@@ -1,9 +1,10 @@
 <div class="form-group">
     @php
+        $language = $language??null;
         $id = $id??str_random(5);
         if(($language?:false)) {
             $lang="[$language]";
-            $savedContent = $content->{str_plural($name)};
+            $savedContent = is_array($content->$name) ? $content->$name : $content->{str_plural($name)};
             $oldValue = old($name.$lang)??$savedContent[$language]??"";
         } else {
             $language="";

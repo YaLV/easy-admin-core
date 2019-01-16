@@ -51,7 +51,11 @@
                                             @endif
                                         </td>
                                     @elseif($headerItem['translate']??false)
-                                        <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ __(implode(".",[$headerItem['translate'], $listItem->{$headerItem['key']}??$listItem[$headerItem[$key]]??""])) }}</td>
+                                        @if($headerItem['translate']=='array')
+                                            <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ $listItem->{$headerItem['field']}[session()->get('language')??config('app.locale')]??$listItem[[$headerItem]['field']][session()->get('language')??config('app.locale')]??"" }}</td>
+                                        @else
+                                            <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ __(implode(".",[$headerItem['translate'], $listItem->{$headerItem['key']}??$listItem[$headerItem[$key]]??""])) }}</td>
+                                        @endif
                                     @else
                                         <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ $listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"" }}</td>
                                     @endif

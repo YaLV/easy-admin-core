@@ -11,7 +11,7 @@ trait MarketDays
     public function getList()
     {
         return [
-            ['field' => 'marketDay', 'label' => 'Market Day'],
+            ['field' => 'marketDay', 'label' => 'Market Day', 'translate' => 'array'],
             ['field' => 'parsedAcceptOrders', 'label' => 'Order Accepted to'],
             ['field' => 'buttons', 'buttons' => ['edit', 'state'], 'label' => ''],
         ];

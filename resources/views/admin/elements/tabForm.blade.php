@@ -32,14 +32,14 @@
              aria-labelledby="{{ $tab['id']??$tabId }}-tab" {{ implode(" ", $tabContentData) }}>
 
             @if(count($tab['languages']??[])>0)
-                @foreach($tab['languages'] as $languageCode => $language)
+                @foreach($tab['languages'] as $languageCode => $languageName)
                     @push('langTabs-'.($tab['id']??$tabId))
                         <li class="nav-item">
                             <a class="nav-link {{$loop->first?"active":""}} border-left-0"
                                id="{{$languageCode}}-simple{{($tab['id']??$tabId)}}"
                                data-toggle="tab" href="#{{$languageCode}}{{($tab['id']??$tabId)}}" role="tab"
                                aria-controls="{{$languageCode}}{{($tab['id']??$tabId)}}"
-                               aria-selected="true">{{$language}}</a>
+                               aria-selected="true">{{$languageName}}</a>
                         </li>
                     @endpush
 
@@ -56,7 +56,6 @@
                                         $elementAttr[] = "data-$dataAttr=$dataValue";
                                     @endphp
                                 @endforeach
-
                                 @include("Admin::fields.".$element["type"], array_merge($element, ["data" => implode(" ", $elementAttr), 'language' => $languageCode]))
                             @endforeach
                         </div>
