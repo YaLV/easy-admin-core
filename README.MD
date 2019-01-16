@@ -1,4 +1,4 @@
-# Riva-Marine project
+# Svaigi project
 
 ### Installaton
 ```
@@ -9,7 +9,7 @@ php artisan migrate
 
 #### CSS/JS changes goes in
 - resources/sass/custom.css
-- resource/js/main.js 
+- resource/js/custom.js 
 
 #### Changes saved to files above should be compiled via command:
 
