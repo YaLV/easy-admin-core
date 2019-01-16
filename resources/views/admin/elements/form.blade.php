@@ -14,7 +14,7 @@
         {{ @csrf_field() }}
         <div class="card">
             <div class="card-body">
-                @if(count($tab['languages']??[])>1)
+                @if(count($tab['languages']??[])>0)
                     @foreach($tab['languages'] as $languageCode => $language)
 
                         @push('langTabs')
@@ -45,12 +45,17 @@
                             </div>
                         @endpush
                     @endforeach
-                    <ul class="nav nav-tabs" id="languageTab" role="tablist">
-                        @stack('langTabs')
-                    </ul>
-                    <div class="tab-content" id="languageTabContent">
+
+                    @if(count($tab['languages']??[])>1)
+                        <ul class="nav nav-tabs" id="languageTab" role="tablist">
+                            @stack('langTabs')
+                        </ul>
+                        <div class="tab-content" id="languageTabContent">
+                            @stack('langContent')
+                        </div>
+                    @else
                         @stack('langContent')
-                    </div>
+                    @endif
                 @else
 
                     @foreach($tab['data'] as $name => $element)

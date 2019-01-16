@@ -33,17 +33,19 @@
 
             @if(count($tab['languages']??[])>0)
                 @foreach($tab['languages'] as $languageCode => $language)
-
                     @push('langTabs-'.($tab['id']??$tabId))
                         <li class="nav-item">
-                            <a class="nav-link {{$loop->first?"active":""}} border-left-0" id="{{$languageCode}}-simple{{($tab['id']??$tabId)}}"
-                               data-toggle="tab" href="#{{$languageCode}}{{($tab['id']??$tabId)}}" role="tab" aria-controls="{{$languageCode}}{{($tab['id']??$tabId)}}"
+                            <a class="nav-link {{$loop->first?"active":""}} border-left-0"
+                               id="{{$languageCode}}-simple{{($tab['id']??$tabId)}}"
+                               data-toggle="tab" href="#{{$languageCode}}{{($tab['id']??$tabId)}}" role="tab"
+                               aria-controls="{{$languageCode}}{{($tab['id']??$tabId)}}"
                                aria-selected="true">{{$language}}</a>
                         </li>
                     @endpush
 
                     @push('langContent-'.($tab['id']??$tabId))
-                        <div class="tab-pane fade {{$loop->first?"show active":""}}" id="{{$languageCode}}{{($tab['id']??$tabId)}}"
+                        <div class="tab-pane fade {{$loop->first?"show active":""}}"
+                             id="{{$languageCode}}{{($tab['id']??$tabId)}}"
                              role="tabpanel" aria-labelledby="{{$languageCode}}-simple{{($tab['id']??$tabId)}}">
                             @foreach($tab['data'] as $name => $element)
                                 @php
@@ -60,12 +62,17 @@
                         </div>
                     @endpush
                 @endforeach
-                <ul class="nav nav-tabs" id="languageTab" role="tablist">
-                    @stack('langTabs-'.($tab['id']??$tabId))
-                </ul>
-                <div class="tab-content" id="languageTabContent">
+
+                @if(count($tab['languages']??[])>1)
+                    <ul class="nav nav-tabs" id="languageTab" role="tablist">
+                        @stack('langTabs-'.($tab['id']??$tabId))
+                    </ul>
+                    <div class="tab-content" id="languageTabContent">
+                        @stack('langContent-'.($tab['id']??$tabId))
+                    </div>
+                @else
                     @stack('langContent-'.($tab['id']??$tabId))
-                </div>
+                @endif
             @else
 
                 @foreach($tab['data'] as $name => $element)

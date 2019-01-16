@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MarketDay extends Model
 {
     public $fillable = ['marketDay', 'hideBeforeDays', 'hideBeforeHours'];
-
+    protected $casts = [
+        'marketDay' => 'array'
+    ];
     use SoftDeletes;
 
     public function getParsedAcceptOrdersAttribute() {

@@ -24,7 +24,7 @@ class MarketDaysController extends Controller
 
     public function editMarketDay($id)
     {
-        return view('admin.elements.form', ['formElements' => $this->form(), 'content' => MarketDay::withTrashed()->findOrFail($id)]);
+        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => MarketDay::withTrashed()->findOrFail($id)]);
     }
 
 
@@ -35,7 +35,7 @@ class MarketDaysController extends Controller
 
     public function getEditName($id)
     {
-        return MarketDay::withTrashed()->findOrFail($id)->marketDay;
+        return MarketDay::withTrashed()->findOrFail($id)->marketDay[config('app.locale')];
     }
 
     public function changeState($id)

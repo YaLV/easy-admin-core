@@ -2,6 +2,7 @@
 
 namespace App\Plugins\MarketDays\Functions;
 
+use App\Languages;
 use App\Plugins\MarketDays\Model\MarketDay;
 use Carbon\Carbon;
 
@@ -28,21 +29,31 @@ trait MarketDays
     public function form()
     {
         $default = [
-            'data' => [
-                'marketDay'       => ['type' => 'text', 'class' => '', 'label' => 'Market Day'],
-                'hideBeforeDays'  => ['type' => 'text', 'class' => '', 'label' => 'Close sales to this day before X days'],
-                'hideBeforeHours' => ['type' => 'text', 'class' => '', 'label' => 'Close sales to this day at XX:XX hours'],
+            [
+                'languages' => Languages::all()->pluck('name', 'code'),
+                'Label'     => 'Display',
+                'data'      => [
+                    'marketDay' => ['type' => 'text', 'class' => '', 'label' => 'Market Day'],
+                ],
+            ],
+            [
+                'Label' => 'Settings',
+                'data'  => [
+                    'hideBeforeDays'  => ['type' => 'text', 'class' => '', 'label' => 'Close sales to this day before X days'],
+                    'hideBeforeHours' => ['type' => 'text', 'class' => '', 'label' => 'Close sales to this day at XX:XX hours'],
+                ],
             ],
         ];
 
         return $default;
     }
 
-    public function vacationForm() {
+    public function vacationForm()
+    {
         $default = [
             'data' => [
                 'vacation_date' => ['type' => 'text', 'class' => 'datepicker', 'label' => 'Vacation Day'],
-            ]
+            ],
         ];
 
         return $default;

@@ -40,22 +40,29 @@ class AppServiceProvider extends ServiceProvider
             $view->with('menuItems', (new Menu)->getMenuItems());
         });
 
-        View::composer('admin.partials.breadcrumbs', function ($view) {
+        View::composer('layouts.admin', function ($view) {
             $page = Menu::where('routeName', Route::currentRouteName())->first();
-            $breadcrumbs = [];
+            $breadcrumbs = $title = [];
             do {
                 $editorId = request()->route('id');
                 if($editorId && preg_match("/[{}]/",$page->slug)) {
                     $controller = explode("@", $page->action);
                     $editName = (new $controller[0])->getEditName($editorId);
-                    $breadcrumbs[] = (object)['displayName' => $page->displayName.": <strong>".$editName."</strong>"];
+                    $pageEl = (object)['displayName' => $page->displayName.": <strong>".$editName."</strong>"];
+                    $breadcrumbs[] = $pageEl;
                 } else {
                     $breadcrumbs[] = $page;
                 }
-                $page = Menu::find($page->parent_id);
+
+                $page = Menu::find($page->parent_id??false);
             } while($page);
 
             $breadcrumbs = array_reverse($breadcrumbs);
+
+            foreach($breadcrumbs as $crumb) {
+                $title[] = strip_tags($crumb->displayName??ucfirst(Route::currentRouteName()));
+            }
+            $view->with('title', implode("::", $title));
 
             $view->with('breadcrumbs', $breadcrumbs);
         });
