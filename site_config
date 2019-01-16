@@ -1,0 +1,4 @@
+PHP_VERSION:7.1
+ROOT:public
+HTUSER:svaigi
+HTPASS:svpwd
