@@ -12,13 +12,13 @@ class MarketDaySeeder extends Seeder
     public function run()
     {
         $marketDays = [
-            'monday'    => '{"lv":"Pirmdiena"}',
-            'tuesday'   => '{"lv":"Otrdiena"}',
-            'wednesday' => '{"lv":"Trešdiena"}',
-            'thursday'  => '{"lv":"Ceturtdiena"}',
-            'friday'    => '{"lv":"Piektdiena"}',
-            'saturday'  => '{"lv":"Sestdiena"}',
-            'Sunday'    => '{"lv":"Svētdiena"}',
+            'monday'    => ["lv" => "Pirmdiena"],
+            'tuesday'   => ["lv" => "Otrdiena"],
+            'wednesday' => ["lv" => "Trešdiena"],
+            'thursday'  => ["lv" => "Ceturtdiena"],
+            'friday'    => ["lv" => "Piektdiena"],
+            'saturday'  => ["lv" => "Sestdiena"],
+            'Sunday'    => ["lv" => "Svētdiena"],
         ];
 
         foreach ($marketDays as $marketDaySlug => $marketDay) {
