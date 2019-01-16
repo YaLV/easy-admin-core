@@ -9,9 +9,5 @@ job2:
   when: on_success
   script:
       - /opt/makeSite/nginxConf $CI_PROJECT_NAME dev $CI_BUILD_REPO;
-      - sudo systemctl restart numbers.service
-      #- /usr/bin/docker stop $(docker ps | grep numbers_node | awk '{print $1}')
-      #- cd /var/www/dev/$CI_PROJECT_NAME/web && /usr/bin/docker build -t numbers_node .
-      ##- cd /var/www/dev/$CI_PROJECT_NAME/web && /usr/bin/docker run --network="host" -d numbers_node
   only:
       - develop
