@@ -6,10 +6,15 @@
     <title>{{ $title??"Svaigi Admin" }}</title>
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link href="{{ asset('css/bootstrap-select.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/multi-select.css')}}">
     <link href="{{ asset('css/circular-std/style.css') }}" rel="stylesheet">
     <link href="{{ mix('css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/fontawesome/css/fontawesome-all.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/noty.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/custom.css') }}">
     @stack('css')
 </head>
 
@@ -24,6 +29,9 @@
             <div class="container-fluid dashboard-content">
                 @include('admin.partials.pageLabel')
                 @yield('content')
+                @if($modalId??false)
+                    @include("admin.elements.modal")
+                @endif
             </div>
             @include('admin.partials.footer')
         </div>
@@ -33,11 +41,13 @@
     window.token = '{{ csrf_token() }}';
 </script>
 <script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/jquery-ui.js') }}"></script>
-<script src="{{ asset('js/select2.min.js') }}"></script>
-<script>
-    jQuery('select').select2();
-</script>
+<script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
+<script src="{{ asset('js/bootstrap-select.js') }}"></script>
+<script src="{{ asset('js/jquery.multi-select.js') }}"></script>
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('//cloud.tinymce.com/stable/tinymce.min.js') }}?apikey=6crcu265aw4ekxocvyzzx0wf09vwlaeb09rcvcov0j0gd28d"></script>
+<script src="{{ asset('js/custom.js') }}"></script>
+@stack('scripts')
 @if(session('message'))
     @php
         $message = session('message');

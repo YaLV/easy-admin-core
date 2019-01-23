@@ -24,7 +24,10 @@
     },
     "dependencies": {
         "bootstrap-datepicker": "^1.8.0",
+        "bootstrap-modal": "^2.2.4",
+        "jquery-sortablejs": "^1.0.1",
         "jquery-ui": "^1.12.1",
+        "multi-select": "^0.3.4",
         "webpack": "^4.27.1"
     }
 }

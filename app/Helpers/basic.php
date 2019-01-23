@@ -2,7 +2,7 @@
 
 
 function language() {
-    return session('locale')??config('locale');
+    return session('locale')??config('app.locale');
 }
 
 function languages() {
@@ -10,9 +10,21 @@ function languages() {
 }
 
 function getTranslations($path, $collections) {
-    $collectionTranslates = [];
-    foreach($collections as $collection) {
-        $collectionTranslates[] = (object)['id' => $collection->id, 'name' => __("$path.{$collection->id}")];
+    return $collections::selectRaw('id, concat("category.name.", id) as name')->get();
+}
+
+function nullOrDate($value, $results) {
+    return ($value??false)?$results[1]:$results[0];
+}
+
+function calcPrice($price, $changes) {
+    foreach($changes as $change) {
+        $changesToPrice = round((int)$price*(abs($change)/100), 2);
+        if($change[0]=="-") { // discount
+            $price-=$changesToPrice;
+        } else {
+            $price+=$changesToPrice;
+        }
     }
-    return (object)$collectionTranslates;
+    return number_format(round($price,2),2);
 }

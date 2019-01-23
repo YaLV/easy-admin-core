@@ -16,11 +16,10 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/sass/inputmask.css',
         'resources/sass/select2.css',
         'resources/sass/tempusdominus-bootstrap-4.css',
-        'resources/sass/custom.css',
-        'resources/sass/noty.css',
         'resources/sass/jquery-ui.css',
-        'resources/sass/themes/bootstrap-v4.css'
+        'resources/sass/themes/bootstrap-v4.css',
     ], 'public/css/app.css')
+    .styles(['resources/sass/custom.css'],'public/css/custom.css')
     .styles(['resources/sass/style.css'], 'public/css/style.css')
     .styles(['resources/sass/bootstrap.min.css'], 'public/css/bootstrap.min.css')
     .copy('resources/js/jquery-ui.js', 'public/js/');

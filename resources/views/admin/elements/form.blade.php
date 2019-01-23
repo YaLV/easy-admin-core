@@ -31,6 +31,10 @@
                             <div class="tab-pane fade {{$loop->first?"show active":""}}" id="{{$languageCode}}"
                                  role="tabpanel" aria-labelledby="{{$languageCode}}-simple">
                                 @foreach($tab['data'] as $name => $element)
+                                    @if($element['type']=='view')
+                                        @includeIf($element["class"], array_merge($element, ['language' => $languageCode]))
+                                        @continue;
+                                    @endif
                                     @php
                                         $elementAttr = [];
                                     @endphp

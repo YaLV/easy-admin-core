@@ -52,6 +52,17 @@ class CreateMenusTable extends Migration
                 'parent_id'   => null,
                 'method'      => 'POST',
             ],
+            [
+                'routeName'   => 'slugify',
+                'slug'        => 'slugify',
+                'icon'        => 'fa fa-upload',
+                'displayName' => 'Slug String',
+                'action'      => '\App\Plugins\Admin\AdminController@slugify',
+                'inMenu'      => 0,
+                'sequence'    => 0,
+                'parent_id'   => null,
+                'method'      => 'POST',
+            ],
 
         ];
         foreach($defaultMenus as $menu) {

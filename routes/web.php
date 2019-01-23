@@ -19,3 +19,12 @@ Route::get('/', function () {
 
 
 Route::get('/a', '\App\Plugins\MarketDays\MarketDaysController@closestDay');
+
+Route::post('/calcPrice', function() {
+    $discounts = [
+        \App\Plugins\Vat\Model\Unit::find(request('vat_id'))->amount??0,
+        request('mark_up')?:0
+    ];
+
+   return ['status' => true, 'noMessage' => true, 'result' => calcPrice(request('price'), $discounts)];
+});

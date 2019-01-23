@@ -35,4 +35,7 @@ class MarketDay extends Model
         return [$availableTime->timestamp, $marketDayOrig];
     }
 
+    public function getNameAttribute() {
+        return $this->marketDay[language()]??"";
+    }
 }

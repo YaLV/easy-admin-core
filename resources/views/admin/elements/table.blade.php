@@ -19,7 +19,6 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
-
                             @foreach($tableHeaders as $headerItem)
                                 <th>{{ $headerItem['label'] }}</th>
                             @endforeach
@@ -33,9 +32,9 @@
                             <tr {{ ($hasSoftDeletes && $listItem->trashed())??false?"class=text-muted":"class=text-dark" }}>
                                 @foreach($tableHeaders as $headerItem)
                                     @if(($headerItem->type??$headerItem['type']??"")=='translate')
-                                        <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ __(($headerItem['use']??"").($listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"")) }}</td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ __(($headerItem['use']??"").($listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"")) }}</td>
                                     @elseif(($headerItem->field??$headerItem['field']??"")=='buttons')
-                                        <td style="width:200px;" class="text-right">
+                                        <td style="width:200px;" class="text-right {{ $headerItem['class']??false }}">
                                             <div class="btn-group">
                                                 @foreach($headerItem['buttons'] as $button)
                                                     @includeIf('admin.buttons.'.$button)
@@ -43,7 +42,7 @@
                                             </div>
                                         </td>
                                     @elseif(($headerItem->field??$headerItem['type']??"")=='yesno')
-                                        <td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>
                                             @if($listItem->{$headerItem['field']})
                                                 <i class="fas fa-check-circle" style="color:green;"></i>
                                             @else
@@ -52,12 +51,18 @@
                                         </td>
                                     @elseif($headerItem['translate']??false)
                                         @if($headerItem['translate']=='array')
-                                            <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ $listItem->{$headerItem['field']}[session()->get('language')??config('app.locale')]??$listItem[[$headerItem]['field']][session()->get('language')??config('app.locale')]??"" }}</td>
+                                            <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $listItem->{$headerItem['field']}[language()]??$listItem[[$headerItem]['field']][language()]??"" }}</td>
                                         @else
-                                            <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ __(implode(".",[$headerItem['translate'], $listItem->{$headerItem['key']}??$listItem[$headerItem[$key]]??""])) }}</td>
+                                            @if(!($listItem->{$headerItem['key']}??$listItem[$headerItem['key']]??""))
+                                                <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}></td>
+                                            @else
+                                                <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ __(implode(".",[$headerItem['translate'], $listItem->{$headerItem['key']}??$listItem[$headerItem['key']]??""])) }}</td>
+                                            @endif
                                         @endif
+                                    @elseif($headerItem['fn']??false)
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $headerItem['fn']($listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??null, $headerItem['results'])??"" }}</td>
                                     @else
-                                        <td {{ ($headerItem['sortGrab']??false)?"class=dragdrop":"" }}>{{ $listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"" }}</td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"" }}</td>
                                     @endif
 
                                 @endforeach

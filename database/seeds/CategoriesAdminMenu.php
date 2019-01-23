@@ -13,6 +13,21 @@ class CategoriesAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::orderBy('sequence', 'desc')->first();
 
+        $mainMenu = \App\Model\Admin\Menu::firstOrCreate(
+            [
+                'slug'      => 'shop',
+                'routeName' => 'shop',
+            ],
+            [
+                'icon'        => 'fas fa-shopping-bag',
+                'displayName' => 'Shop',
+                'action'      => '',
+                'inMenu'      => '1',
+                'sequence'    => $currentMenu->last,
+                'parent_id'   => null,
+                'method'      => 'GET',
+            ]);
+
         $main = "categories";
 
         $mainCat = \App\Model\Admin\Menu::firstOrCreate(
@@ -25,8 +40,8 @@ class CategoriesAdminMenu extends Seeder
                 'displayName' => 'Categories',
                 'action'      => '',
                 'inMenu'      => '1',
-                'sequence'    => $currentMenu->last,
-                'parent_id'   => null,
+                'sequence'    => 0,
+                'parent_id'   => $mainMenu->id,
                 'method'      => 'GET',
             ]);
 
@@ -38,7 +53,7 @@ class CategoriesAdminMenu extends Seeder
             [
                 'icon'        => 'fas fa-list',
                 'displayName' => 'List',
-                'action'      => '\App\Plugins\Products\CategoryController@index',
+                'action'      => '\App\Plugins\Categories\CategoryController@index',
                 'inMenu'      => '1',
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,
@@ -52,7 +67,7 @@ class CategoriesAdminMenu extends Seeder
             [
                 'icon'        => 'fas fa-plus',
                 'displayName' => 'Add',
-                'action'      => '\App\Plugins\Products\CategoryController@add',
+                'action'      => '\App\Plugins\Categories\CategoryController@add',
                 'inMenu'      => '1',
                 'sequence'    => 1,
                 'parent_id'   => $mainCat->id,
@@ -66,7 +81,7 @@ class CategoriesAdminMenu extends Seeder
             [
                 'icon'        => 'fas fa-edit',
                 'displayName' => 'Edit',
-                'action'      => '\App\Plugins\Products\CategoryController@edit',
+                'action'      => '\App\Plugins\Categories\CategoryController@edit',
                 'inMenu'      => '0',
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,
@@ -80,7 +95,7 @@ class CategoriesAdminMenu extends Seeder
             [
                 'icon'        => 'fas fa-plus',
                 'displayName' => 'Store',
-                'action'      => '\App\Plugins\Products\CategoryController@store',
+                'action'      => '\App\Plugins\Categories\CategoryController@store',
                 'inMenu'      => '0',
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,
@@ -94,7 +109,7 @@ class CategoriesAdminMenu extends Seeder
             [
                 'icon'        => 'fas fa-trash-alt',
                 'displayName' => 'Destroy',
-                'action'      => '\App\Plugins\Products\CategoryController@destroy',
+                'action'      => '\App\Plugins\Categories\CategoryController@destroy',
                 'inMenu'      => '0',
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,

@@ -39,4 +39,8 @@ class AdminController extends Controller
 
         return ["status" => true, 'message' => 'File Uploaded, please save form, to add file to current item', 'data' => $returnData];
     }
+
+    public function slugify() {
+        return ["status" => true, 'slug' => str_slug(request('slugify'), "_"), 'message' => "Slug created"];
+    }
 }

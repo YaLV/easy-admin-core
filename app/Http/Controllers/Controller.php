@@ -36,4 +36,8 @@ class Controller extends BaseController implements ControllerInterface
     {
         return "Error: Not Set";
     }
+
+    public function switch($param) {
+        return ($param??false)?1:0;
+    }
 }

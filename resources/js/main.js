@@ -155,6 +155,7 @@ jQuery.ajaxSetup({
         return;
     },
     complete: function(xhr, textStatus, error) {
+        if(xhr.responseJSON.noMessage) return;
         if(xhr.status === 200) {
             svaigi.showMessage(xhr.responseJSON.message||'Changes have been made', 'success');
         }
@@ -173,78 +174,3 @@ jQuery.ajaxPrefilter(function(options, originalOptions, jqXHR){
         }
     }
 });
-
-var imageControlTemplate = "<div class='controls'>" +
-    "<a href='#' class='btn btn-xs btn-info setMainImage' data-file><i class='fas mainImage'></i></a>" +
-    "<a href='#' class='btn btn-xs btn-danger removeImage' data-file><i class='fas fa-trash-alt'></i></a>" +
-    "</div>";
-
-jQuery(document).ready(function () {
-    jQuery('.preview').each(function () {
-        id = jQuery(this).attr('data-file');
-        jQuery(this).find('.preview_image_container').each(function () {
-            controls = jQuery(imageControlTemplate).clone();
-            isMain = jQuery(this).find('.imMain').val();
-            controls.find('.mainImage').addClass(isMain == 1 ? "fa-thumbs-up" : "fa-thumbs-down");
-            controls.find('[data-file]').attr('data-file', id);
-            jQuery(this).append(controls);
-        });
-    });
-
-    bindButtons();
-
-    jQuery('input[type=file]').change(function(){
-        fileData = new FormData;
-        fileId = jQuery(this).attr('id');
-
-        files = jQuery(this)[0].files;
-        for(x in files) {
-            fileData.append(jQuery(this).attr('name')+"[]", files[x]);
-        }
-        fileData.append('path', jQuery('.preview[data-file='+fileId+']').attr('data-path'));
-        fileData.append('owner', jQuery(this).attr('id'));
-
-
-        jQuery.ajax({
-            url: "/admin/uploadFile",
-            type: "POST",
-            data:  fileData,
-            contentType: false,//"multipart/form-data",
-            cache: false,
-            processData:false,
-            success: function(containers)
-            {
-                for( x in containers.data) {
-                    container = jQuery(containers.data[x]);
-
-                    controls = jQuery(imageControlTemplate).clone();
-                    isMain = container.find('.imMain').val();
-                    controls.find('.mainImage').addClass("fa-thumbs-down");
-                    controls.find('[data-file]').attr('data-file', id);
-                    container.append(controls);
-                    jQuery('.preview[data-file='+fileId+']').append(container);
-                }
-                bindButtons();
-            }
-        });
-    });
-});
-
-function bindButtons() {
-    jQuery('.removeImage').unbind().click(function (e) {
-        e.preventDefault();
-        jQuery(this).parents('.preview_image').remove();
-        return false;
-    });
-
-    jQuery('.setMainImage').unbind().click(function (e) {
-        e.preventDefault();
-        id = jQuery(this).parents('.preview').attr('data-file');
-        block = jQuery(this).parents('.preview_image_container');
-        jQuery('[data-file=' + id + '] .mainImage').removeClass('fa-thumbs-up').addClass('fa-thumbs-down');
-        jQuery('.preview[data-file=' + id + ']').find('.preview_image .imMain').val("0");
-        block.find('.imMain').val("1");
-        jQuery(this).find('.mainImage').toggleClass('fa-thumbs-up fa-thumbs-down');
-        return false;
-    });
-}

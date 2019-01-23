@@ -48,6 +48,10 @@
                              id="{{$languageCode}}{{($tab['id']??$tabId)}}"
                              role="tabpanel" aria-labelledby="{{$languageCode}}-simple{{($tab['id']??$tabId)}}">
                             @foreach($tab['data'] as $name => $element)
+                                @if($element['type']=='view')
+                                    @includeIf($element["class"], array_merge($element, ['language' => $languageCode]))
+                                    @continue;
+                                @endif
                                 @php
                                     $elementAttr = [];
                                 @endphp
@@ -56,7 +60,7 @@
                                         $elementAttr[] = "data-$dataAttr=$dataValue";
                                     @endphp
                                 @endforeach
-                                @include("Admin::fields.".$element["type"], array_merge($element, ["data" => implode(" ", $elementAttr), 'language' => $languageCode]))
+                                @includeIf("Admin::fields.".$element["type"], array_merge($element, ["data" => implode(" ", $elementAttr), 'language' => $languageCode]))
                             @endforeach
                         </div>
                     @endpush
@@ -75,6 +79,10 @@
             @else
 
                 @foreach($tab['data'] as $name => $element)
+                    @if($element['type']=='view')
+                        @includeIf($element["class"], array_merge($element, ['language' => $languageCode]))
+                        @continue;
+                    @endif
                     @php
                         $elementAttr = [];
                     @endphp
