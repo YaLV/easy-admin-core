@@ -100,7 +100,8 @@ class ProductController extends AdminController
         } catch (\PDOException $e) {
             DB::rollBack();
 
-            return ['state' => 'false', 'message' => 'DB error:' . $e->getMessage()];
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);
+            return redirect()->back();
         }
 
         return redirect(route('products.list'))->with(['message' => ['msg' => "Product Saved"]]);

@@ -75,7 +75,7 @@ class MarketDaysController extends AdminController
         if ($md->save()) {
             return redirect(route('marketdays'))->with('message', ["msg" => 'Market Day Saved']);
         }
-
+        session()->flash("message", ['msg' => "Error saving Market Day", 'isError'=> true]);
         return redirect()->back();
 
     }

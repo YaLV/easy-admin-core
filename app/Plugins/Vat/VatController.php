@@ -6,10 +6,12 @@ namespace App\Plugins\Vat;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Vat\Model\Vat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VatController extends AdminController
 {
     use \App\Plugins\Vat\Functions\Vat;
+
     public function index()
     {
         return view('admin.elements.table',
@@ -38,12 +40,25 @@ class VatController extends AdminController
             'name'   => 'required',
             'amount' => 'required',
         ]);
+        try {
 
-        Vat::updateOrCreate(['id' => $id], [
-            'name'   => request('name'),
-            'amount' => request('amount'),
-        ]);
-        return redirect(route('vat'));
+            DB::beginTransaction();
+
+            Vat::updateOrCreate(['id' => $id], [
+                'name'   => request('name'),
+                'amount' => request('amount'),
+            ]);
+
+            DB::commit();
+
+            return redirect(route('vat'));
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError' => true]);
+
+            return redirect()->back();
+        }
+
     }
 
     public function getEditName($id)
@@ -51,8 +66,10 @@ class VatController extends AdminController
         return Vat::findOrFail($id)->name;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $result = Vat::findOrFail($id)->delete();
-        return ['status' => $result, 'message' => ($result?'Vat Deleted':"Error deleting VAT")];
+
+        return ['status' => $result, 'message' => ($result ? 'Vat Deleted' : "Error deleting VAT")];
     }
 }

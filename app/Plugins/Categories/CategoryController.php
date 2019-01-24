@@ -9,6 +9,7 @@ use App\Plugins\Admin\Model\File;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\Categories\Model\CategoryMeta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class CategoryController extends AdminController
@@ -68,12 +69,20 @@ class CategoryController extends AdminController
             'twitter_description',
         ];
 
-        $category = Category::updateOrCreate(['id' => $id], [
-            'parent_id' => request('parent_id'),
-        ]);
-        $this->handleMetas($category, $metas, 'name');
-        $this->handleImages($category);
+        try {
+            DB::beginTransaction();
 
+            $category = Category::updateOrCreate(['id' => $id], [
+                'parent_id' => request('parent_id'),
+            ]);
+            $this->handleMetas($category, $metas, 'name');
+            $this->handleImages($category);
+            DB::commit();
+        } catch(\PDOException $e) {
+            DB::rollBack();
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);
+            return redirect()->back();
+        }
         return redirect(route('categories.list'))->with(['message' => ['msg' => "Category Saved"]]);
     }
 

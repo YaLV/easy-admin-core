@@ -6,10 +6,12 @@ namespace App\Plugins\Units;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Units\Model\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UnitController extends AdminController
 {
     use \App\Plugins\Units\Functions\Unit;
+
     public function index()
     {
         return view('admin.elements.table',
@@ -35,15 +37,27 @@ class UnitController extends AdminController
     public function store(Request $request, $id = false)
     {
         $request->validate([
-            'name'   => 'required',
+            'name' => 'required',
             'unit' => 'required',
         ]);
 
-        Unit::updateOrCreate(['id' => $id], [
-            'name'   => request('name'),
-            'unit' => request('unit'),
-        ]);
-        return redirect(route('unit'));
+        try {
+
+            DB::beginTransaction();
+
+            Unit::updateOrCreate(['id' => $id], [
+                'name' => request('name'),
+                'unit' => request('unit'),
+            ]);
+            DB::commit();
+
+            return redirect(route('unit'));
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError' => true]);
+
+            return redirect()->back();
+        }
     }
 
     public function getEditName($id)
@@ -51,8 +65,10 @@ class UnitController extends AdminController
         return Unit::findOrFail($id)->name;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $result = Unit::findOrFail($id)->delete();
-        return ['status' => $result, 'message' => ($result?'Unit Deleted':"Error deleting Unit")];
+
+        return ['status' => $result, 'message' => ($result ? 'Unit Deleted' : "Error deleting Unit")];
     }
 }

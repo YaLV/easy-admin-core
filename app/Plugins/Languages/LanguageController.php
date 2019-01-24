@@ -49,6 +49,7 @@ class LanguageController extends AdminController
         if($language->save()) {
             return redirect(route('languages'))->with('message', ['msg' => 'Language saved successfully']);
         }
+        session()->flash("message", ['msg' => "Error Saving Language", 'isError'=> true]);
         return redirect()->back();
     }
 
