@@ -11,7 +11,7 @@ class ProductsAdminMenu extends Seeder
      */
     public function run()
     {
-        $currentMenu = \App\Model\Admin\Menu::orderBy('sequence', 'desc')->first();
+        $currentMenu = \App\Model\Admin\Menu::where('slug','!=','config')->orderBy('sequence', 'desc')->first();
 
         $mainMenu = \App\Model\Admin\Menu::firstOrCreate(
             [

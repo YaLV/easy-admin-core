@@ -37,7 +37,7 @@ jQuery(document).ready(function () {
         }
 
         jQuery.post(button.attr('href'), "", function (response) {
-            if (response.status) {
+            if (response.status==true) {
                 button.parents('tr').remove();
             }
         });
@@ -55,7 +55,20 @@ var imageControlTemplate = "<div class='controls'>" +
 
 jQuery(document).ready(function () {
 
-    tinymce.init({ selector:'textarea' });
+    tinymce.init({
+        selector:'textarea',
+        plugins: "image imagetools colorpicker hr table link textcolor code paste lists autolink anchor contextmenu insertdatetime",
+        force_br_newlines : true,
+        force_p_newlines : false,
+        forced_root_block : '',
+        toolbar: [
+            "code | undo redo | formats | bold italic | fontselect | fontsizeselect | hr alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor | anchor",
+            ],
+        insertdatetime_formats: [
+            "%H:%M:%S",
+            ""
+        ]
+    });
 
     jQuery('.preview').each(function () {
         id = jQuery(this).attr('data-file');

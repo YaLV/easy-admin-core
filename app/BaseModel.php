@@ -42,4 +42,8 @@ class BaseModel extends Model
 
     }
 
+    public function formatSelected($item) {
+        return $this->$item->pluck('id')->toArray();
+    }
+
 }

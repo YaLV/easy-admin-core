@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Plugins\Admin\Model\File;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class AdminController extends Controller implements ControllerInterface
 {
     public static function adminRoutes()
     {
@@ -41,6 +41,35 @@ class AdminController extends Controller
     }
 
     public function slugify() {
-        return ["status" => true, 'slug' => str_slug(request('slugify'), "_"), 'message' => "Slug created"];
+        return ["status" => true, 'slug' => str_slug(request('slugify')), 'message' => "Slug created"];
+    }
+
+    public function index()
+    {
+        return view('admin.errors.404');
+    }
+
+    public function edit($id)
+    {
+        return view('admin.errors.404');
+    }
+
+    public function add()
+    {
+        return view('admin.errors.404');
+    }
+
+    public function store(Request $request, $id = false)
+    {
+        return view('admin.errors.404');
+    }
+
+    public function getEditName($id)
+    {
+        return "Error: Not Set";
+    }
+
+    public function switch($param) {
+        return ($param??false)?1:0;
     }
 }

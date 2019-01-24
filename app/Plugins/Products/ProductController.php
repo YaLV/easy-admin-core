@@ -3,16 +3,15 @@
 namespace App\Plugins\Products;
 
 use App\Functions\General;
-use App\Http\Controllers\Controller;
+use App\Plugins\Admin\AdminController;
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductMeta;
 use App\Plugins\Products\Model\ProductVariation;
-use App\Plugins\Units\Model\Unit;
 use App\Plugins\Vat\Model\Vat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends Controller
+class ProductController extends AdminController
 {
     use Products;
     use General;
@@ -38,7 +37,6 @@ class ProductController extends Controller
 
     public function store(Request $request, $id = false)
     {
-
         if ($id) {
             $unique = ",$id";
         }
@@ -46,14 +44,14 @@ class ProductController extends Controller
         $val = [
             'main_category' => 'required',
             'sku'           => 'required|unique:products,sku' . ($unique ?? ""),
-            'supplier'      => 'required',
+            'supplier_id'   => 'required',
         ];
 
         $msg = [
             'main_category.required' => 'Main Category can not be empty',
             'sku.required'           => 'Product Code can not be empty',
             'sku.unique'             => 'Product with this Product Code already exists',
-            'supplier.required'      => 'Supplier can not be empty',
+            'supplier_id.required'   => 'Supplier can not be empty',
         ];
 
         foreach (languages() as $lang) {
@@ -63,6 +61,7 @@ class ProductController extends Controller
 
 
         $request->validate($val, $msg);
+
 
         $metas = [
             'name',
@@ -89,7 +88,7 @@ class ProductController extends Controller
                 'is_suggested'   => $this->switch(request('is_suggested')),
                 'is_highlighted' => $this->switch(request('is_highlighted')),
                 'main_category'  => request('main_category'),
-                'supplier'       => request('supplier'),
+                'supplier_id'    => request('supplier_id'),
             ]);
 
             $this->handleMetas($product, $metas, 'name-id');

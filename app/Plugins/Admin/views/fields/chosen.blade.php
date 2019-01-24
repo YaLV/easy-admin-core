@@ -1,6 +1,6 @@
 @php
     $id = $id??str_random(5);
-    $selectedItems = $content->formatSelected($name);
+    $selectedItems = old($name)??$content->formatSelected($name);
 @endphp
 <div class="row">
     <div class="col-md-2"><h5 style="color:#71748d;font-weight:normal">{{ $label }}</h5></div>

@@ -22,7 +22,7 @@ class Products extends Migration
             $table->boolean('is_lv')->nullable();
             $table->boolean('is_suggested')->nullable();
             $table->boolean('is_highlighted')->nullable();
-            $table->boolean('supplier');
+            $table->integer('supplier_id');
             $table->integer('times_bought')->nullable();
             $table->softDeletes();
             $table->timestamps();

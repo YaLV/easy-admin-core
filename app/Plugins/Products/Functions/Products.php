@@ -6,6 +6,7 @@ namespace App\Plugins\Products;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductVariation;
+use App\Plugins\Suppliers\Model\Supplier;
 use App\Plugins\Units\Model\Unit;
 
 trait Products
@@ -14,6 +15,7 @@ trait Products
     {
 
         $categories = \App\Plugins\Categories\Model\Category::all();
+        $suppliers = Supplier::all();
         $languages = languages()->pluck('name', 'code');
 
         return [
@@ -65,7 +67,7 @@ trait Products
                     'main_category'    => ['type' => 'select', 'label' => 'Main Category', 'options' => $categories],
                     'extra_categories' => ['type' => 'chosen', 'label' => 'Extra Categories', 'options' => $categories],
                     'market_days'      => ['type' => 'chosen', 'label' => 'Market Day(-s)', 'options' => MarketDay::all()],
-                    'supplier'         => ['type' => 'select', 'label' => 'Supplier', 'options' => $categories],
+                    'supplier_id'         => ['type' => 'select', 'label' => 'Supplier', 'options' => $suppliers],
                     'product_image'    => ['type' => 'image', 'label' => 'Product Image', 'preview' => true],
                 ],
             ],
@@ -90,7 +92,7 @@ trait Products
             ['field' => 'sku', 'label' => 'Product Code'],
             ['field' => 'name', 'label' => 'Product Name', 'translate' => 'product.name', 'key' => 'id'],
             ['field' => 'slug', 'label' => 'Product Slug', 'translate' => 'product.slug', 'key' => 'id'],
-            //['field' => 'deleted_at', 'label' => 'state', 'fn' => 'nullOrDate', 'results' => ['Active','Draft']],
+            ['field' => 'supplier_id', 'label' => 'Supplier', 'translate' => 'supplier.name', 'key' => 'supplier_id'],
             ['field' => 'buttons', 'buttons' => ['edit', 'state', 'delete'], 'label' => '',],
         ];
     }

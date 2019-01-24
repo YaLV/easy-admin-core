@@ -3,10 +3,11 @@
 namespace App\Plugins\Vat;
 
 
+use App\Plugins\Admin\AdminController;
 use App\Plugins\Vat\Model\Vat;
 use Illuminate\Http\Request;
 
-class VatController
+class VatController extends AdminController
 {
     use \App\Plugins\Vat\Functions\Vat;
     public function index()

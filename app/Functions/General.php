@@ -18,7 +18,7 @@ trait General
                     $slugPartsCoded = [];
                     $slugParts = explode("-",$slug);
                     foreach($slugParts??[] as $slug) {
-                        $slugPartsCoded[] = str_slug($metaData[$slug][$language->code]??$collection->$slug,"_");
+                        $slugPartsCoded[] = str_slug($metaData[$slug][$language->code]??$collection->$slug);
                     }
                     $meta_value = implode("-", $slugPartsCoded);
                 }

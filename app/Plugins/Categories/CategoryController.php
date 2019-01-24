@@ -4,14 +4,14 @@ namespace App\Plugins\Categories;
 
 use App\Functions\General;
 use App\Languages;
+use App\Plugins\Admin\AdminController;
 use App\Plugins\Admin\Model\File;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\Categories\Model\CategoryMeta;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class CategoryController extends Controller
+class CategoryController extends AdminController
 {
     use \App\Plugins\Categories\Functions\Category;
     use General;
@@ -79,10 +79,16 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
+
         $cc = Category::findOrFail($id);
 
-        $cc->delete();
+        if($cc->products_main()->count()) {
+            return ['status' => 'false', "message" => 'Category is set to main in some products, can not remove Category'];
+        }
 
+        $cc->products()->sync([]);
+
+        $cc->delete();
         CategoryMeta::where('owner_id', $cc->id)->delete();
 
         return ['status' => true, "message" => "Category Deleted"];

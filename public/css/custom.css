@@ -86,3 +86,7 @@ input[readonly] {
 .addCash:after {
     content:" €";
 }
+
+.dropdown.is-invalid~.invalid-feedback {
+    display:block;
+}

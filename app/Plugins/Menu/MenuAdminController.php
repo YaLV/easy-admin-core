@@ -2,11 +2,11 @@
 
 namespace App\Plugins\Menu;
 
-use App\Http\Controllers\Controller;
+use App\Plugins\Admin\AdminController;
 use App\Plugins\Menu\Functions\Menu;
 use App\Plugins\Menu\Model\FrontendMenu;
 
-class MenuAdminController extends Controller
+class MenuAdminController extends AdminController
 {
     use Menu;
 

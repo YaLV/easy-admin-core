@@ -3,14 +3,14 @@
 namespace App\Plugins\MarketDays;
 
 
-use App\Http\Controllers\Controller;
+use App\Plugins\Admin\AdminController;
 use App\Plugins\MarketDays\Functions\MarketDays;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\MarketDays\Model\Vacation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class MarketDaysController extends Controller
+class MarketDaysController extends AdminController
 {
 
     use MarketDays;

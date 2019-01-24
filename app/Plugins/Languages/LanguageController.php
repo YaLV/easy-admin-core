@@ -3,12 +3,12 @@
 namespace App\Plugins\Languages;
 
 
-use App\Http\Controllers\Controller;
 use App\Languages;
+use App\Plugins\Admin\AdminController;
 use App\Plugins\Languages\Functions\Language;
 use Illuminate\Http\Request;
 
-class LanguageController extends Controller
+class LanguageController extends AdminController
 {
 
     use Language;

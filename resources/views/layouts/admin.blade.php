@@ -45,7 +45,7 @@
 <script src="{{ asset('js/bootstrap-select.js') }}"></script>
 <script src="{{ asset('js/jquery.multi-select.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
-<script src="{{ asset('//cloud.tinymce.com/stable/tinymce.min.js') }}?apikey=6crcu265aw4ekxocvyzzx0wf09vwlaeb09rcvcov0j0gd28d"></script>
+<script src="{{ asset('//cloud.tinymce.com/stable/tinymce.min.js') }}?apikey={{env('TINY_KEY',"")}}"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
 @stack('scripts')
 @if(session('message'))
@@ -59,9 +59,14 @@
     </script>
 @endif
 @if($errors->any())
+    @foreach($errors->all() as $msg)
+        @php
+            $errorList[] = "<li>$msg</li>";
+        @endphp
+    @endforeach
     <script>
         jQuery(document).ready(function () {
-            svaigi.showMessage("There was an error", 'error');
+            svaigi.showMessage("<ul>{!! implode("", $errorList)  !!}</ul>", 'error');
         });
     </script>
 @endif

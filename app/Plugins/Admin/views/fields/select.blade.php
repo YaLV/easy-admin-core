@@ -16,7 +16,7 @@
                     @if($option->id==($content->id??"") && class_basename($content) == class_basename($option))
                         @continue
                     @endif
-                    <option value="{{ $option->id }}" {{ ($content->$name??false)==$option->id?"selected=selected":"" }}>{{$option->name}}</option>
+                    <option value="{{ $option->id }}" {{ (old($name)??$content->$name??false)==$option->id?"selected=selected":"" }}>{{$option->name}}</option>
                 @endforeach
             </select>
             @if($errors->has($name) || $errors->has("$name.$language"))

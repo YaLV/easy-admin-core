@@ -63,7 +63,7 @@ trait Category
                                          'options' => $categories,
                                          'label' => 'Parent Category', 'dataAttr' => ['live-search' => "true", 'size' => '5']],
                     'category_image' => ['type' => 'image', 'label' => 'Category Header Image', 'preview' => true],
-                    'filters'        => ['type' => 'chosen', 'label' => 'Filtri', 'options' => $categories],
+//                    'filters'        => ['type' => 'chosen', 'label' => 'Filtri', 'options' => $categories],
                 ],
             ],
         ];

@@ -9567,7 +9567,7 @@ jQuery.ajaxSetup({
     if (xhr.responseJSON.noMessage) return;
 
     if (xhr.status === 200) {
-      svaigi.showMessage(xhr.responseJSON.message || 'Changes have been made', 'success');
+      svaigi.showMessage(xhr.responseJSON.message || 'Changes have been made', xhr.responseJSON.status == true ? 'success' : 'error');
     }
   }
 });

@@ -26,7 +26,7 @@
                    type="{{ $type }}"
                    name="{{ $name }}{{ $lang??"" }}"
                    value="{{ $oldValue }}"
-                   {{ in_array("slugify", explode(" ",($class??[])))||$name=='slug'?"data-language=$language":"" }}
+                   {{ in_array("slugify", explode(" ",($class??"")))||$name=='slug'?"data-language=$language":"" }}
                    class="form-control{{$name=="slug"?" slug":""}} {{ $class??"" }}{{ ($errors->has($name)?:$errors->has("$name.$language")?:false)?" is-invalid":"" }}{{ ($readonly??false)?" disabled":"" }}"
                     {{ ($readonly??false)?"tabindex=-1":"" }}
                     {{ $readonly??"" }}

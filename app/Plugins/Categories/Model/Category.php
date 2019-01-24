@@ -4,6 +4,7 @@ namespace App\Plugins\Categories\Model;
 
 use App\BaseModel;
 use App\Plugins\Admin\Model\File;
+use App\Plugins\Products\Model\Product;
 
 
 /**
@@ -38,5 +39,17 @@ class Category extends BaseModel
     public function getNameAttribute() {
         if(!$this->id) return;
         return __("category.name.".$this->id);
+    }
+
+    public function filters() {
+        return $this->belongsToMany();
+    }
+
+    public function products() {
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function products_main() {
+        return $this->hasMany(Product::class, 'main_category');
     }
 }

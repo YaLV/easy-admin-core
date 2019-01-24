@@ -7,6 +7,7 @@ use App\BaseModel;
 use App\Functions\General;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\MarketDays\Model\MarketDay;
+use App\Plugins\Suppliers\Model\Supplier;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends BaseModel
@@ -22,7 +23,7 @@ class Product extends BaseModel
         'is_suggested',
         'is_highlighted',
         'main_category',
-        'supplier',
+        'supplier_id',
     ];
     public $metaClass = __NAMESPACE__ . '\ProductMeta';
 
@@ -74,5 +75,9 @@ class Product extends BaseModel
 
     public function market_days() {
         return $this->belongsToMany(MarketDay::class);
+    }
+
+    public function supplier_id() {
+        return $this->belongsTo(Supplier::class);
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Plugins\Units;
 
 
+use App\Plugins\Admin\AdminController;
 use App\Plugins\Units\Model\Unit;
 use Illuminate\Http\Request;
 
-class UnitController
+class UnitController extends AdminController
 {
     use \App\Plugins\Units\Functions\Unit;
     public function index()
