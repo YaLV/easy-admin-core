@@ -30,7 +30,9 @@
                 @include('admin.partials.pageLabel')
                 @yield('content')
                 @if($modalId??false)
-                    @include("admin.elements.modal")
+                    @foreach($modalId as $modalName => $modalID)
+                        @include("admin.elements.modal")
+                    @endforeach
                 @endif
             </div>
             @include('admin.partials.footer')

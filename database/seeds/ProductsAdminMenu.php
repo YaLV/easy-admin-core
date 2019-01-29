@@ -186,6 +186,33 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-
+        \App\Model\Admin\Menu::firstOrCreate(
+            [
+                'slug'      => "attributes/load",
+                'routeName' => "$main.attributes.load",
+            ],
+            [
+                'icon'        => 'fas fa-edit',
+                'displayName' => 'Load product attribute Values',
+                'action'      => '\App\Plugins\Products\ProductController@getAttributes',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+        \App\Model\Admin\Menu::firstOrCreate(
+            [
+                'slug'      => "attributes/format",
+                'routeName' => "$main.attributes.format",
+            ],
+            [
+                'icon'        => 'fas fa-edit',
+                'displayName' => 'Load product attribute Values',
+                'action'      => '\App\Plugins\Products\ProductController@formatAttributes',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
     }
 }

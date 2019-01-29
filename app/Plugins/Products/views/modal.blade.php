@@ -1,8 +1,8 @@
-@section("modal_title")
-    New Product Variation
+@section("modal_title_{$modalId['variations']}")
+    Product Variation
 @endsection
 
-@section("modal_body")
+@section("modal_body_{$modalId['variations']}")
         <div class="row">
             <div class="col-md-4">Cost:</div>
             <div class="col-md-8">
@@ -87,6 +87,6 @@
         </div>
 @endsection
 
-@section("modal_footer")
+@section("modal_footer_{$modalId['variations']}")
     <button type="button" class="btn btn-success btn-xs saveVariation">Add Variation</button>
 @endsection

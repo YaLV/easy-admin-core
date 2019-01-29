@@ -5,6 +5,8 @@ namespace App\Plugins\Products\Model;
 
 use App\BaseModel;
 use App\Functions\General;
+use App\Plugins\Attributes\Model\Attribute;
+use App\Plugins\Attributes\Model\AttributeValue;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Suppliers\Model\Supplier;
@@ -79,5 +81,19 @@ class Product extends BaseModel
 
     public function supplier_id() {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function attributes() {
+        return $this->belongsToMany(Attribute::class);
+    }
+
+    public function attributeValues() {
+        return $this->belongsToMany(AttributeValue::class);
+    }
+
+    public function attributeValuesList($product_id) {
+        return $this->attributes()->values()->whereHas('product', function($q) use($product_id){
+            $q->where('product_id', $product_id);
+        })->get();
     }
 }

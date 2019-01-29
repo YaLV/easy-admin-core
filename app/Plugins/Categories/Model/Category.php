@@ -4,6 +4,7 @@ namespace App\Plugins\Categories\Model;
 
 use App\BaseModel;
 use App\Plugins\Admin\Model\File;
+use App\Plugins\Attributes\Model\Attribute;
 use App\Plugins\Products\Model\Product;
 
 
@@ -42,7 +43,7 @@ class Category extends BaseModel
     }
 
     public function filters() {
-        return $this->belongsToMany();
+        return $this->belongsToMany(Attribute::class);
     }
 
     public function products() {

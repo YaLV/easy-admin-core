@@ -16,7 +16,7 @@
         <th>Info</th>
         <th>Variation Display</th>
         <th><a href="#" class="addLine btn btn-success btn-xs" data-toggle="modal"
-               data-target="#modalWin{{$modalId}}"><i class="fas fa-plus"></i></a></th>
+               data-target="#modalWin{{$modalId['variations']}}"><i class="fas fa-plus"></i></a></th>
     </tr>
     </thead>
     <tbody class="variations">
@@ -30,11 +30,12 @@
 @push('scripts')
     <script>
         jQuery(document).ready(function () {
-            bindButtons();
+            jQuery("#post{{$modalId['variations']}}").submit(function(){return false;})
+            bindModalButtons();
 
             jQuery('.calcPrice').click(function (e) {
                 e.preventDefault();
-                jQuery.post("{{route('products.calc')}}", jQuery('#post{{$modalId}}').serialize(), function (response) {
+                jQuery.post("{{route('products.calc')}}", jQuery('#post{{$modalId['variations']}}').serialize(), function (response) {
                     if (response.status) {
                         jQuery('.calcPriceValue').val(response.result);
                     }
@@ -44,7 +45,7 @@
 
             jQuery('.makeDisplay').click(function (e) {
                 e.preventDefault();
-                jQuery.post("{{route('products.makedisplay')}}", jQuery('#post{{$modalId}}').serialize(), function (response) {
+                jQuery.post("{{route('products.makedisplay')}}", jQuery('#post{{$modalId['variations']}}').serialize(), function (response) {
                     if (response.status) {
                         jQuery('.displayValue').val(response.result);
                     }
@@ -54,15 +55,15 @@
 
             jQuery('.saveVariation').click(function (e) {
                 e.preventDefault();
-                jQuery.post("{{route('products.variations.store')}}", jQuery('#post{{$modalId}}').serialize(), function (response) {
+                jQuery.post("{{route('products.variations.store')}}", jQuery('#post{{$modalId['variations']}}').serialize(), function (response) {
                     if (response.status) {
                         if ($("[data-vid=" + response.variation + "]").length > 0) {
                             $("[data-vid=" + response.variation + "]").replaceWith(response.result);
                         } else {
                             $('.variations').append(response.result);
                         }
-                        $('#modalWin{{$modalId??false}}').modal('hide');
-                        bindButtons();
+                        $('#modalWin{{$modalId['variations']??false}}').modal('hide');
+                        bindModalButtons();
                     }
                 });
                 return false;
@@ -77,7 +78,7 @@
 
             jQuery('.addLine').click(function () {
                 setDefaultDropdowns();
-                $('#modalWin{{$modalId??false}} input').val('');
+                $($(this).data('target')+' input').val('');
             });
             setDefaultDropdowns();
         });
@@ -88,16 +89,14 @@
             });
         }
 
-        function bindButtons() {
+        function bindModalButtons() {
             jQuery('.loadVariation').unbind().click(function (e) {
                 e.preventDefault();
                 jQuery.post("{{ route('products.variations.load') }}", "id=" + $(this).data('id'), function (result) {
                     if (result.status) {
                         data = result.result;
-                        form = $('#post{{$modalId??false}}');
-                        console.log(form);
+                        form = $('#post{{$modalId['variations']??false}}');
                         for (x in data) {
-                            console.log("setting "+x+" as "+data[x]);
                             if (x === 'vat_id') {
                                 form.find('[name=vat_id]').val(data[x]).selectpicker("refresh");
                             } else if (x === 'unit_id') {
@@ -108,7 +107,7 @@
                                 form.find('[name=' + x + ']').val(data[x]);
                             }
                         }
-                        $('#modalWin{{$modalId??false}}').modal('show');
+                        $('#modalWin{{$modalId['variations']??false}}').modal('show');
                         form.find('.calcPrice').click();
                     }
                 });
@@ -116,7 +115,7 @@
 
             jQuery('.removeLine').unbind().click(function (e) {
                 e.preventDefault();
-                jQuery(this).parents('.variation').remove();
+                jQuery(this).parents('.variation,.attribute').remove();
                 return false;
             })
         }

@@ -5,6 +5,7 @@ namespace App\Plugins\Categories\Functions;
 
 use App\Languages;
 use App\Plugins\Admin\Model\File;
+use App\Plugins\Attributes\Model\Attribute;
 
 trait Category
 {
@@ -63,10 +64,14 @@ trait Category
                                          'options' => $categories,
                                          'label' => 'Parent Category', 'dataAttr' => ['live-search' => "true", 'size' => '5']],
                     'category_image' => ['type' => 'image', 'label' => 'Category Header Image', 'preview' => true],
-//                    'filters'        => ['type' => 'chosen', 'label' => 'Filtri', 'options' => $categories],
+                    'filters'        => ['type' => 'chosen', 'label' => 'Attributes', 'options' => Attribute::all()],
                 ],
             ],
         ];
+    }
+
+    public function handleAttributes($collection) {
+        $collection->filters()->sync(request('filters'));
     }
 
 }

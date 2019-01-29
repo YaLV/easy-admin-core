@@ -3,6 +3,8 @@
 namespace App\Plugins\Products;
 
 
+use App\Plugins\Attributes\Model\Attribute;
+use App\Plugins\Attributes\Model\AttributeValue;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductVariation;
@@ -67,14 +69,14 @@ trait Products
                     'main_category'    => ['type' => 'select', 'label' => 'Main Category', 'options' => $categories],
                     'extra_categories' => ['type' => 'chosen', 'label' => 'Extra Categories', 'options' => $categories],
                     'market_days'      => ['type' => 'chosen', 'label' => 'Market Day(-s)', 'options' => MarketDay::all()],
-                    'supplier_id'         => ['type' => 'select', 'label' => 'Supplier', 'options' => $suppliers],
+                    'supplier_id'      => ['type' => 'select', 'label' => 'Supplier', 'options' => $suppliers],
                     'product_image'    => ['type' => 'image', 'label' => 'Product Image', 'preview' => true],
                 ],
             ],
             [
-                'Label' => 'Filters',
+                'Label' => 'Attributes',
                 'data'  => [
-                    'filters' => ['type' => 'view', 'class' => 'Products::filters'],
+                    'filters' => ['type' => 'view', 'class' => 'Products::attributes'],
                 ],
             ],
             [
@@ -138,4 +140,47 @@ trait Products
         return $variation;
     }
 
+    public function getAttributes()
+    {
+        $options = [];
+        $attribute = Attribute::findOrFail(request('attribute'));
+
+        $allValues = $attribute->values;
+        $selectedValues = $attribute->values()->whereHas('product', function ($q) {
+            $q->where('product_id', request('product'));
+        })->get()->pluck('id')->toArray();
+
+        foreach ($allValues as $attributeValue) {
+            $options[] = [
+                'name'     => __("attributevalues.name.{$attributeValue->id}"),
+                "id"       => $attributeValue->id,
+                'selected' => in_array($attributeValue->id, $selectedValues),
+            ];
+        }
+
+        return ['status' => true, 'noMessage' => true, 'options' => $options];
+    }
+
+    public function formatAttributes()
+    {
+        $attribute = Attribute::findOrFail(request('attributeSel'));
+
+        $attributeValues = AttributeValue::findMany(request('attributeValuesSel'));
+
+        if ($attributeValues->count() == 0) {
+            return ['status' => true, 'remove' => true, 'attributeId' => $attribute->id];
+        }
+
+        return [
+            'status'  => true,
+            'attributeId'   => $attribute->id,
+            'data'    => view('Products::attribute',
+                [
+                    'attribute'          => $attribute,
+                    'selectedAttributes' => $attributeValues,
+                ])->render(),
+            'message' => 'Changes to Attribute have been made',
+        ];
+
+    }
 }

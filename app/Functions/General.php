@@ -12,8 +12,8 @@ trait General
 
         foreach ($metas as $meta) {
             foreach (languages() as $language) {
-                if(!$metaData[$meta][$language->code] && $meta!='slug') continue;
-                $meta_value = $metaData[$meta][$language->code];
+                if(!($metaData[$meta][$language->code]??false) && $meta!='slug') continue;
+                $meta_value = $metaData[$meta][$language->code]??"";
                 if($meta=="slug") {
                     $slugPartsCoded = [];
                     $slugParts = explode("-",$slug);

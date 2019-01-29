@@ -77,6 +77,7 @@ class CategoryController extends AdminController
             ]);
             $this->handleMetas($category, $metas, 'name');
             $this->handleImages($category);
+            $this->handleAttributes($category);
             DB::commit();
         } catch(\PDOException $e) {
             DB::rollBack();

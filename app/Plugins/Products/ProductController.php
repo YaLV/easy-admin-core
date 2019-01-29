@@ -32,7 +32,7 @@ class ProductController extends AdminController
 
     public function add()
     {
-        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Product(), 'modalId' => str_random(10)]);
+        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Product(), 'modalId' => ["attributes" => str_random(10), "variations" => str_random(10)]]);
     }
 
     public function store(Request $request, $id = false)
@@ -96,11 +96,14 @@ class ProductController extends AdminController
             $this->setVariations($product);
             $this->addCategories($product);
             $this->addMarketDays($product);
+            $product->attributeValues()->sync(request('attributeValues'));
+            $product->attributes()->sync(request('attribute'));
             DB::commit();
         } catch (\PDOException $e) {
             DB::rollBack();
 
-            session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError' => true]);
+
             return redirect()->back();
         }
 
@@ -121,7 +124,7 @@ class ProductController extends AdminController
 
     public function edit($id)
     {
-        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Product::findOrFail($id), 'modalId' => str_random(10)]);
+        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Product::findOrFail($id), 'modalId' => ["attributes" => str_random(10), "variations" => str_random(10)]]);
     }
 
     public function getEditName($id)
@@ -197,5 +200,21 @@ class ProductController extends AdminController
         $id = request('id');
 
         return ['status' => true, "noMessage" => true, "result" => ProductVariation::findOrFail($id)];
+    }
+
+    public function asd()
+    {
+        Product::with('categories')
+            ->whereHas(
+                function ($q) use ($categories) {
+                    $q->whereIn('category_id', $categories);
+                }
+            )
+            ->with('attribute_values')
+            ->whereHasIn(
+                function ($q) use ($attributes) {
+                    $q->whereIn('attribute_value_id', $attributes);
+                }
+            )->get();
     }
 }
