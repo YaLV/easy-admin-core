@@ -31,12 +31,12 @@ class AttributeController extends AdminController
 
     public function add()
     {
-        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Attribute(), 'modalId' => str_random(10)]);
+        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Attribute(), 'modalId' => ['attribute' => str_random(10)]]);
     }
 
     public function edit($id)
     {
-        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Attribute::findOrFail($id), 'modalId' => str_random(10)]);
+        return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Attribute::findOrFail($id), 'modalId' => ['attribute' => str_random(10)]]);
     }
 
     public function store(Request $request, $id = false)

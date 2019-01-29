@@ -9,7 +9,7 @@
         <th>Name</th>
         <th>slug</th>
         <th><a href="#" class="addLine btn btn-success btn-xs" data-toggle="modal"
-               data-target="#modalWin{{$modalId}}"><i class="fas fa-plus"></i></a></th>
+               data-target="#modalWin{{$modalId['attribute']}}"><i class="fas fa-plus"></i></a></th>
     </tr>
     </thead>
     <tbody class="attributeValues">
@@ -27,7 +27,7 @@
         jQuery(document).ready(function() {
             jQuery('.saveAttributeValue').click(function (e) {
                 e.preventDefault();
-                jQuery.post("{{route('attributes.value.store')}}", jQuery('#post{{$modalId}}').serialize(), function (response) {
+                jQuery.post("{{route('attributes.value.store')}}", jQuery('#post{{$modalId['attribute']}}').serialize(), function (response) {
                     if (response.status) {
                         atv = $("[data-vid=" + response.attributeValue + "]");
                         if (atv.length > 0) {
@@ -35,7 +35,7 @@
                         } else {
                             $('.attributeValues').append(response.result);
                         }
-                        $('#modalWin{{$modalId??false}}').modal('hide');
+                        $('#modalWin{{$modalId['attribute']??false}}').modal('hide');
                         bindModalButtons();
                     }
                 });
@@ -43,7 +43,7 @@
             });
 
             jQuery('.addLine').click(function () {
-                $('#modalWin{{$modalId??false}} input').val('');
+                $('#modalWin{{$modalId['attribute']??false}} input').val('');
             });
             bindModalButtons();
         });
@@ -55,7 +55,7 @@
                     console.log(result);
                     if (result.status) {
                         data = result.result;
-                        form = $('#post{{$modalId??false}}');
+                        form = $('#post{{$modalId['attribute']??false}}');
                         for (x in data) {
                             for (y in data[x]) {
                                 console.log('[data-fieldname=' + x + '][data-language='+y+']');
@@ -63,7 +63,7 @@
                             }
                         }
                         form.find('[name=id]').val(result.resultId);
-                        $('#modalWin{{$modalId??false}}').modal('show');
+                        $('#modalWin{{$modalId['attribute']??false}}').modal('show');
                     }
                 });
             });
