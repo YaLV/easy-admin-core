@@ -158,7 +158,7 @@ trait Products
             ];
         }
 
-        return ['status' => true, 'noMessage' => true, 'options' => $options];
+        return ['status' => true, 'noMessage' => true, 'options' => $options, "attribute" => $attribute->id];
     }
 
     public function formatAttributes()

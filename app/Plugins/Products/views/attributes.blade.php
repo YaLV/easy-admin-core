@@ -63,7 +63,7 @@
 
         function getUsedAttributeValues() {
             let usedAttributeValues = new Array;
-            jQuery('[name^=attributeValues]').map(function (idx, elem) {
+            jQuery('.attributes [name^=attributeValues]').map(function (idx, elem) {
                 usedAttributeValues.push(parseInt($(elem).val()));
             });
             return usedAttributeValues;
@@ -84,9 +84,11 @@
                 if (result.status) {
                     av.find('option').remove();
                     for (x in result.options) {
-                        if (jQuery('[data-vid='+result.options.attribute+']').length>0) {
+                        if (jQuery('[data-vid='+result.attribute+']').length>0) {
                             if(!usedAttributeValues.includes(result.options[x].id)) {
                                 result.options[x].selected = false;
+                            } else {
+                                result.options[x].selected = true;
                             }
                         }
                         av.append(new Option(result.options[x].name, result.options[x].id, false, result.options[x].selected));
