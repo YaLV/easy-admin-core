@@ -3,6 +3,8 @@
 namespace App\Plugins\Attributes\Model;
 
 use App\BaseModel;
+use App\Plugins\Categories\Model\Category;
+use App\Plugins\Products\Model\Product;
 
 class Attribute extends BaseModel
 {
@@ -27,4 +29,11 @@ class Attribute extends BaseModel
         return $attributeValues;
     }
 
+    public function products() {
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function categories() {
+        return $this->belongsToMany(Category::class);
+    }
 }

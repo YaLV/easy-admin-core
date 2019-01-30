@@ -4,6 +4,7 @@ namespace App\Plugins\Units;
 
 
 use App\Plugins\Admin\AdminController;
+use App\Plugins\Products\Model\ProductVariation;
 use App\Plugins\Units\Model\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +68,14 @@ class UnitController extends AdminController
 
     public function delete($id)
     {
-        $result = Unit::findOrFail($id)->delete();
+
+
+        $cc = Unit::findOrFail($id);
+
+        if($cc->variations()->count()) {
+            return ['status' => false, 'message' => 'This Measurement Unit is in use, can not delete'];
+        }
+
 
         return ['status' => $result, 'message' => ($result ? 'Unit Deleted' : "Error deleting Unit")];
     }

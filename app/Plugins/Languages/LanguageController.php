@@ -63,4 +63,5 @@ class LanguageController extends AdminController
     public function getEditName($id) {
         return Languages::find($id)->name??"";
     }
+
 }

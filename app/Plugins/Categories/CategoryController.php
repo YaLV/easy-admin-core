@@ -96,10 +96,17 @@ class CategoryController extends AdminController
             return ['status' => 'false', "message" => 'Category is set to main in some products, can not remove Category'];
         }
 
-        $cc->products()->sync([]);
+        try {
+            DB::beginTransaction();
+            $cc->products()->detach();
+            $cc->metaData()->delete();
 
-        $cc->delete();
-        CategoryMeta::where('owner_id', $cc->id)->delete();
+            $cc->delete();
+            DB::commit();
+        } catch(\PDOException $e) {
+            DB::rollBack();
+            abort(500);
+        }
 
         return ['status' => true, "message" => "Category Deleted"];
     }

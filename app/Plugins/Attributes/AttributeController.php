@@ -8,6 +8,8 @@ use App\Plugins\Admin\AdminController;
 use App\Plugins\Attributes\Functions\Attributes;
 use App\Plugins\Attributes\Model\Attribute;
 use App\Plugins\Attributes\Model\AttributeValue;
+use App\Plugins\Categories\Model\Category;
+use App\Plugins\Products\Model\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -106,5 +108,35 @@ class AttributeController extends AdminController
         $att = AttributeValue::findOrFail($id);
 
         return ['status' => true, "noMessage" => true, "result" => $att->meta, 'resultId' => $att->id];
+    }
+
+    public function destroy($id) {
+        $deleteFrom = [
+            "products",
+            "categories",
+        ];
+
+        try {
+            DB::beginTransaction();
+            $attribute = Attribute::findOrFail($id);
+
+            foreach ($deleteFrom as $deleteClass) {
+                $attribute->$deleteClass()->detach();
+            }
+
+            foreach($attribute->values as $values) {
+                $values->product()->detach();
+                $values->metaData()->delete();
+            }
+            $attribute->metaData()->delete();
+            $attribute->values()->delete();
+            $attribute->delete();
+            DB::commit();
+
+            return ['status' => true, 'message' => "Attribute Deleted, detached from products, attribute values and categories"];
+        } catch(\PDOException $e) {
+            DB::rollBack();
+            abort(500);
+        }
     }
 }

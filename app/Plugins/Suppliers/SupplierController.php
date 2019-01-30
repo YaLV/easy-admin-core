@@ -42,7 +42,15 @@ class SupplierController extends AdminController
         if($cc->products()->count()) {
             return ['status' => false, 'message' => 'This Supplier has products, can not remove Supplier'];
         }
-        $cc->delete();
+        try{
+            DB::beginTransaction();
+            $cc->metaData()->delete();
+            $cc->forceDelete();
+            DB::commit();
+        } catch(\PDOException $e) {
+            DB::rollBack();
+            abort(500);
+        }
 
         return ['status' => true, "message" => "Supplier Deleted"];
     }

@@ -114,10 +114,17 @@ class ProductController extends AdminController
     {
         $cc = Product::findOrFail($id);
 
-        $cc->forceDelete();
-
-        ProductMeta::where('owner_id', $cc->id)->delete();
-        ProductVariation::where('product_id', $cc->id)->delete();
+        try{
+            DB::beginTransaction();
+            $cc->extra_categories()->detach();
+            $cc->metaData()->delete();
+            $cc->variations()->delete();
+            $cc->forceDelete();
+            DB::commit();
+        } catch(\PDOException $e) {
+            DB::rollBack();
+            abort(500);
+        }
 
         return ['status' => true, "message" => "Product Deleted"];
     }
