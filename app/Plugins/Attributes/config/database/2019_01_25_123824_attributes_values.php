@@ -18,6 +18,8 @@ class AttributesValues extends Migration
             $table->integer('attribute_id')->nullable();
             $table->timestamps();
         });
+
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'AttributeAdminMenu']);
     }
 
     /**
