@@ -45,16 +45,18 @@ class MenuAdminController extends AdminController
             request()->validate([
                 'menuContent' => 'required',
             ]);
+            $data = ['name' => request('name')];
         } else {
             request()->validate([
                 'name' => 'required',
                 'slug' => 'required|unique:frontend_menus',
             ]);
+            $data = ['name' => request('name'), 'slug' => request('slug')];
         }
 
         try {
             DB::beginTransaction();
-            $menu = FrontendMenu::updateOrCreate(['id' => $id], ['name' => request('name'), 'slug' => request('slug')]);
+            $menu = FrontendMenu::updateOrCreate(['id' => $id], $data);
 
             if ($id) {
                 $this->handleMenuItems($menu);

@@ -63,10 +63,6 @@ class CategoryController extends AdminController
             'description',
             'google_keywords',
             'google_description',
-            'og_title',
-            'og_description',
-            'twiter_title',
-            'twitter_description',
         ];
 
         try {

@@ -42,22 +42,6 @@ trait Category
                 ],
             ],
             [
-                'Label'     => 'Facebook OpenGraph',
-                'languages' => Languages::all()->pluck('name', 'code'),
-                'data'      => [
-                    'og_title'       => ['type' => 'text', 'class' => '', 'label' => 'OpenGraph Title', 'meta' => true],
-                    'og_description' => ['type' => 'textarea', 'class' => '', 'label' => 'OpenGraph Description', 'meta' => true],
-                ],
-            ],
-            [
-                'Label'     => 'Twitter Opengraph',
-                'languages' => Languages::all()->pluck('name', 'code'),
-                'data'      => [
-                    'twiter_title'        => ['type' => 'text', 'class' => '', 'label' => 'Twitter Title', 'meta' => true],
-                    'twitter_description' => ['type' => 'textarea', 'class' => '', 'label' => 'Twitter Description', 'meta' => true],
-                ],
-            ],
-            [
                 'Label' => 'Parameters',
                 'data'  => [
                     'parent_id'      => ['type' => 'select', 'class' => 'show-tick',

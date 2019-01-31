@@ -42,22 +42,6 @@ trait Products
             ],
 
             [
-                'Label'     => 'Facebook OpenGraph',
-                'languages' => $languages,
-                'data'      => [
-                    'og_title'       => ['type' => 'text', 'class' => '', 'label' => 'OpenGraph Title', 'meta' => true],
-                    'og_description' => ['type' => 'textarea', 'class' => '', 'label' => 'OpenGraph Description', 'meta' => true],
-                ],
-            ],
-            [
-                'Label'     => 'Twitter Opengraph',
-                'languages' => $languages,
-                'data'      => [
-                    'twiter_title'        => ['type' => 'text', 'class' => '', 'label' => 'Twitter Title', 'meta' => true],
-                    'twitter_description' => ['type' => 'textarea', 'class' => '', 'label' => 'Twitter Description', 'meta' => true],
-                ],
-            ],
-            [
                 'Label' => 'Parameters',
                 'data'  => [
                     'sku'              => ['type' => 'text', 'class' => '', 'label' => 'Product Code'],

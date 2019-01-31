@@ -24,8 +24,6 @@ trait Suppliers
                     'slug'                => ['type' => 'text', 'label' => 'Supplier Slug', 'meta' => true, 'class' => 'slug', 'readonly' => 'readonly'],
                     'jur_name'            => ['type' => 'text', 'label' => 'Supplier Legal Name', 'meta' => true],
                     'description'         => ['type' => 'textarea', 'label' => 'Description', 'meta' => true],
-                    'name_product'        => ['type' => 'text', 'label' => 'Supplier Name in products', 'meta' => true],
-                    'description_product' => ['type' => 'textarea', 'label' => 'Description in products', 'meta' => true],
                 ],
             ],
             [
@@ -34,23 +32,6 @@ trait Suppliers
                 'data'      => [
                     'google_keywords'    => ['type' => 'text', 'class' => '', 'label' => 'Keywords', 'meta' => true],
                     'google_description' => ['type' => 'textarea', 'class' => '', 'label' => 'Google Description', 'meta' => true],
-                ],
-            ],
-
-            [
-                'Label'     => 'Facebook OpenGraph',
-                'languages' => $languages,
-                'data'      => [
-                    'og_title'       => ['type' => 'text', 'class' => '', 'label' => 'OpenGraph Title', 'meta' => true],
-                    'og_description' => ['type' => 'textarea', 'class' => '', 'label' => 'OpenGraph Description', 'meta' => true],
-                ],
-            ],
-            [
-                'Label'     => 'Twitter Opengraph',
-                'languages' => $languages,
-                'data'      => [
-                    'twiter_title'        => ['type' => 'text', 'class' => '', 'label' => 'Twitter Title', 'meta' => true],
-                    'twitter_description' => ['type' => 'textarea', 'class' => '', 'label' => 'Twitter Description', 'meta' => true],
                 ],
             ],
             [
