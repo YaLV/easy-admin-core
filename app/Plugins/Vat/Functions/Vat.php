@@ -18,8 +18,8 @@ trait Vat
     {
         return [
             'data' => [
-                'name'   => ['type' => 'text', 'class' => '', 'label' => 'Nosaukums'],
-                'amount' => ['type' => 'text', 'class' => '', 'label' => 'Daudzums'],
+                'name'   => ['type' => 'text', 'class' => '', 'label' => 'Name'],
+                'amount' => ['type' => 'text', 'class' => '', 'label' => 'Amount'],
             ],
         ];
     }

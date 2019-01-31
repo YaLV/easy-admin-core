@@ -45,6 +45,10 @@ class ProductController extends AdminController
             'main_category' => 'required',
             'sku'           => 'required|unique:products,sku' . ($unique ?? ""),
             'supplier_id'   => 'required',
+            'mark_up'       => 'required',
+            'cost'          => 'required',
+            'vat_id'        => 'required',
+            'unit_id'       => 'required',
         ];
 
         $msg = [
@@ -52,6 +56,10 @@ class ProductController extends AdminController
             'sku.required'           => 'Product Code can not be empty',
             'sku.unique'             => 'Product with this Product Code already exists',
             'supplier_id.required'   => 'Supplier can not be empty',
+            'cost.required'          => 'Product Cost can not be empty',
+            'vat_id.required'        => 'Vat can not be empty',
+            'unit_id.required'       => 'Measurement Unit can not be empty',
+            'mark_up.required'       => 'Mark-up can not be empty',
         ];
 
         foreach (languages() as $lang) {
@@ -83,6 +91,10 @@ class ProductController extends AdminController
                 'is_lv'          => $this->switch(request('is_lv')),
                 'is_suggested'   => $this->switch(request('is_suggested')),
                 'is_highlighted' => $this->switch(request('is_highlighted')),
+                'mark_up'        => request('mark_up'),
+                'cost'           => request('cost'),
+                'vat_id'         => request('vat_id'),
+                'unit_id'        => request('unit_id'),
                 'main_category'  => request('main_category'),
                 'supplier_id'    => request('supplier_id'),
             ]);
@@ -110,14 +122,14 @@ class ProductController extends AdminController
     {
         $cc = Product::findOrFail($id);
 
-        try{
+        try {
             DB::beginTransaction();
             $cc->extra_categories()->detach();
             $cc->metaData()->delete();
             $cc->variations()->delete();
             $cc->forceDelete();
             DB::commit();
-        } catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             DB::rollBack();
             abort(500);
         }

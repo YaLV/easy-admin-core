@@ -16,11 +16,7 @@ class ProductVariations extends Migration
         Schema::create('product_variations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->nullable();
-            $table->integer('vat_id');
-            $table->integer('unit_id');
-            $table->integer('amount');
-            $table->decimal('cost');
-            $table->decimal('mark_up');
+            $table->float('amount');
             $table->string('display_name');
             $table->string('for_supplier')->default("");
             $table->timestamps();

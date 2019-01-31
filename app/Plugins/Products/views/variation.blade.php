@@ -1,12 +1,6 @@
 <tr class="variation" data-vid="{{$variation->id}}">
-    <td class="addCash">
-        <input type="hidden" name="variation[]" value="{{$variation->id}}" />
-        {{ $variation->cost }}
-    </td>
-    <td class="addPercent">{{ $variation->mark_up }}</td>
-    <td class="addPercent">{{ $variation->vat->amount }}</td>
-    <td class="addCash">{{ $variation->price }}</td>
     <td>{{ $variation->for_supplier }}</td>
+    <td>{{ $variation->amount }}{{ ($content->unit??false)?$content->unit->unit:"" }}</td>
     <td>{{ $variation->display_name }}</td>
     <td>
         <div class="btn-group">

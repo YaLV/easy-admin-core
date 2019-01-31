@@ -9,12 +9,9 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th>Cost</th>
-        <th>Mark-up</th>
-        <th>Vat</th>
-        <th>Price</th>
-        <th>Info</th>
-        <th>Variation Display</th>
+        <th>Info for supplier</th>
+        <th>Amount</th>
+        <th>Display part</th>
         <th><a href="#" class="addLine btn btn-success btn-xs" data-toggle="modal"
                data-target="#modalWin{{$modalId['variations']}}"><i class="fas fa-plus"></i></a></th>
     </tr>
@@ -43,6 +40,14 @@
                 return false;
             });
 
+            jQuery('.set_unit_id').on("changed.bs.select", function(e, index, newItem, oldItem){
+                id = $(this)[0].options[index].value;
+                name = $(this)[0].options[index].innerHTML;
+
+                jQuery('.unit_id_receive').val(id);
+                jQuery('.unit_name').html(name);
+            });
+
             jQuery('.makeDisplay').click(function (e) {
                 e.preventDefault();
                 jQuery.post("{{route('products.makedisplay')}}", jQuery('#post{{$modalId['variations']}}').serialize(), function (response) {
@@ -69,16 +74,9 @@
                 return false;
             });
 
-            jQuery('.selectUnit').click(function (e) {
-                e.preventDefault();
-                $('input[name=unit_id]').val($(this).data('value'));
-                $(this).parent().prev().dropdown("toggle").html($(this).text());
-                return false;
-            });
-
             jQuery('.addLine').click(function () {
                 setDefaultDropdowns();
-                $($(this).data('target')+' input').val('');
+                $($(this).data('target')+' input[type=text]').val('');
             });
             setDefaultDropdowns();
         });

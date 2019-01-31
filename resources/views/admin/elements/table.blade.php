@@ -62,7 +62,7 @@
                                     @elseif($headerItem['fn']??false)
                                         <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $headerItem['fn']($listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??null, $headerItem['results'])??"" }}</td>
                                     @else
-                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"" }}</td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??"" }}</td>
                                     @endif
 
                                 @endforeach

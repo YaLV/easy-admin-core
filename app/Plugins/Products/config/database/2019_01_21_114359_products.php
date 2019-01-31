@@ -24,6 +24,10 @@ class Products extends Migration
             $table->boolean('is_highlighted')->nullable();
             $table->integer('supplier_id');
             $table->integer('times_bought')->nullable();
+            $table->integer('vat_id');
+            $table->integer('unit_id');
+            $table->decimal('cost');
+            $table->decimal('mark_up');
             $table->softDeletes();
             $table->timestamps();
         });

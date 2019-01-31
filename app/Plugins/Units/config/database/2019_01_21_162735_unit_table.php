@@ -17,6 +17,8 @@ class UnitTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('unit');
+            $table->integer('unit_id')->nullable();
+            $table->integer('parent_amount')->nullable();
             $table->timestamps();
         });
 

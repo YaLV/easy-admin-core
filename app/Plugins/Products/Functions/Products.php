@@ -10,6 +10,7 @@ use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductVariation;
 use App\Plugins\Suppliers\Model\Supplier;
 use App\Plugins\Units\Model\Unit;
+use App\Plugins\Vat\Model\Vat;
 
 trait Products
 {
@@ -56,6 +57,15 @@ trait Products
                     'supplier_id'      => ['type' => 'select', 'label' => 'Supplier', 'options' => $suppliers],
                     'product_image'    => ['type' => 'image', 'label' => 'Product Image', 'preview' => true],
                 ],
+            ],
+            [
+                'Label' => 'Prices',
+                'data' => [
+                    'cost'             => ['type' => 'text', 'class' => '', 'label' => 'Cost'],
+                    'mark_up'          => ['type' => 'text', 'class' => '', 'label' => 'Mark Up'],
+                    'vat_id'           => ['type' => 'select', 'class' => '', 'label' => 'Vat', 'options' => Vat::all()],
+                    'unit_id'          => ['type' => 'select', 'class' => 'set_unit_id', 'label' => 'Measurement Unit', 'options' => Unit::all()],
+                ]
             ],
             [
                 'Label' => 'Attributes',
@@ -116,9 +126,13 @@ trait Products
     public function makeDisplayName(array $variation)
     {
         if (!($variation['display_name'] ?? false)) {
-            $unit = Unit::findOrFail($variation['unit_id'])->unit ?? "";
-            $parts = [implode("", [$variation['amount'], $unit]), $this->calculatePrice()['result'] . "€"];
-            $variation['display_name'] = implode(" / ", $parts);
+            $unit = Unit::findOrFail(request('unit_id')) ?? "";
+
+            if($unit->subUnit()->count()) {
+                $unit = $unit->subUnit;
+                $displayName = (request('amount')*$unit->parent_amount).$unit->unit;
+            }
+            $variation['display_name'] = $displayName??request('amount').$unit->unit;
         }
 
         return $variation;
@@ -156,14 +170,14 @@ trait Products
         }
 
         return [
-            'status'  => true,
-            'attributeId'   => $attribute->id,
-            'data'    => view('Products::attribute',
+            'status'      => true,
+            'attributeId' => $attribute->id,
+            'data'        => view('Products::attribute',
                 [
                     'attribute'          => $attribute,
                     'selectedAttributes' => $attributeValues,
                 ])->render(),
-            'message' => 'Changes to Attribute have been made',
+            'message'     => 'Changes to Attribute have been made',
         ];
 
     }

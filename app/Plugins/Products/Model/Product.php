@@ -10,6 +10,8 @@ use App\Plugins\Attributes\Model\AttributeValue;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Suppliers\Model\Supplier;
+use App\Plugins\Units\Model\Unit;
+use App\Plugins\Vat\Model\Vat;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends BaseModel
@@ -26,6 +28,10 @@ class Product extends BaseModel
         'is_highlighted',
         'main_category',
         'supplier_id',
+        'vat_id',
+        'unit_id',
+        'cost',
+        'mark_up',
     ];
     public $metaClass = __NAMESPACE__ . '\ProductMeta';
 
@@ -75,25 +81,40 @@ class Product extends BaseModel
         }
     }
 
-    public function market_days() {
+    public function market_days()
+    {
         return $this->belongsToMany(MarketDay::class);
     }
 
-    public function supplier_id() {
+    public function supplier_id()
+    {
         return $this->belongsTo(Supplier::class);
     }
 
-    public function attributes() {
+    public function attributes()
+    {
         return $this->belongsToMany(Attribute::class);
     }
 
-    public function attributeValues() {
+    public function attributeValues()
+    {
         return $this->belongsToMany(AttributeValue::class);
     }
 
-    public function attributeValuesList($product_id) {
-        return $this->attributes()->values()->whereHas('product', function($q) use($product_id){
+    public function attributeValuesList($product_id)
+    {
+        return $this->attributes()->values()->whereHas('product', function ($q) use ($product_id) {
             $q->where('product_id', $product_id);
         })->get();
+    }
+
+    public function vat()
+    {
+        return $this->belongsTo(Vat::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

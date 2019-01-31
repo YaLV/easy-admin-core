@@ -46,10 +46,7 @@ class UnitController extends AdminController
 
             DB::beginTransaction();
 
-            Unit::updateOrCreate(['id' => $id], [
-                'name' => request('name'),
-                'unit' => request('unit'),
-            ]);
+            Unit::updateOrCreate(['id' => $id], request((new Unit)->getFillable()));
             DB::commit();
 
             return redirect(route('unit'));
