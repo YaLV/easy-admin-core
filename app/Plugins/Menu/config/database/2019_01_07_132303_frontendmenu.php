@@ -17,6 +17,7 @@ class Frontendmenu extends Migration
             $table->increments('id');
             $table->string('slug');
             $table->string('name');
+            $table->boolean('protected')->default(false);
             $table->timestamps();
         });
     }

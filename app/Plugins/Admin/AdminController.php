@@ -40,7 +40,8 @@ class AdminController extends Controller implements ControllerInterface
         return ["status" => true, 'message' => 'File Uploaded, please save form, to add file to current item', 'data' => $returnData];
     }
 
-    public function slugify() {
+    public function slugify()
+    {
         return ["status" => true, 'slug' => str_slug(request('slugify')), 'message' => "Slug created"];
     }
 
@@ -69,7 +70,29 @@ class AdminController extends Controller implements ControllerInterface
         return "Error: Not Set";
     }
 
-    public function switch($param) {
-        return ($param??false)?1:0;
+    public function switch($param)
+    {
+        return ($param ?? false) ? 1 : 0;
+    }
+
+    public function getApplicableMenuCategories()
+    {
+        $dir = app_path("Plugins");
+        return $this->iteratePlugins($dir);
+    }
+
+    public function iteratePlugins($dir) {
+
+        $menuItems = [];
+        $finder = new \DirectoryIterator($dir);
+        foreach ($finder as $content) {
+            if ($content->isDot()) continue;
+
+            if ($content->isDir() && file_exists(implode("/", [$dir, $content->getFilename(), "menubuilder", "menuData.php"]))) {
+                $class = "\\App\\Plugins\\{$content->getFilename()}\\menubuilder\\menuData";
+                $menuItems[] = $class::getMenuItems();
+            }
+        }
+        return $menuItems;
     }
 }

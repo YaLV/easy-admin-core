@@ -123,7 +123,11 @@ jQuery(document).ready(function () {
 
         $.post('/admin/slugify', 'slugify=' + $(this).val(),function(response) {
             if(response.status) {
-                $('input[type=text].slug[data-language='+language+']').val(response.slug);
+                if(typeof language==="undefined") {
+                    $('input[type=text].slug').val(response.slug);
+                } else {
+                    $('input[type=text].slug[data-language=' + language + ']').val(response.slug);
+                }
             }
         });
     });

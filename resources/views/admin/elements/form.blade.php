@@ -43,7 +43,6 @@
                                             $elementAttr[] = "data-$dataAttr=$dataValue";
                                         @endphp
                                     @endforeach
-
                                     @include("Admin::fields.".$element["type"], array_merge($element, ["data" => implode(" ", $elementAttr), 'language' => $languageCode]))
                                 @endforeach
                             </div>
@@ -63,6 +62,10 @@
                 @else
 
                     @foreach($tab['data'] as $name => $element)
+                        @if($element['type']=='view')
+                            @includeIf($element["class"], $element)
+                            @continue;
+                        @endif
                         @php
                             $elementAttr = [];
                         @endphp
@@ -71,7 +74,6 @@
                                 $elementAttr[] = "data-$dataAttr=$dataValue";
                             @endphp
                         @endforeach
-
                         @include("Admin::fields.".$element["type"], array_merge($element, ["data" => implode(" ", $elementAttr)]))
                     @endforeach
                 @endif

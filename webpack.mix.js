@@ -22,4 +22,5 @@ mix.js('resources/js/app.js', 'public/js')
     .styles(['resources/sass/custom.css'],'public/css/custom.css')
     .styles(['resources/sass/style.css'], 'public/css/style.css')
     .styles(['resources/sass/bootstrap.min.css'], 'public/css/bootstrap.min.css')
-    .copy('resources/js/jquery-ui.js', 'public/js/');
+    .copy('resources/js/jquery-ui.js', 'public/js/')
+    .copy('node_modules/nestedSortable/jquery.mjs.nestedSortable.js', 'public/js');

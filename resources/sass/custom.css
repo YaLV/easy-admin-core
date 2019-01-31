@@ -90,3 +90,51 @@ input[readonly] {
 .dropdown.is-invalid~.invalid-feedback {
     display:block;
 }
+
+
+form#create_menu_item{ width:920px; }
+form#create_menu_item input#new_menu_name{ padding:5px; float:left; margin:0 10px 10px 0; }
+form#create_menu_item input.add_menu_item{
+    font-size:11px;
+    width:60px;
+    height:27px;
+    display:block;
+    -moz-border-radius:3px; -webkit-border-radius:3px; -o-border-radius:3px; border-radius:3px;
+    background:#f5f5f5; background: -moz-linear-gradient(100% 100% 90deg, #eee, #fcfcfc); background: -webkit-linear-gradient(#fcfcfc, #eee) !important; background: -o-linear-gradient(#fcfcfc, #eee);
+    border:1px solid #ccc;
+    color:#666;
+    padding-bottom:3px;
+    float:left;
+}
+div.div_menu_button{
+    font-size:12px;
+    width:295px;
+    display:block;
+    -moz-border-radius:3px; -webkit-border-radius:3px; -o-border-radius:3px; border-radius:3px;
+    background:#f5f5f5; background: -moz-linear-gradient(100% 100% 90deg, #eee, #fcfcfc); background: -webkit-linear-gradient(#fcfcfc, #eee) !important; background: -o-linear-gradient(#fcfcfc, #eee);
+    border:1px solid #ccc;
+    color:#666;
+    padding:10px;
+    margin:0 0 10px 0;
+}
+div#created_buttons{ width:680px; border:1px solid #eee; min-height:400px; padding:10px;}
+.clear{ clear:both;}
+
+.ui-nestedSortable-error { background:#fbe3e4; color:#8a1f11;}
+ol#created_buttons_list{ margin: 0; padding: 0; padding-left: 30px;}
+ol#created_buttons_list, ol#created_buttons_list ol { margin: 0 0 0 25px; padding: 0; list-style-type: none;}
+ol#created_buttons_list { margin: 10px 0 10px 0;}
+#created_buttons_list li { margin: 7px 0 0 0; padding: 0;}
+#created_buttons_list li div > div  { padding:5px; margin: 0; cursor: move; padding-left: 15px; display:inline-block; }
+#created_buttons_list li div > div.action { cursor:pointer; width:5%; padding-left:0px;}
+#created_buttons_list li div > div.title { width:70%;}
+#created_buttons_list li div > div.destroy { cursor:pointer; width:5%; float:right; margin-right: 10px;}
+
+
+.placeholder { background-color: #f9f9f9; border:1px dashed #ccc;}
+
+#created_buttons_list li div.title { position: relative; }
+
+#created_buttons li{margin-left: 25px; padding-left: 25px;}
+
+

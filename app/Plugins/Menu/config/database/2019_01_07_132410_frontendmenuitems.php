@@ -16,11 +16,16 @@ class Frontendmenuitems extends Migration
         Schema::create('frontend_menu_items', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('frontend_menu_id')->references('id')->on('frontent_menus');
-            $table->text('urlSetup');
+            $table->string('menu_owner');
+            $table->text('owner_id');
             $table->integer('sequence');
+            $table->integer('frontend_menu_item_id')->nullable();
             $table->timestamps();
             $table->unique(['id', 'sequence']);
         });
+
+        \Illuminate\Support\Facades\Artisan::call("db:seed", ["--class" => "MenuBuilderAdminMenu"]);
+        \Illuminate\Support\Facades\Artisan::call("db:seed", ["--class" => "DefaultMenus"]);
     }
 
     /**
