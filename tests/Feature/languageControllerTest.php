@@ -37,7 +37,7 @@ class languageControllerTest extends TestCase
         $name = $faker->Name();
         $save['name'] = $name;
         $save['code'] = substr($name, 0, 2);
-        if($language->is_default)
+        // if($language->is_default)
       }
 
 
