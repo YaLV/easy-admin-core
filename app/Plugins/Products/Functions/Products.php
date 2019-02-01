@@ -128,7 +128,7 @@ trait Products
         if (!($variation['display_name'] ?? false)) {
             $unit = Unit::findOrFail(request('unit_id')) ?? "";
 
-            if($unit->subUnit()->count()) {
+            if($unit->subUnit()->count() && request('amount')<1) {
                 $unit = $unit->subUnit;
                 $displayName = (request('amount')*$unit->parent_amount).$unit->unit;
             }
