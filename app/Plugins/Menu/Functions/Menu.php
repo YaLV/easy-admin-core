@@ -2,6 +2,7 @@
 
 namespace App\Plugins\Menu\Functions;
 
+use App\Plugins\Menu\Model\FrontendMenu;
 use App\Plugins\Menu\Model\FrontendMenuItem;
 use \Illuminate\Support\Facades\Route;
 
@@ -65,5 +66,10 @@ trait Menu
             }
         }
         $item->delete();
+    }
+
+    public function getEditName($id) {
+        $fmenu = FrontendMenu::find($id);
+        return $fmenu?$fmenu->name:"";
     }
 }
