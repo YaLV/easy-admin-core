@@ -20,10 +20,11 @@ trait Suppliers
                 'Label'     => 'Display',
                 'languages' => $languages,
                 'data'      => [
-                    'name'                => ['type' => 'text', 'label' => 'Supplier Name', 'meta' => true, 'class' => 'slugify'],
-                    'slug'                => ['type' => 'text', 'label' => 'Supplier Slug', 'meta' => true, 'class' => 'slug', 'readonly' => 'readonly'],
-                    'jur_name'            => ['type' => 'text', 'label' => 'Supplier Legal Name', 'meta' => true],
-                    'description'         => ['type' => 'textarea', 'label' => 'Description', 'meta' => true],
+                    'name'        => ['type' => 'text', 'label' => 'Supplier Name', 'meta' => true, 'class' => 'slugify'],
+                    'slug'        => ['type' => 'text', 'label' => 'Supplier Slug', 'meta' => true, 'class' => 'slug', 'readonly' => 'readonly'],
+                    'jur_name'    => ['type' => 'text', 'label' => 'Supplier Legal Name', 'meta' => true],
+                    'description' => ['type' => 'textarea', 'label' => 'Description', 'meta' => true],
+                    'location'    => ['type' => 'text', 'label' => 'Location'],
                 ],
             ],
             [
@@ -39,7 +40,6 @@ trait Suppliers
                 'data'  => [
                     'custom_id'      => ['type' => 'text', 'label' => 'Supplier ID'],
                     'email'          => ['type' => 'text', 'label' => 'E-mail'],
-                    'location'       => ['type' => 'text', 'label' => 'Location'],
                     'coords'         => ['type' => 'text', 'label' => 'Google Maps Coordinates'],
                     'farmer'         => ['type' => 'switch', 'label' => 'Farmer'],
                     'craftsman'      => ['type' => 'switch', 'label' => 'Craftsman'],

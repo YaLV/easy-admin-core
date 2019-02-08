@@ -12,4 +12,8 @@ class FrontendMenuItem extends Model
     {
         return $this->hasMany(FrontendMenuItem::class);
     }
+
+    public function parent() {
+        return $this->belongsTo(FrontendMenuItem::class);
+    }
 }

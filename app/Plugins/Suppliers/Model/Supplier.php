@@ -3,6 +3,7 @@
 namespace App\Plugins\Suppliers\Model;
 
 use App\BaseModel;
+use App\Plugins\Admin\Model\File;
 use App\Plugins\Products\Model\Product;
 
 class Supplier extends BaseModel
@@ -27,5 +28,9 @@ class Supplier extends BaseModel
 
     public function products() {
         return $this->hasMany(Product::class);
+    }
+
+    public function image() {
+        return $this->hasMany(File::class, 'owner_id');
     }
 }

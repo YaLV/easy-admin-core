@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\CacheController;
+use App\Http\Controllers\FrontController;
 use App\Model\Admin\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -16,6 +18,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Send current language
+        View::share("pageLanguage", language());
+        View::share("frontController", new FrontController);
+        View::share("cache", new CacheController);
+
 
         // Register Plugin View/Migration Directory
         $dir = config('app.plugins', app_path('Plugins'));
@@ -35,11 +42,12 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->loadMigrationsFrom($migrationFolder);
 
-        // Add Menu, when Menubar exists
+        // Add Admin Menu, when Menubar exists
         View::composer('admin.partials.sidebar', function ($view) {
             $view->with('menuItems', (new Menu)->getMenuItems());
         });
 
+        // Add breadcrumbs in admin
         View::composer('layouts.admin', function ($view) {
             $page = Menu::where('routeName', Route::currentRouteName())->first();
             $breadcrumbs = $title = [];
@@ -67,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('breadcrumbs', $breadcrumbs);
         });
 
+        // Admin pages - send current Route Name
         View::composer('admin.*',function($view) {
             $routeName = explode(".", Route::currentRouteName());
             $view->with('currentRoute', $routeName[0]);

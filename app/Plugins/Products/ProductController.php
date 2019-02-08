@@ -3,6 +3,7 @@
 namespace App\Plugins\Products;
 
 use App\Functions\General;
+use App\Http\Controllers\CacheController;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductMeta;
@@ -107,6 +108,8 @@ class ProductController extends AdminController
             $product->attributeValues()->sync(request('attributeValues'));
             $product->attributes()->sync(request('attribute'));
             DB::commit();
+            $product->forgetMeta(['slug', 'name']);
+            (new CacheController)->createProductCache($product->id, true);
         } catch (\PDOException $e) {
             DB::rollBack();
 
@@ -232,4 +235,5 @@ class ProductController extends AdminController
                 }
             )->get();
     }
+
 }

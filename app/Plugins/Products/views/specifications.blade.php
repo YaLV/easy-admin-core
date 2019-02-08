@@ -40,6 +40,12 @@
                 return false;
             });
 
+
+            if($('.set_unit_id').val()) {
+                jQuery('.unit_id_receive').val($('.set_unit_id').val());
+                jQuery('.unit_name').html($('.set_unit_id')[0].options[$('.set_unit_id')[0].selectedIndex].innerHTML);
+            }
+
             jQuery('.set_unit_id').on("changed.bs.select", function(e, index, newItem, oldItem){
                 id = $(this)[0].options[index].value;
                 name = $(this)[0].options[index].innerHTML;
@@ -76,7 +82,7 @@
 
             jQuery('.addLine').click(function () {
                 setDefaultDropdowns();
-                $($(this).data('target')+' input[type=text]').val('');
+                $($(this).data('target')+' input:not([name=unit_id])').val('');
             });
             setDefaultDropdowns();
         });
