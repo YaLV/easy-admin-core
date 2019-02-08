@@ -3,6 +3,7 @@
 namespace App\Plugins\Categories;
 
 use App\Functions\General;
+use App\Http\Controllers\CacheController;
 use App\Languages;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Admin\Model\File;
@@ -75,6 +76,7 @@ class CategoryController extends AdminController
             $this->handleImages($category);
             $this->handleAttributes($category);
             DB::commit();
+            (new CacheController)->createCategoryCache(true);
         } catch(\PDOException $e) {
             DB::rollBack();
             session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);

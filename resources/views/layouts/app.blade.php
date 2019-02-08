@@ -1,80 +1,50 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<html class="sv-lightbox-open_" lang="{{ $pageLanguage }}">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <title>Svaigi.lv</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="{{ asset("assets/img/favicon.ico") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/bootstrap.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/jquery-ui.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/owl.carousel.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/font-awesome.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/animate.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/main.css") }}">
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+<body class="sv-lightbox-open_ sv-has-marketday-dropdown">
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+@include("frontend.elements.cookies")
+@include("frontend.elements.loginpopup")
+@include("frontend.elements.mobilemenu")
+@include("frontend.elements.marketday")
+<div class="sv-dock">
+    <div class="container">
+        @include("frontend.elements.desktopmenu")
     </div>
+</div>
+@include("frontend.elements.categorymenu")
+
+@yield('content')
+
+@include("frontend.elements.footer")
+
+@include("frontend.elements.copyright")
+
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script src="{{ asset("assets/js/jquery-3.1.1.min.js") }}"></script>
+<script src="{{ asset("assets/js/bootstrap.min.js") }}"></script>
+<script src="{{ asset("assets/js/jquery-ui.min.js") }}"></script>
+<script src="{{ asset("assets/js/jquery.ui.touch-punch.min.js") }}"></script>
+<script src="{{ asset("assets/js/owl.carousel.min.js") }}"></script>
+<script src="{{ asset("assets/js/owl.animate.js") }}"></script>
+<script src="{{ asset("assets/js/jquery.selectric.js") }}"></script>
+<script src="{{ asset("assets/js/imagesloaded.pkgd.min.js") }}"></script>
+<script src="{{ asset("assets/js/svaigi.js") }}?ver={{ filemtime(public_path("assets/js/svaigi.js")) }}"></script>
 </body>
+
 </html>

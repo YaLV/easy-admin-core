@@ -7,7 +7,6 @@
             <div class="col-md-4">Cost:</div>
             <div class="col-md-8">
                 <div class="form-group">
-                    <input type="hidden" name="id" value="" />
                     <input type="text" name="cost" class="form-control" />
                 </div>
             </div>
@@ -52,6 +51,7 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <div class="input-group mb-3">
+                        <input type="hidden" name="id" value="" />
                         <input type="text" class="form-control" name="amount" />
                         <div class="input-group-append be-addon">
                             <input type="hidden" class="unit_id_receive" name="unit_id" value="" />
