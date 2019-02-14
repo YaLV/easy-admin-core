@@ -24,6 +24,8 @@ class ProductCache
     public $isHighlighted;
     public $supplier_id;
     public $id;
+    public $marketDays;
+    public $price;
 
 
     public function __construct($product)
@@ -38,19 +40,23 @@ class ProductCache
     {
         $prices = [];
 
-        $prices['orig'] = (object)[
+        /*$prices['orig'] = (object)[
             'price'        => calcPrice($product->cost, [$product->vat->amount, $product->mark_up, $this->discount]),
             'display_name' => '1'.$product->unit->unit,
             'oldPrice'     => calcPrice($product->cost, [$product->vat->amount, $product->mark_up]),
-        ];
+        ];*/
 
 
         foreach ($product->variations ?? [] as $variation) {
             $cost = $product->cost * $variation->amount;
+            $price = calcPrice($cost, [$product->vat->amount, $product->mark_up, $this->discount]);
             $prices[$variation->id] = (object)[
-                'price'        => calcPrice($cost, [$product->vat->amount, $product->mark_up, $this->discount]),
+                'price'        => $price,
                 'display_name' => $variation->display_name,
                 'oldPrice'     => calcPrice($cost, [$product->vat->amount, $product->mark_up]),
+                'vat'          => $price - calcPrice($cost, [$product->mark_up]),
+                'vat_amount'   => $product->vat->amount,
+                'size'         => $variation->size,
             ];
         }
         $this->variations = $prices;
@@ -97,6 +103,8 @@ class ProductCache
             'unit_id' => $product->unit_id,
             'vat_id'  => $product->vat_id,
         ];
+
+        $this->marketDays = $product->market_days->pluck('id')->toArray();
     }
 
     private function setupCategories($product)
@@ -127,6 +135,11 @@ class ProductCache
         }
     }
 
+    public function getVariationPrice($vid)
+    {
+        return $this->variations[$vid] ?? [];
+    }
+
     public function hasManyPrices()
     {
         return count($this->variations) > 1;
@@ -146,7 +159,7 @@ class ProductCache
 
     public function image($type = 'list')
     {
-        return $this->imageUrl[$type]??config('app.defaultProductImage');
+        return $this->imageUrl[$type] ?? config('app.defaultProductImage');
     }
 
     public function getUrl()
@@ -164,7 +177,28 @@ class ProductCache
         $pathParts = [];
         foreach ($catList as $oid => $category) {
             $nid = $oid + 1;
-            $pathParts['category' . $nid] = __("category.slug.$category");
+            $pathParts['slug' . $nid] = __("category.slug.$category");
+        }
+
+        return $pathParts;
+    }
+
+    public function createBreadcrumbs()
+    {
+        $categoryCache = (new CacheController)->getCategoryCache();
+        $path = $this->createBreadCrumbPath($categoryCache->getPath($this->mainCategory));
+
+        return $path;
+    }
+
+    public function createBreadCrumbPath($catList)
+    {
+        $pathParts = [];
+        $slugs = [];
+        foreach ($catList as $oid => $category) {
+            $nid = $oid + 1;
+            $slugs[$nid] = __("category.slug.$category");
+            $pathParts[] = ['url' => r('url', $slugs), 'name' => __("category.name.$category")];
         }
 
         return $pathParts;
@@ -172,7 +206,11 @@ class ProductCache
 
     public function getMeta($field, $language = null)
     {
-        return $this->metaData[$field][$language] ?? $this->metaData[$field][$language] ?? "";
+        return $this->metaData[$field][$language] ?? $this->metaData[$field][language()] ?? "";
     }
 
+    public function supplier()
+    {
+        return (new CacheController)->getSupplier($this->supplier_id);
+    }
 }

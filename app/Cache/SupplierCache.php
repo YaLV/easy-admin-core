@@ -5,7 +5,7 @@ namespace App\Cache;
 
 use App\Plugins\Suppliers\Model\Supplier;
 
-trait SupplierCache
+class SupplierCache
 {
 
     private $imageUrl;
@@ -45,8 +45,8 @@ trait SupplierCache
         $this->products = $supplier->products()->pluck('id')->toArray();
     }
 
-    public function getMeta($key, $language = language()) {
-        return $this->metaData[$key][$language]??"";
+    public function getMeta($key, $language = false) {
+        return $this->metaData[$key][$language]??$this->metaData[$key][language()]??"";
     }
 
     public function getImage() {

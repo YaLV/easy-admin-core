@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Plugins\Cart\Model\OrderHeader;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,5 +32,9 @@ class User extends Authenticatable
 
     public function discount() {
         return 0;
+    }
+
+    public function cart() {
+        return $this->hasMany(OrderHeader::class);
     }
 }

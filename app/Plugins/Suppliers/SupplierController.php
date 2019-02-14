@@ -39,15 +39,15 @@ class SupplierController extends AdminController
 
         $cc = Supplier::findOrFail($id);
 
-        if($cc->products()->count()) {
+        if ($cc->products()->count()) {
             return ['status' => false, 'message' => 'This Supplier has products, can not remove Supplier'];
         }
-        try{
+        try {
             DB::beginTransaction();
             $cc->metaData()->delete();
             $cc->forceDelete();
             DB::commit();
-        } catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             DB::rollBack();
             abort(500);
         }
@@ -69,13 +69,11 @@ class SupplierController extends AdminController
         $val = [
             'custom_id' => 'required|unique:suppliers,custom_id' . ($unique ?? ""),
             'email'     => 'required|email',
-            'location'  => 'required',
         ];
 
         $msg = [
             'custom_id.required' => 'ID can not be empty',
             'email.required'     => 'Email can not be empty',
-            'location.required'  => 'Location can not be empty',
             'email.email'        => 'Email Should be in Email Format',
         ];
 
@@ -106,6 +104,7 @@ class SupplierController extends AdminController
             'description',
             'google_keywords',
             'google_description',
+            'location',
         ];
 
         try {
@@ -113,7 +112,6 @@ class SupplierController extends AdminController
             $supplier = Supplier::updateOrCreate(['id' => $id], [
                 'custom_id' => request('custom_id'),
                 'email'     => request('email'),
-                'location'  => request('location'),
                 'coords'    => request('coords'),
                 'farmer'    => $this->switch(request('farmer')),
                 'craftsman' => $this->switch(request('craftsman')),
@@ -122,14 +120,19 @@ class SupplierController extends AdminController
             $this->handleMetas($supplier, $metas, 'name');
             $this->handleImages($supplier);
             DB::commit();
-
+            $supplier->forgetMeta(['slug', 'name', 'location']);
             return redirect(route('suppliers.list'));
         } catch (\PDOException $e) {
             DB::rollBack();
 
-            session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError' => true]);
+
             return redirect()->back();
         }
+    }
+
+    public function getEditName($id) {
+        return __('supplier.name.'.$id);
     }
 
 }

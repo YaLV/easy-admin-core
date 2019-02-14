@@ -24,7 +24,7 @@ trait Suppliers
                     'slug'        => ['type' => 'text', 'label' => 'Supplier Slug', 'meta' => true, 'class' => 'slug', 'readonly' => 'readonly'],
                     'jur_name'    => ['type' => 'text', 'label' => 'Supplier Legal Name', 'meta' => true],
                     'description' => ['type' => 'textarea', 'label' => 'Description', 'meta' => true],
-                    'location'    => ['type' => 'text', 'label' => 'Location'],
+                    'location'    => ['type' => 'text', 'label' => 'Location', 'meta' => true],
                 ],
             ],
             [

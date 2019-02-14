@@ -1,7 +1,8 @@
+
 <div class="sv-marketday-dropdown">
-    <a href="javascript:void(0)" class="title"><span>Uz pirmdienu, 14.08.</span></a>
+    <a href="javascript:void(0)" class="title"><span>{{ $cache->getSelectedMarketDayFormatted() }}</span></a>
     <div class="content">
-        <a href="javascript:void(0)" class="title"><span>Uz pirmdienu, 14.08.</span></a>
+        <a href="javascript:void(0)" class="title"><span>{{ $cache->getSelectedMarketDayFormatted() }}</span></a>
         <div class="calendar">
             <div class="container">
                 <div class="row">
@@ -12,54 +13,20 @@
                         </p>
                     </div>
                     <div class="days">
-                        <div class="sv-day">
+                        @foreach($cache->getClosestMarketDayList() as $availableTo => $marketDay)
+                        <div class="sv-day {{ $cache->isSelectedMarketDay($marketDay)?"is-active":"" }}">
                             <div>
                                 <div class="nr">
-                                    <span>14</span>
-                                    <span>augusts</span>
+                                    <span>{{ $marketDay->date->format('d') }}</span>
+                                    <span>{{ __(":month", ["month" => $marketDay->date->format('F')]) }}</span>
                                 </div>
                                 <div class="name">
-                                    Pirmdiena
+                                    {{ $marketDay->name }}
                                 </div>
                             </div>
-                            <a href="#" class="button">Izvēlēties</a>
+                            <a href="{{ route('setMarketDay', [$availableTo]) }}" class="button">Izvēlēties</a>
                         </div>
-                        <div class="sv-day">
-                            <div>
-                                <div class="nr">
-                                    <span>14</span>
-                                    <span>augusts</span>
-                                </div>
-                                <div class="name">
-                                    Pirmdiena
-                                </div>
-                            </div>
-                            <a href="#" class="button">Izvēlēties</a>
-                        </div>
-                        <div class="sv-day">
-                            <div>
-                                <div class="nr">
-                                    <span>14</span>
-                                    <span>augusts</span>
-                                </div>
-                                <div class="name">
-                                    Pirmdiena
-                                </div>
-                            </div>
-                            <a href="#" class="button">Izvēlēties</a>
-                        </div>
-                        <div class="sv-day is-active">
-                            <div>
-                                <div class="nr">
-                                    <span>17</span>
-                                    <span>augusts</span>
-                                </div>
-                                <div class="name">
-                                    Ceturtdiena
-                                </div>
-                            </div>
-                            <a href="#" class="button">Izvēlēties</a>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

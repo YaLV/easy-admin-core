@@ -39,7 +39,8 @@ class BaseModel extends Model
         }
     }
 
-    public function MetaLanguage($slugs = []) {
+    public function MetaLanguage($slugs = [], $forget = false) {
+
         $cacheData = Cache::get(implode("_", array_merge([class_basename($this),"meta", language()],$slugs)))??$this->formMetaLanguage($slugs);
 
         Cache::put(implode("_", array_merge([class_basename($this),"meta", language()],$slugs)), $cacheData, 1440);
