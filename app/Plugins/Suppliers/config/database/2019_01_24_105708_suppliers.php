@@ -17,7 +17,6 @@ class Suppliers extends Migration
             $table->increments('id');
             $table->string('custom_id');
             $table->string('email');
-            $table->string('location');
             $table->string('coords')->nullable();
             $table->boolean('farmer');
             $table->boolean('craftsman');

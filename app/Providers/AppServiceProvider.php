@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
         View::share("frontController", new FrontController);
         View::share("cache", new CacheController);
 
-
         // Register Plugin View/Migration Directory
         $dir = config('app.plugins', app_path('Plugins'));
         $pluginFolder = new \DirectoryIterator($dir);

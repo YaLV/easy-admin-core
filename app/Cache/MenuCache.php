@@ -37,6 +37,7 @@ class MenuCache
             $itemLevel = $this->getItemId(request()->route($autoParam));
         }
         if(!is_array($this->tree[$itemLevel]??false)) return [];
+
         ksort($this->tree[$itemLevel]);
 
         return $this->tree[$itemLevel];

@@ -2,6 +2,7 @@
 
 namespace App\Plugins\MarketDays\Model;
 
+use App\Plugins\Products\Model\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,5 +38,9 @@ class MarketDay extends Model
 
     public function getNameAttribute() {
         return $this->marketDay[language()]??"";
+    }
+
+    public function products() {
+        return $this->belongsToMany(Product::class);
     }
 }

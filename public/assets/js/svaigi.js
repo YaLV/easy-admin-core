@@ -354,14 +354,20 @@ function forms() {
     disableOnMobile: false,
     nativeOnMobile: false,
     optionsItemBuilder: function(itemData, element, index) {
-        return "<h3>"+($(itemData.element[0]).data('origprice') ? "<s>"+$(itemData.element[0]).data('origprice')+"</s>"+itemData.text:itemData.text)+"</h3>";
+        if($(itemData.element[0]).data('wrap')) {
+            return "<h3>" + ($(itemData.element[0]).data('origprice') ? "<s>" + $(itemData.element[0]).data('origprice') + "</s>" + itemData.text : itemData.text) + "</h3>";
+        }
+        return ($(itemData.element[0]).data('origprice') ? "<s>" + $(itemData.element[0]).data('origprice') + "</s>" + itemData.text : itemData.text);
     },
     labelBuilder: function(itemData) {
-        return "<h3>"+($(itemData.element[0]).data('origprice') ? "<s>"+$(itemData.element[0]).data('origprice')+"</s>"+itemData.text:itemData.text)+"</h3>";
+        if ($(itemData.element[0]).data('wrap')) {
+            return "<h3>" + ($(itemData.element[0]).data('origprice') ? "<s>" + $(itemData.element[0]).data('origprice') + "</s>" + itemData.text : itemData.text) + "</h3>";
+        }
+        return ($(itemData.element[0]).data('origprice') ? "<s>"+$(itemData.element[0]).data('origprice')+"</s>"+itemData.text:itemData.text);
     }
   });
 
-  jQuery('select').on('selectric-change', function(event, element, selectric) {
+    jQuery('select').on('selectric-change', function(event, element, selectric) {
     jQuery(element).val(jQuery(element).selectric().val());
   });
 

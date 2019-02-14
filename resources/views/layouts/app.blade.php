@@ -18,7 +18,7 @@
 
 <body class="sv-lightbox-open_ sv-has-marketday-dropdown">
 
-@include("frontend.elements.cookies")
+{{--@include("frontend.elements.cookies")--}}
 @include("frontend.elements.loginpopup")
 @include("frontend.elements.mobilemenu")
 @include("frontend.elements.marketday")
