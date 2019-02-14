@@ -1,0 +1,380 @@
+// main: ../main.scss
+
+@media only screen and (max-width : 992px) {
+
+  .sv-dock {
+    .container {
+      width: 100%;
+    }
+    .row {
+      height: 54px;
+    }
+    .logo {
+      img {
+        width: 90px;
+      }
+      margin-left: 15px;
+    }
+    .user {
+      display: none;
+    }
+    .right {
+      padding-right: 50px;
+    }
+    .cart {
+      & > a {
+        padding: 0 15px;
+        font-size: 22px;
+        .icon {
+          margin-right: 15px;
+        }
+      }
+    }
+    .sv-btn-menu {
+      // left: 120px;
+      left: auto;
+      right: 15px;
+    }
+  }
+
+  .sv-products-menu {
+    display: none;
+  }
+
+  .sv-products-menu-mobile {
+    display: block;
+  }
+
+  .sv-btn-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 54px;
+    position: absolute;
+    z-index: 300;
+    span {
+      width: 25px;
+      height: 25px;
+      position: relative;
+      display: block;
+      s {
+        width: 25px;
+        height: 2px;
+        background: $white;
+        display: block;
+        position: absolute;
+        @include transition-veryfast;
+        &:nth-child(1) {
+          top: 4px;
+          left: 0;
+        }
+        &:nth-child(2) {
+          top: 11px;
+          left: 0;
+        }
+        &:nth-child(3) {
+          top: 18px;
+          left: 0;
+        }
+      }
+    }
+    &:hover {
+      background: darken($accent, 2%);
+    }
+  }
+
+  .sv-product-card {
+    &:hover {
+      .image {
+        transform: none;
+        box-shadow: none;
+      }
+      .sv-tag {
+        transform: none;
+      }
+    }
+  }
+
+  .sv-copyright {
+    .row {
+      .contacts {
+        & > div {
+          margin-left: 25px;
+        }
+      }
+    }
+  }
+
+  .sv-marketday-dropdown {
+    .calendar {
+      .container {
+        .row {
+          padding-top: 50px;
+          padding-bottom: 50px;
+          flex-flow: column;
+          align-items: center;
+          .intro {
+            text-align: center;
+            margin-bottom: 50px;
+          }
+          .days {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .sv-lightbox-signin {
+    flex-flow: column;
+    & > div {
+      width: 100%;
+      height: 50%;
+    }
+  }
+
+  .sv-lightbox {
+    &.sv-newsletter {
+      .content-sv-newsletter {
+        form {
+          width: calc(100% - 60px);
+        }
+      }
+    }
+  }
+
+  .sv-category-title-banner {
+    height: auto;
+    overflow: hidden;
+    .title {
+      position: relative;
+      padding: 25px 15px;
+      h3 {
+        font-size: 40px;
+        line-height: 50px;
+        margin-bottom: 10px;
+      }
+      h4 {
+        font-size: 17px;
+        line-height: 25px;
+        padding: 0;
+      }
+    }
+  }
+
+  .sv-category-title-banner {
+    display: none;
+  }
+
+  .sv-category-wrapper, .sv-product-single-wrapper {
+    .container {
+      width: 690px;
+    }
+  }
+
+  .sv-sidebar-category {
+    display: none;
+  }
+
+  .sv-product-single-content {
+    .sv-product-single-header {
+      flex-wrap: wrap;
+      flex-flow: column-reverse;
+      .sv-product-description, .sv-product-title {
+        width: 100%;
+        padding: 0;
+      }
+      .sv-product-title {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .sv-blog-list {
+    &.page-list {
+      .list {
+        margin: 0;
+        .item {
+          width: 100%;
+          margin: 0;
+          margin-bottom: 30px;
+        }
+      }
+    }
+  }
+
+  .sv-page-title {
+    padding: 40px 0;
+    h2 {
+      font-size: 40px;
+      line-height: 50px;
+    }
+  }
+
+  .sv-farmers-list {
+    padding: 70px 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: -70px;
+    .item {
+      width: 25%;
+    }
+  }
+
+  .sv-order-history {
+    .list-open {
+      .item {
+        .product {
+          width: 50%;
+          padding-right: 5%;
+        }
+        .price-single, .quantity, .price-total {
+          width: 16.60%;
+        }
+        &.totals {
+          .data-wrapper {
+            width: 50%;
+          }
+        }
+      }
+    }
+  }
+
+  .sv-cart-steps {
+    margin-top: 25px;
+    position: relative;
+    & > .container {
+      height: auto;
+      & > .row {
+        height: auto;
+        justify-content: center;
+      }
+    }
+    ul {
+      li {
+        margin: 0 25px;
+      }
+    }
+  }
+
+  .sv-cart-tabs {
+    flex-flow: column;
+    .tab {
+      margin: 8px 0;
+    }
+  }
+
+  .sv-cart {
+    flex-wrap: wrap;
+    .list {
+      width: 100%;
+      margin: -15px 0;
+      .item {
+        position: relative;
+        flex-wrap: wrap;
+        .product {
+          width: 100%;
+          margin-bottom: 15px;
+          .selectric-wrapper {
+            display: block;
+          }
+          .title {
+          }
+          .image {
+            margin-right: 20px;
+            // img {
+            //   width: 80px;
+            // }
+          }
+        }
+        .price {
+          display: none;
+        }
+        .total {
+          width: 50%;
+        }
+        .quantity {
+          width: 50%;
+          text-align: left;
+          .ui-spinner .ui-spinner-input {
+            width: 103px;
+            height: 28px;
+            line-height: 28px;
+          }
+          .ui-spinner .ui-spinner-button.ui-spinner-down {
+            left: 0;
+            top: 2px;
+          }
+          .ui-spinner .ui-spinner-button.ui-spinner-up {
+            right: 0;
+            top: 2px;
+          }
+        }
+        &.header {
+          display: none;
+        }
+      }
+    }
+    .sidebar {
+      padding-top: 30px;
+      width: 100%;
+      margin: 0;
+      position: relative;
+      right: auto;
+      .totals {
+        .checkout {
+          padding: 15px;
+          padding-top: 0;
+          .list {
+            .item {
+              padding: 5px 0;
+            }
+          }
+          .sv-btn {
+            padding: 0;
+            font-size: 18px;
+          }
+        }
+        .list {
+          padding: 10px 0;
+        }
+        .item {
+          padding: 6px 15px;
+          & > div {
+            width: 50%;
+          }
+        }
+      }
+    }
+  }
+
+  .sv-delivery-days {
+    .details {
+      flex-flow: column;
+      & > div {
+        border-right: none;
+        border-top: 1px solid #f1f1f1;
+      }
+    }
+  }
+
+  .sv-category-title-mobile {
+    display: block !important;
+  }
+
+  .sv-mobile-filters {
+    // display: auto !important;
+  }
+
+  .sv-sidebar-search {
+    &.is-mobile {
+      display: block;
+    }
+  }
+
+  .sv-message {
+    padding: 15px;
+  }
+
+}

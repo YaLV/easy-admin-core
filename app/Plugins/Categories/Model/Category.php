@@ -53,4 +53,12 @@ class Category extends BaseModel
     public function products_main() {
         return $this->hasMany(Product::class, 'main_category');
     }
+
+    public function children() {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function discount() {
+        return 0;
+    }
 }

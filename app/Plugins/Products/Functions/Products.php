@@ -97,7 +97,15 @@ trait Products
     {
         $variations = request('variation');
 
-        foreach (ProductVariation::findMany($variations) as $variation) {
+        $DBvariations = ProductVariation::findMany($variations);
+
+        $removeVariations = array_diff($collection->variations()->pluck('id')->toArray(), $variations);
+
+        foreach($removeVariations as $rVariation) {
+            ProductVariation::find($rVariation)->delete();
+        }
+
+        foreach ($DBvariations as $variation) {
             $variation->product_id = $collection->id;
             $variation->save();
         }
@@ -128,7 +136,7 @@ trait Products
         if (!($variation['display_name'] ?? false)) {
             $unit = Unit::findOrFail(request('unit_id')) ?? "";
 
-            if($unit->subUnit()->count()) {
+            if($unit->subUnit()->count() && request('amount')<1) {
                 $unit = $unit->subUnit;
                 $displayName = (request('amount')*$unit->parent_amount).$unit->unit;
             }

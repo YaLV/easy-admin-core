@@ -4,7 +4,24 @@ return [
 
     'uploadFile' => [
         'category_image' => 'categories',
+        'product_image'  => 'products',
     ],
+
+    'imageSize' => [
+        'category_image' => [
+            'header' => '1473x247',
+        ],
+        'product_image'  => [
+            'list' => '210x210',
+            'view' => '702x470',
+        ],
+        'supplier' => [
+            'main' => '100x100'
+        ]
+    ],
+
+    'defaultProductImage' => '/assets/img/tmp/photo-5.jpg',
+    'defaultSupplierImage' => '/assets/img/tmp/photo-9.jpg',
     /*
     |--------------------------------------------------------------------------
     | Application Name
