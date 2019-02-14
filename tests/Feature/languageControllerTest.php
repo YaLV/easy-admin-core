@@ -28,6 +28,7 @@ class languageControllerTest extends TestCase
       $response->assertSee('Nosaukums');
     }
 
+    /* Store, Edit & destroy */
     public function testCreateEditLanguage(){
 
       $this->actingAs(\App\User::find(1));
@@ -37,29 +38,30 @@ class languageControllerTest extends TestCase
         $name = $faker->Name();
         $save['name'] = $name;
         $save['code'] = substr($name, 0, 2);
-        // if($language->is_default)
       }
-
 
       $response = $this->post(route('languages.store'), $save);
       $response->assertStatus(302);
       $response->assertRedirect(route('languages'));
 
-      // $cid = \App\Plugins\Categories\Model\CategoryMeta::where(['meta_name' => 'slug', 'meta_value' => $slug, 'language' => language()])->first();
+      $lanid = Languages::where(['code' => $save['code'], 'name' => $save['name']])->first();
 
-      $lanid = \App\Languages::where(['code' => $save['code'], 'name' => $save['name']])->first();
-
-      $response = $this->from(route('languages.edit', $lanid->id))->post(route('languages.store'), $save);
-      $response->assertStatus(302);
-      $response->assertRedirect(route('languages.edit', $lanid->id));
-      $response->assertSessionHasErrors();
+      $response = $this->call('GET', route('languages.edit', $lanid->id));
+      $response->assertStatus(200);
 
       $response = $this->json('POST', route('languages.destroy', $lanid->id));
       $response->assertStatus(200);
     }
-    // public function testCreateStoreLanguage(){
-    //   $this->actingAs(\App\User::find(1));
-    //   $faker = \Faker\Factory::create('en_US');
-    //
-    // }
+
+    public function testDefaultLanguage(){
+
+      $this->actingAs(\App\User::find(1));
+      $language = Languages::where('is_default', 1)->first();
+
+      $lan = $this->setIsDefaultAttribute($language->id);
+
+      $response->assertEquals($lan->id, $language->id);
+
+    }
+
 }
