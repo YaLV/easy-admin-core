@@ -30,12 +30,11 @@ class adminControllerTest extends TestCase
      public function testSlugify() {
 
        $this->actingAs(\App\User::find(1));
-
        $faker = \Faker\Factory::create('en_US');
        $slug_str = $faker->realText(40);
        $result = $this->post(route('slugify'), ['slugify' => $slug_str]);
        $result->assertStatus(200);
-      $result->assertJson(['slug' => str_slug($slug_str)]);
+       $result->assertJson(['slug' => str_slug($slug_str)]);
      }
 
      public function testSuccessfulLogin() {
