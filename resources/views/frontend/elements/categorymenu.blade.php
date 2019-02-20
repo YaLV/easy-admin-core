@@ -54,43 +54,10 @@
 						</span>
             </a>
             <div class="sv-dropdown sv-cart-dropdown">
-                <div class="item-list">
-                    <a href="#" class="item">
-								<span class="image">
-									<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-								</span>
-                        <span class="text">
-									<h3>Cūkgaļas fileja</h3>
-									<h4>3.59 € / 500 g</h4>
-								</span>
-                    </a>
-                    <a href="#" class="item">
-								<span class="image">
-									<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-								</span>
-                        <span class="text">
-									<h3>Cūkgaļas fileja</h3>
-									<h4>3.59 € / 500 g</h4>
-								</span>
-                    </a>
-                    <a href="#" class="item">
-								<span class="image">
-									<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-								</span>
-                        <span class="text">
-									<h3>Cūkgaļas fileja</h3>
-									<h4>3.59 € / 500 g</h4>
-								</span>
-                    </a>
-                    <a href="#" class="item">
-								<span class="image">
-									<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-								</span>
-                        <span class="text">
-									<h3>Cūkgaļas fileja</h3>
-									<h4>3.59 € / 500 g</h4>
-								</span>
-                    </a>
+                <div class="item-list minicart-contents">
+                    @foreach($frontController->getCartItems() as $item)
+                        @include("Orders::frontend.partials.miniitem")
+                    @endforeach
                 </div>
                 <a href="#" class="go-to-cart"><span>Atvērt grozu</span></a>
             </div>

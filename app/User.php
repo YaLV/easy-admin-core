@@ -2,9 +2,8 @@
 
 namespace App;
 
-use App\Plugins\Cart\Model\OrderHeader;
+use App\Plugins\Orders\Model\OrderHeader;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -17,7 +16,25 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username'
+        'id',
+        'username',
+        'name',
+        'last_name',
+        'email',
+        'email_verified_at',
+        'password',
+        'registered',
+        'phone',
+        'is_legal',
+        'legal_name',
+        'legal_address',
+        'legal_reg_nr',
+        'legal_vat_reg_nr',
+        'address',
+        'city',
+        'postal_code',
+        'newsletter',
+        'isAdmin',
     ];
 
     /**
@@ -30,11 +47,18 @@ class User extends Authenticatable
     ];
 
 
-    public function discount() {
+    public function discount()
+    {
         return 0;
     }
 
-    public function cart() {
+    public function cart()
+    {
         return $this->hasMany(OrderHeader::class);
+    }
+
+    public function isAnonimous()
+    {
+        return ($this->id ?? false) == 99;
     }
 }

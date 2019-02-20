@@ -1,51 +1,133 @@
 <?php
 
 
-function language() {
-    return request()->route('lang')??config('app.locale');
+function language()
+{
+    return request()->route('lang') ?? config('app.locale');
 }
 
-function languages() {
+function languages()
+{
     $languageCache = \Illuminate\Support\Facades\Cache::get('languagelist');
-    if(!$languageCache) {
+    if (!$languageCache) {
         $languageCache = \App\Languages::all();
     }
     \Illuminate\Support\Facades\Cache::put("languagelist", $languageCache, 1440);
+
     return $languageCache;
 
 }
 
-function getTranslations($path, $collections) {
+function getTranslations($path, $collections)
+{
     return $collections::selectRaw('id, concat("category.name.", id) as name')->get();
 }
 
-function nullOrDate($value, $results) {
-    return ($value??false)?$results[1]:$results[0];
+function nullOrDate($value, $results)
+{
+    return ($value ?? false) ? $results[1] : $results[0];
 }
 
-function calcPrice($price, $changes) {
-    foreach($changes as $change) {
-        $changesToPrice = round((float)$price*(abs($change)/100), 2);
-        if($change[0]=="-") { // discount
-            $price-=$changesToPrice;
-        } else {
-            $price+=$changesToPrice;
-        }
-    }
-    return number_format(round($price,2),2);
+function calcPrice($price, $vat, $markup, $discount, $amount = 1)
+{
+    $vat = 1 + ($vat / 100);
+    $markup = 1 + ($markup / 100);
+    $discount = 1 - ($discount / 100);
+
+    $wovat = $price * $markup;
+    $wvat = $wovat * $vat;
+
+    $prices = [
+        'cost'     => $price,
+        'markup'   => $markup,
+        'vat'      => $vat,
+        'discount' => $discount,
+    ];
+
+    $prices['full'] = (object)[
+        'wovat' => number_format(round($wovat,2),2),
+        'wvat'  => number_format(round($wvat,2),2),
+        'vat'   => number_format(round($wvat - $wovat,2),2),
+    ];
+
+    $discountwvat = $wvat - ($wvat * $discount);
+    $pricewdiscount = ($wvat * $discount);
+    $pricewdiscountvat = $pricewdiscount - ($pricewdiscount / $vat);
+
+    $prices['wdiscount'] = (object)[
+        'discount'    => number_format(round($discountwvat,2),2),
+        'discountvat' => number_format(round($discountwvat - ($discountwvat / $vat), 2),2),
+        'price'       => number_format(round($pricewdiscount,2),2),
+        'pricevat'    => number_format(round($pricewdiscountvat,2),2),
+        'pricewovat'  => number_format(round($pricewdiscount - $pricewdiscountvat,2),2),
+    ];
+
+    $prices['sum'] = (object)[
+        'wdiscount'  => (object)[
+            'wovat' => number_format(round(($pricewdiscount * $amount) - ($pricewdiscountvat * $amount),2),2),
+            'wvat'  => number_format(round($pricewdiscount * $amount,2),2),
+            'vat'   => number_format(round($pricewdiscountvat * $amount,2),2),
+        ],
+        'wodiscount' => (object)[
+            'wovat' => number_format(round($wovat * $amount,2),2),
+            'wvat'  => number_format(round($wvat * $amount,2),2),
+            'vat'   => number_format(round(($wvat * $amount) - ($wovat * $amount),2),2),
+        ],
+    ];
+
+
+    return (object)$prices;
 }
 
-function r($name, $params = [], $absolute = true) {
-    if(!isDefaultLang()) {
-        $params['lang'] = $params['lang']??request()->route('lang')??"";
+function r($name, $params = [], $absolute = true)
+{
+    if (!isDefaultLang()) {
+        $params['lang'] = $params['lang'] ?? request()->route('lang') ?? "";
     }
+
     return route($name, $params, $absolute);
 }
 
-function isDefaultLanguage() {
-    return isDefaultLang()?".default":"";
+function isDefaultLanguage()
+{
+    return isDefaultLang() ? ".default" : "";
 }
 
-function isDefaultLang() {
-    return language()==config('app.locale');
+function isDefaultLang()
+{
+    return language() == config('app.locale');
+}
+
+function getCartTotals($cart)
+{
+    $sums = $cart->items()->selectRaw('sum(price*amount) as sum, sum(vat*amount) as vatsum ')->first();
+    $productSum = $sums->sum ?? 0;
+    $vatSum = $sums->vatsum ?? 0;
+
+    switch ($cart->discount_target) {
+        case "product":
+            $discount = ($cart->discount_type == 'percent' ? ($productSum * ($cart->discount_amount / 100)) : $cart->discount_amount);
+            break;
+
+        case "delivery":
+            $discount = ($cart->discount_type == 'percent' ? (($cart->delivery_amount ?? 0) * ($cart->discount_amount / 100)) : $cart->discount_amount);
+            break;
+
+        case "all":
+            $totalSum = $productSum + $cart->delivery_amount;
+            $discount = ($cart->discount_type == 'percent' ? ($totalSum * ($cart->discount_amount / 100)) : $cart->discount_amount);
+            break;
+
+        default:
+            $discount = 0;
+            break;
+    }
+    $discount = number_format(($discount != abs($discount) ? ($totalSum ?? $productSum) : round(($discount ?? 0), 2)), 2);
+
+    return (object)[
+        'productSum' => $productSum,
+        'vatSum'     => $vatSum,
+        'discount'   => $discount,
+        'toPay'      => number_format($productSum + ($cart->delivery_amount ?? 0) - ($discount ?? 0), 2),
+    ];
 }

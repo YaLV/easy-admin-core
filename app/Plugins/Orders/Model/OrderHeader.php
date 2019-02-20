@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderHeader extends Model
 {
-
+    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target'];
 
     public function cartItems() {
         return $this->whereHas('items', function($q) {

@@ -2,102 +2,163 @@
 
 namespace App\Plugins\Orders;
 
+use App\Http\Controllers\CacheController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Profile;
+use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
-use App\Plugins\Orders\Model\OrderLines;
+use App\Plugins\Products\Model\Product;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
+
+    use CartFunctions;
+
     public function index()
     {
-        return view('frontend.pages.cart');
+        $cart = $this->getCart();
+
+        return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery']);
     }
 
-    public function addToCart()
+    public function changeCartItem()
     {
-        $cart = false;
-
         request()->validate([
             'product_id'   => 'required|numeric',
             'variation_id' => 'required|numeric',
             'amount'       => 'numeric',
+            'line'         => 'numeric',
         ]);
 
-        $product = $this->cache()->getProduct(request('product_id'));
-        $variation = $product->getVariationPrice(request('variation_id'));
-
-        $user = Auth::user();
-
-        $cartData = [
-            'user_id'         => $user->id,
-            'market_day_id'   => session()->get('marketDay')->id,
-            'market_day_date' => session()->get('marketDay')->date,
-            'status'          => 'draft',
+        $lineData = [
+            'id' => null,
         ];
-        // Cart
-        if (!$user) {
-            $user = User::find('99');
-            $cart_id = session()->get('cart') ?? null;
-            $cartData['id'] = $cart_id;
-            $cartData['user_id'] = $user->id;
-            if (!$cart_id) {
-                $cart = OrderHeader::create($cartData);
-            }
-        }
 
-        if (!$cart) {
-            $cart = OrderHeader::updateOrCreate($cartData);
-        }
+        $cart = $this->getCart();
 
-        if (!$cart) {
-            abort(404);
-        }
-        $itemData = [
-            'supplier_id'    => $product->supplier_id,
-            'supplier_name'  => __('supplier.name.' . $product->supplier_id),
-            'product_id'     => $product->id,
-            'product_name'   => __("product.name.{$product->id}"),
-            'vat_id'         => $product->price['vat_id'],
-            'vat_amount'     => $variation->vat_amount,
-            'vat'            => $variation->vat,
-            'price'          => $variation->price,
-            'display_name'   => $variation->display_name,
-            'variation_size' => $variation->size,
-            'discount'       => abs($product->price['discount']),
-            'amount'         => request('amount') ?? 1,
-            'variation_id'   => request('variation_id'),
-        ];
-        $cart->items()->create($itemData);
-
-        if (request()->ajax()) {
-            return ['status' => 'true', 'miniCart' => $this->getCartContents($cart->id)];
+        if ($cartItemId = request()->get('line')) {
+            $item = $cart->items()->where(['id' => $cartItemId, 'product_id' => request()->get('product_id')])->first();
+            if (!$item) abort(404);
+            $lineData = [
+                'id' => $item->id,
+            ];
         } else {
-            return redirect()->back();
-        }
-    }
-
-    private function getCartContents($cartId, $template = "Cart::minicartitem")
-    {
-        $cart = OrderHeader::find($cartId);
-        $cartItems = $cart->items();
-
-        $itemsRendered = [];
-        $cartTotals = 0;
-        $cartItemCount = $cartItems->count();
-
-        foreach ($cartItems->get() as $itemOrder => $cartItem) {
-            $cartTotals += $cartItem->price ?? 0;
-            if ($itemOrder < 4) {
-                $itemsRendered[] = view($template, ['item' => $cartItem])->render();
+            $item = $cart->items()
+                ->where(
+                    [
+                        'product_id'   => request()->get('product_id'),
+                        'variation_id' => request()->get('variation_id'),
+                    ]
+                )->first();
+            if ($item) {
+                $lineData = [
+                    'id' => $item->id,
+                ];
             }
         }
 
-        return [
-            'totalAmount' => $cartTotals,
-            'itemCount'   => $cartItemCount,
-            'itemsToShow' => implode("\n", $itemsRendered),
-        ];
+        if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
+            $item->increment('amount', (request()->get('amount') ?? 1));
+        } else {
+            $product = $this->cache()->getProduct(request('product_id'));
+            $variation = $product->getVariationPrice(request('variation_id'));
+
+            $itemData = [
+                'supplier_id'    => $product->supplier_id,
+                'supplier_name'  => __('supplier.name.' . $product->supplier_id),
+                'product_id'     => $product->id,
+                'product_name'   => __("product.name.{$product->id}"),
+                'vat_id'         => $product->price->vat_id,
+                'vat_amount'     => $product->price->vat,
+                'vat'            => $variation->vat,
+                'price'          => $variation->price,
+                'display_name'   => $variation->display_name,
+                'variation_size' => $variation->size,
+                'discount'       => (Auth::user() ?? User::find(99))->discount(),
+                'variation_id'   => request('variation_id'),
+            ];
+            $cartItem = $cart->items()->updateOrCreate($lineData, $itemData);
+        }
+
+        if(request()->ajax()) {
+            return $this->getCartContents($cart, (($item ?? false) ? true : false));
+        } else {
+            return redirect()->route('cart'.isDefaultLanguage());
+        }
+
     }
+
+    public function checkout($edit = null)
+    {
+        $step = 2;
+        if(Auth::user() && !Auth::user()->registered) {
+            Auth::logout();
+        }
+
+        if (Auth::user() && !$edit) {
+            return redirect()->route('payment' . isDefaultLanguage());
+        }
+
+        return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User]);
+    }
+
+    public function payment()
+    {
+        $step = 3;
+        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User]);
+    }
+
+    public function saveUserInfo(Profile $request)
+    {
+
+        $request->validated();
+
+        $user = Auth::user() ?? null;
+
+        if(!$user) {
+            $user = User::where('email', request()->get('email'))->first() ?? new User;
+        }
+
+        $user = $user->updateOrCreate(['id' => $user->id??null], request($user->getFillable()));
+
+        if(!Auth::user()) {
+            $cart = $this->getCart();
+            Auth::login($user);
+            $cart->update(['user_id' => $user->id]);
+        }
+
+        return redirect()->route('payment'.isDefaultLanguage());
+
+    }
+
+    public function saveOrder()
+    {
+        $cart = $this->getCart();
+
+        if($cart->items()->count()==0) {
+            return redirect()->route('cart'.isDefaultLanguage());
+        }
+
+        $user = Auth::user()??User::where('email', (session()->get('email')??"noemailSpecified"))->first();
+
+        if(!$user) {
+            return redirect()->route('checkout'.isDefaultLanguage());
+        }
+
+        $cart->update([
+            'state'   => 'ordered',
+        ]);
+
+        return redirect()->route('thankyou'.isDefaultLanguage());
+    }
+
+    public function thankyou() {
+        if(!Auth::user()->registered) {
+            Auth::logout();
+        }
+        return view('Orders::frontend.thankyou');
+    }
+
 }

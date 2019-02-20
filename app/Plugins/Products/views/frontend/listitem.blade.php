@@ -33,7 +33,7 @@
                         </select>
                     @else
                         <h3>
-                            <input type="hidden" value="orig" name="variation[{{$item->id}}]" />
+                            <input type="hidden" value="{{ $item->prices()->id }}" name="variation_id" />
                             @if($item->isSale())
                                 <s>{{ $item->prices()->oldPrice }}€</s>
                             @endif

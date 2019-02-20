@@ -3,6 +3,7 @@
 namespace App\Plugins\Products\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ProductVariation extends Model
 {
@@ -15,7 +16,7 @@ class ProductVariation extends Model
     }
 
     public function getPriceAttribute() {
-        return calcPrice($this->cost?:0, [$this->mark_up?:0, $this->vat->amount]);
+        return calcPrice($this->cost?:0, $this->product->vat->amount, $this->mark_up, (Auth::user()?Auth::user()->discount():0));
     }
 
 }

@@ -2,7 +2,9 @@
 
 namespace App\Plugins\Menu;
 
+use App\Http\Controllers\CacheController;
 use App\Plugins\Admin\AdminController;
+use App\Plugins\Categories\Model\Category;
 use App\Plugins\Menu\Functions\Menu;
 use App\Plugins\Menu\Model\FrontendMenu;
 use App\Plugins\Menu\Model\FrontendMenuItem;
@@ -62,12 +64,16 @@ class MenuAdminController extends AdminController
                 $this->handleMenuItems($menu);
             }
             DB::commit();
+
+            (new CacheController)->createMenuCache($menu->slug, true);
+
         } catch (\PDOException $e) {
             abort(500);
+
             return false;
         }
 
-        if($id) {
+        if ($id) {
             return redirect(route('menus.list'));
         }
 
@@ -79,8 +85,8 @@ class MenuAdminController extends AdminController
     {
 
         request()->validate([
-            'owner' => 'required',
-            'owner_id'   => 'required',
+            'owner'    => 'required',
+            'owner_id' => 'required',
         ]);
 
         $menu = FrontendMenu::findOrFail($id);
@@ -98,14 +104,17 @@ class MenuAdminController extends AdminController
             DB::commit();
         } catch (\PDOException $e) {
             abort(500);
+
             return false;
         }
 
         return ['status' => true, 'noMessage' => true, 'content' => view("Menu::menuItem", ['menuItem' => $menuItem])->render()];
     }
 
-    public function destroyMenuItem($id) {
+    public function destroyMenuItem($id)
+    {
         $this->removeMenuItems(FrontendMenuItem::findOrFail($id));
+
         return ['status' => true, 'message' => 'Menu Item Removed', 'removedId' => $id];
     }
 

@@ -32,7 +32,7 @@
                     <h2>Liellopa gaļa malšanai</h2>
                     <div class="breadcrumbs">
                         @foreach($product->createBreadcrumbs() as $crumb)
-                        <a href="{{$crumb['url']}}">{{$crumb['name']}}</a>
+                            <a href="{{$crumb['url']}}">{{$crumb['name']}}</a>
                         @endforeach
                     </div>
                     <a href="#" class="farmer">
@@ -41,20 +41,31 @@
                     </a>
                 </div>
                 <form action="{{ r("cartAdd".isDefaultLanguage()) }}" method="post">
-                    @if($product->hasManyPrices())
-                        <select name="variation[{{$product->id}}]" class="selectpicker">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="product_id" value="{{ $product->id }}" />
+
+                @if($product->hasManyPrices())
+                        <select name="variation_id" class="selectpicker">
                             @foreach($product->prices() as $priceID => $price)
                                 <option value="{{ $priceID }}" {{$loop->first?"selected":""}} {{ $product->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
                             @endforeach
                         </select>
                     @else
-                        <input type="hidden" value="orig" name="variation[{{$product->id}}]" />
+                        <input type="hidden" value="{{$product->prices()->id}}" name="variation_id" />
+
                         @if($product->isSale())
                             <s>{{ $product->prices()->oldPrice }}€</s>
                         @endif
                         {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
                     @endif
-                    <button class="sv-btn {{ in_array((new \App\Http\Controllers\CacheController)->getSelectedMarketDay()->id,$product->marketDays)?"":"is-disabled" }}">Pievienot grozam</button>
+                    <div class="input-wrapper quantity">
+                        <span class="button minus disabled"></span>
+                        <span class="button add"></span>
+                        <input type="text" name="amount" value="1" class="qty" />
+                    </div>
+                    <button class="sv-btn {{ in_array((new \App\Http\Controllers\CacheController)->getSelectedMarketDay()->id,$product->marketDays)?"":"is-disabled" }}">
+                        Pievienot grozam
+                    </button>
                 </form>
             </div>
 
@@ -98,7 +109,6 @@
         </div>
 
         <div class="sv-blank-spacer medium"></div>
-
 
 
     </div>

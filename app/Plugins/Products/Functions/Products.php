@@ -95,7 +95,9 @@ trait Products
 
     public function setVariations(Product $collection)
     {
-        $variations = request('variation');
+        $variations = request('variation')??false;
+
+        if(!$variations) return null;
 
         $DBvariations = ProductVariation::findMany($variations);
 
@@ -109,6 +111,7 @@ trait Products
             $variation->product_id = $collection->id;
             $variation->save();
         }
+        return true;
     }
 
     public function addCategories(Product $collection)
