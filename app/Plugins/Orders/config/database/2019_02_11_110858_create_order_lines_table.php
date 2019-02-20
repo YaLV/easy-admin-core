@@ -25,7 +25,7 @@ class CreateOrderLinesTable extends Migration
             $table->decimal('price', 8, 2);
             $table->decimal('vat_amount', 8, 2);
             $table->decimal('discount', 8, 2);
-            $table->integer('amount');
+            $table->integer('amount')->default(1);
             $table->string("display_name");
             $table->float("variation_size");
             $table->integer('variation_id');

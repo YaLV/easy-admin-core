@@ -42,7 +42,7 @@ class Product extends BaseModel
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
-        $this->imagetypes = config('app.imageSize.product_image');
+        $this->imageTypes = config('app.imageSize.product_image');
     }
 
     public function main_cat()
@@ -118,6 +118,14 @@ class Product extends BaseModel
         return $this->belongsTo(Unit::class);
     }
 
+    public function createVariation() {
+        $unitSize = $this->unit->unit;
+        return [$this->variations()->create([
+            'amount'    => 1,
+            'display_name' => "1".$unitSize,
+            'for_supplier' => "1".$unitSize,
+        ])];
+    }
 
     /***************** Frontend Functions ********************/
 

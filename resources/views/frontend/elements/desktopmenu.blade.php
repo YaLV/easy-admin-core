@@ -18,11 +18,11 @@
     <div class="right">
         <div class="user">
             <a href="javascript:void(0)" class="toggle-sv-signin">
-								<span class="icon">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" viewBox="0 0 24 21">
-										<path d="M21.162,21A10,10,0,0,0,2.838,21H0.7A11.984,11.984,0,0,1,23.3,21h-2.14ZM12,10a5,5,0,1,1,5-5A5,5,0,0,1,12,10Zm0-8a3,3,0,1,0,3,3A3,3,0,0,0,12,2Z" />
-									</svg>
-								</span>
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" viewBox="0 0 24 21">
+                        <path d="M21.162,21A10,10,0,0,0,2.838,21H0.7A11.984,11.984,0,0,1,23.3,21h-2.14ZM12,10a5,5,0,1,1,5-5A5,5,0,0,1,12,10Zm0-8a3,3,0,1,0,3,3A3,3,0,0,0,12,2Z" />
+                    </svg>
+                </span>
             </a>
             <div class="sv-dropdown sv-user-dropdown">
                 <ul>
@@ -40,54 +40,21 @@
         </div>
         <div class="cart has-items">
             <a href="#">
-								<span class="icon">
-									<s></s>
-									<svg xmlns="http://www.w3.org/2000/svg" width="26" height="14" viewBox="0 0 26 14">
-										<path d="M25.91,2l0.081,0.046L21,13.538V14H6l-0.806-.014L0.009,2.046,0.09,2H0V0H26V2H25.91ZM2.234,2L6.577,12H19.423L23.766,2H2.234Z" />
-									</svg>
-								</span>
-                <span>20.99€</span>
+                <span class="icon">
+                    <s></s>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="14" viewBox="0 0 26 14">
+                        <path d="M25.91,2l0.081,0.046L21,13.538V14H6l-0.806-.014L0.009,2.046,0.09,2H0V0H26V2H25.91ZM2.234,2L6.577,12H19.423L23.766,2H2.234Z" />
+                    </svg>
+                </span>
+                <span class="minicart-totals">{{ $frontController->getCartTotals()->toPay }} €</span>
             </a>
             <div class="sv-dropdown sv-cart-dropdown">
-                <div class="item-list">
-                    <a href="#" class="item">
-										<span class="image">
-											<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-										</span>
-                        <span class="text">
-											<h3>Cūkgaļas fileja</h3>
-											<h4>3.59 € / 500 g</h4>
-										</span>
-                    </a>
-                    <a href="#" class="item">
-										<span class="image">
-											<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-										</span>
-                        <span class="text">
-											<h3>Cūkgaļas fileja</h3>
-											<h4>3.59 € / 500 g</h4>
-										</span>
-                    </a>
-                    <a href="#" class="item">
-										<span class="image">
-											<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-										</span>
-                        <span class="text">
-											<h3>Cūkgaļas fileja</h3>
-											<h4>3.59 € / 500 g</h4>
-										</span>
-                    </a>
-                    <a href="#" class="item">
-										<span class="image">
-											<img src="{{ asset("assets/img/tmp/photo-1.jpg") }}" />
-										</span>
-                        <span class="text">
-											<h3>Cūkgaļas fileja</h3>
-											<h4>3.59 € / 500 g</h4>
-										</span>
-                    </a>
+                <div class="item-list minicart-contents">
+                    @foreach($frontController->getCartItems() as $item)
+                        @include("Orders::frontend.partials.miniitem")
+                    @endforeach
                 </div>
-                <a href="#" class="go-to-cart"><span>Atvērt grozu</span></a>
+                <a href="{{ route('cart'.isDefaultLanguage()) }}" class="go-to-cart"><span>Atvērt grozu</span></a>
             </div>
         </div>
     </div>

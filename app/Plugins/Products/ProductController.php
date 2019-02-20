@@ -99,10 +99,9 @@ class ProductController extends AdminController
                 'main_category'  => request('main_category'),
                 'supplier_id'    => request('supplier_id'),
             ]);
-
             $this->handleMetas($product, $metas, 'name-id');
             $this->handleImages($product);
-            $this->setVariations($product);
+            $this->setVariations($product)??$product->createVariation();
             $this->addCategories($product);
             $this->addMarketDays($product);
             $product->attributeValues()->sync(request('attributeValues'));
@@ -176,7 +175,7 @@ class ProductController extends AdminController
         ]);
 
         $vat = Vat::findOrFail(request('vat_id')) ?? (object)['amount' => 0];
-        $price = calcPrice(request('cost'), [request('mark_up') ?: 0, $vat->amount]);
+        $price = calcPrice(request('cost'), $vat->amount, request('mark_up')?:0, 0);
 
         return ['status' => true, 'noMessage' => true, 'result' => $price];
     }

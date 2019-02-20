@@ -17,10 +17,14 @@ class CreateOrderHeadersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('market_day_id');
-            $table->timestamp('market_day_date');
+            $table->timestamp('market_day_date')->nullable();
             $table->enum("state", ["draft", "ordered", "accepted", "finished"])->default('draft');
-            $table->string('discount_code');
-            $table->enum('discount_target', ['product', 'delivery', 'all']);
+            $table->string('discount_code')->nullable();
+            $table->integer('discount_amount')->nullable();
+            $table->enum('discount_target', ['product', 'delivery', 'all', 'none'])->nullable();
+            $table->enum('discount_type', ['percent', 'amount'])->nullable();
+            $table->integer('delivery_id')->nullable();
+            $table->decimal('delivery_amount', 8, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -4,7 +4,9 @@ namespace App\Cache;
 
 
 use App\Http\Controllers\CacheController;
+use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ProductCache
 {
@@ -40,23 +42,10 @@ class ProductCache
     {
         $prices = [];
 
-        /*$prices['orig'] = (object)[
-            'price'        => calcPrice($product->cost, [$product->vat->amount, $product->mark_up, $this->discount]),
-            'display_name' => '1'.$product->unit->unit,
-            'oldPrice'     => calcPrice($product->cost, [$product->vat->amount, $product->mark_up]),
-        ];*/
-
-
         foreach ($product->variations ?? [] as $variation) {
-            $cost = $product->cost * $variation->amount;
-            $price = calcPrice($cost, [$product->vat->amount, $product->mark_up, $this->discount]);
             $prices[$variation->id] = (object)[
-                'price'        => $price,
                 'display_name' => $variation->display_name,
-                'oldPrice'     => calcPrice($cost, [$product->vat->amount, $product->mark_up]),
-                'vat'          => $price - calcPrice($cost, [$product->mark_up]),
-                'vat_amount'   => $product->vat->amount,
-                'size'         => $variation->size,
+                'amount'       => $variation->amount,
             ];
         }
         $this->variations = $prices;
@@ -97,11 +86,12 @@ class ProductCache
 
         $this->sku = $product->sku;
 
-        $this->price = [
+        $this->price = (object)[
             'cost'    => $product->cost,
             'mark_up' => $product->mark_up,
             'unit_id' => $product->unit_id,
             'vat_id'  => $product->vat_id,
+            'vat'     => $product->vat->amount,
         ];
 
         $this->marketDays = $product->market_days->pluck('id')->toArray();
@@ -123,21 +113,44 @@ class ProductCache
 
     public function isSale()
     {
-        return $this->discount ? true : false;
+        return $this->discount() ? true : false;
     }
 
-    public function prices()
+    private function discount()
     {
+        $user = Auth::user() ?? User::find(99);
+
+        return $user->discount();
+    }
+
+    public function prices($amount = 1)
+    {
+        $price = [];
+        foreach ($this->variations as $variationid => $variation) {
+            $priceVariation = calcPrice($this->price->cost, $this->price->vat, $this->price->mark_up, $this->discount() ?? 0);
+            $price[$variationid] = (object)[
+                'display_name' => $variation->display_name,
+                'price'        => number_format(round($priceVariation->wdiscount->price * $variation->amount, 2), 2),
+                'oldPrice'     => number_format(round($priceVariation->full->wvat * $variation->amount, 2), 2),
+                'vat'          => $priceVariation->wdiscount->pricevat,
+                'id'           => $variationid,
+                'size'         => $variation->amount,
+            ];
+        }
         if ($this->hasManyPrices()) {
-            return $this->variations;
+            return $price;
         } else {
-            return current($this->variations);
+            return current($price);
         }
     }
 
+
     public function getVariationPrice($vid)
     {
-        return $this->variations[$vid] ?? [];
+        if($this->hasManyPrices()) {
+            return $this->prices()[$vid] ?? [];
+        }
+        return $this->prices();
     }
 
     public function hasManyPrices()

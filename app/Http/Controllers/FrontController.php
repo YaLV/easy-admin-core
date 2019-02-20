@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\Categories\Model\CategoryMeta;
-use App\Plugins\Menu\Model\FrontendMenu;
-use App\Plugins\Products\Model\Product;
-use Illuminate\Support\Facades\Cache;
+use App\Plugins\Orders\Functions\CartFunctions;
 
 class FrontController extends Controller
 {
+
+    use CartFunctions;
 
     public function divert()
     {
@@ -30,7 +30,7 @@ class FrontController extends Controller
 
         $products = $category->products()
             ->whereHas('market_days', function ($q) {
-                $md = session()->get('marketDay')??0;
+                $md = (new CacheController)->getSelectedMarketDay();
 
                 return $q->where('market_day_id', $md->id);
             });
@@ -61,6 +61,14 @@ class FrontController extends Controller
         $products = CategoryMeta::where(["meta_value" => $cat3 ?: $cat2 ?: $cat1, 'meta_name' => 'slug'])->firstOrFail()->category->products()->pluck('id')->toArray();
 
         return $products;
+    }
+
+    public function getCartTotals() {
+        return getCartTotals($this->getCart());
+    }
+
+    public function getCartItems() {
+        return $this->getCart()->items;
     }
 
 }

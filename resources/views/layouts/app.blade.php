@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset("assets/css/font-awesome.min.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/animate.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/main.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/custom.css") }}">
 </head>
 
 <body class="sv-lightbox-open_ sv-has-marketday-dropdown">
