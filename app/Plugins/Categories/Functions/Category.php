@@ -7,8 +7,16 @@ use App\Languages;
 use App\Plugins\Admin\Model\File;
 use App\Plugins\Attributes\Model\Attribute;
 
+/**
+ * Trait Category
+ *
+ * @package App\Plugins\Categories\Functions
+ */
 trait Category
 {
+    /**
+     * @return array
+     */
     public function getList()
     {
         return [
@@ -19,6 +27,9 @@ trait Category
         ];
     }
 
+    /**
+     * @return array
+     */
     public function form()
     {
 
@@ -54,6 +65,9 @@ trait Category
         ];
     }
 
+    /**
+     * @param $collection
+     */
     public function handleAttributes($collection) {
         $collection->filters()->sync(request('filters'));
     }

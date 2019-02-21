@@ -1,6 +1,6 @@
 <div class="sv-page-title">
     <h2>
-        <a href="#">Pirceja dati</a>
+        <a href="#">@yield('pageTitle')</a>
     </h2>
     @if(($step??false))
         <div class="sv-cart-steps">

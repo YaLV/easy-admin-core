@@ -5,7 +5,13 @@ namespace App;
 use App\Plugins\Orders\Model\OrderHeader;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
+/**
+ * Class User
+ *
+ * @package App
+ */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -47,18 +53,67 @@ class User extends Authenticatable
     ];
 
 
+    /**
+     * Get all discounts for products, using current user
+     *
+     * @return int
+     */
     public function discount()
     {
         return 0;
     }
 
+    /**
+     * Get user cart
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function cart()
     {
         return $this->hasMany(OrderHeader::class);
     }
 
+    /**
+     * return if
+     *
+     * @return bool
+     */
     public function isAnonimous()
     {
         return ($this->id ?? false) == 99;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isAdmin() {
+        return $this->isAdmin;
+    }
+
+    public function setPasswordAttribute($value) {
+        return Hash::make($value);
+    }
+
+    public function getFullNameAttribute() {
+        return $this->name." ".$this->last_name;
+    }
+
+    /**
+     * @param array $requestData
+     *
+     * @return User
+     */
+    public function updateUser(array $requestData) {
+
+        if(($requestData['id']??false)) {
+            $userFind['id'] = $requestData['id'];
+        } else {
+            $isInUsers = User::where(['email' => request('email'), 'registered' => 0])->first();
+            $userFind['id'] = $isInUsers?$isInUsers->pluck('id')->toArray():null;
+        }
+        $requestData['registered'] = 1;
+
+        return User::updateOrCreate($userFind, $requestData);
+
     }
 }

@@ -80,11 +80,11 @@ class MenuCache
         return r("url" . isDefaultLanguage(), $menuItems);
     }
 
-    private function getHierarchy($item, $level = 1)
+    private function getHierarchy($item, $level = 7)
     {
         if (!($item->slug ?? false)) return [];
-        $nextLevel = $level + 1;
+        $nextLevel = $level - 1;
 
-        return array_merge(["category$level" => __($item->slug)], $this->getHierarchy($this->menuItems[$item->parent] ?? [], $nextLevel));
+        return array_merge(["slug$level" => __($item->slug)], $this->getHierarchy($this->menuItems[$item->parent] ?? [], $nextLevel));
     }
 }

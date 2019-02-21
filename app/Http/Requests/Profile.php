@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueNotRegistered;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 
 class Profile extends FormRequest
 {
@@ -23,18 +25,34 @@ class Profile extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name'             => 'required',
             'last_name'        => 'required',
-            'email'            => 'required|email',
             'phone'            => 'required',
-            'legal_name'       => 'required_if:is_legal,1',
-            'legal_address'    => 'required_if:is_legal,1',
-            'legal_reg_nr'     => 'required_if:is_legal,1',
-            'legal_vat_reg_nr' => 'required_if:is_legal,1',
+            'legal_name'       => 'required_if:legal_person,1',
+            'legal_address'    => 'required_if:legal_person,1',
+            'legal_reg_nr'     => 'required_if:legal_person,1',
+            'legal_vat_reg_nr' => 'required_if:legal_person,1',
             'address'          => 'required',
             'city'             => 'required',
             'postal_code'      => 'required',
+
         ];
+
+        $rn = explode(".", Route::currentRouteName());
+
+        switch ($rn[0]) {
+            case "register":
+                $rules['password'] = 'required|confirmed';
+                $rules['rules'] = 'accepted';
+                $rules['email'] = ['required','email', new UniqueNotRegistered()];
+                break;
+
+            case "checkout":
+                $rules['rules'] = 'accepted';
+                break;
+        }
+
+        return $rules;
     }
 }

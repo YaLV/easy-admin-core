@@ -30,7 +30,7 @@
             </a>
         </div>
         <div class="title">
-            <a href="#" class="name">{{ $item->product_name }}</a>
+            <a href="{{ $product->getUrl() }}" class="name">{{ $item->product_name }}</a>
             <a href="#" class="farmer">{{ $item->supplier_name }}</a>
             @stack("variations-$random_id")
         </div>

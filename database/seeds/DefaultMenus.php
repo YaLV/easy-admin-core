@@ -23,5 +23,10 @@ class DefaultMenus extends Seeder
             'protected' => 1,
         ]);
 
+        \App\Plugins\Menu\Model\FrontendMenu::updateOrCreate([
+            'name'      => 'Footer Menu',
+            'slug'      => 'footer',
+            'protected' => 1,
+        ]);
     }
 }

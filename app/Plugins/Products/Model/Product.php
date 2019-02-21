@@ -15,9 +15,15 @@ use App\Plugins\Units\Model\Unit;
 use App\Plugins\Vat\Model\Vat;
 use App\User;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class Product
+ *
+ * @package App\Plugins\Products\Model
+ */
 class Product extends BaseModel
 {
     use SoftDeletes;
@@ -67,7 +73,12 @@ class Product extends BaseModel
         return $this->hasMany(ProductVariation::class);
     }
 
-    public function formatSelected($item)
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $item
+     *
+     * @return array
+     */
+    public function formatSelected(Model $item)
     {
         switch ($item) {
             case "extra_categories":

@@ -1,7 +1,7 @@
 <div class="row">
     <span class="sv-menu-mobile-close"></span>
     <div class="logo">
-        <a href="#"><img src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" /></a>
+        <a href="{{ route('home') }}"><img src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" /></a>
     </div>
     <a href="javascript:void(0)" class="sv-btn-menu toggle-sv-menu-mobile">
 						<span>
@@ -16,8 +16,9 @@
         </ul>
     </div>
     <div class="right">
+        @if(Auth::user() && Auth::user()->registered)
         <div class="user">
-            <a href="javascript:void(0)" class="toggle-sv-signin">
+            <a href="javascript:void(0)">
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" viewBox="0 0 24 21">
                         <path d="M21.162,21A10,10,0,0,0,2.838,21H0.7A11.984,11.984,0,0,1,23.3,21h-2.14ZM12,10a5,5,0,1,1,5-5A5,5,0,0,1,12,10Zm0-8a3,3,0,1,0,3,3A3,3,0,0,0,12,2Z" />
@@ -26,6 +27,11 @@
             </a>
             <div class="sv-dropdown sv-user-dropdown">
                 <ul>
+                    @if(auth::user()->isAdmin())
+                        <li class="admin">
+                            <a href="{{ route('dashboard') }}"><span>Admin</span></a>
+                        </li>
+                    @endif
                     <li class="history">
                         <a href="#"><span>Pirkumu vēsture</span></a>
                     </li>
@@ -33,11 +39,17 @@
                         <a href="#"><span>Profila dati</span></a>
                     </li>
                     <li>
-                        <a href="#"><span>Iziet</span></a>
+                        <a href="{{ route('frontlogout'.isDefaultLanguage()) }}"><span>Iziet</span></a>
                     </li>
                 </ul>
             </div>
         </div>
+        @else
+            <div style="z-index:10000;">
+                <a  href="javascript:void(0)" class="toggle-sv-signin">Login</a>
+                <a href="{{ route('register'.isDefaultLanguage()) }}">Register</a>
+            </div>
+        @endif
         <div class="cart has-items">
             <a href="#">
                 <span class="icon">

@@ -2,18 +2,10 @@
     <div class="container">
         <div class="row">
             <ul class="menu">
-                <li>
-                    <a href="#">Sadarbībai</a>
-                </li>
-                <li>
-                    <a href="#">Abonements piegādēm</a>
-                </li>
-                <li>
-                    <a href="#">Lietošanas noteikumi</a>
-                </li>
-                <li>
-                    <a href="#">Kontakti</a>
-                </li>
+                <pre>
+                {{ print_r(session()->all()) }}
+                </pre>
+                @include("frontend.partials.menu.main", ['slug' => 'footer'])
             </ul>
             <div class="social">
                 <a href="#" class="insta"><i class="fa fa-instagram"></i></a>

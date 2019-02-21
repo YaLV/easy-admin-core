@@ -46,6 +46,7 @@
 <script src="{{ asset("assets/js/jquery.selectric.js") }}"></script>
 <script src="{{ asset("assets/js/imagesloaded.pkgd.min.js") }}"></script>
 <script src="{{ asset("assets/js/svaigi.js") }}?ver={{ filemtime(public_path("assets/js/svaigi.js")) }}"></script>
+<script src="{{ asset("assets/js/custom.js") }}?ver={{ filemtime(public_path("assets/js/custom.js")) }}"></script>
 </body>
 
 </html>
