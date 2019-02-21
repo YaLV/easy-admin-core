@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('pageTitle')
+    Grozs
+@endsection
 
 @section('content')
     @forelse($cart->items as $item)

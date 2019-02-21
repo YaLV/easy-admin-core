@@ -10,6 +10,11 @@ use App\Plugins\MarketDays\Model\Vacation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+/**
+ * Class MarketDaysController
+ *
+ * @package App\Plugins\MarketDays
+ */
 class MarketDaysController extends AdminController
 {
 
@@ -22,25 +27,43 @@ class MarketDaysController extends AdminController
         return view('admin.elements.table', ['list' => MarketDay::withTrashed()->get(), 'tableHeaders' => $this->getList(), 'header' => 'Market Days']);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function editMarketDay($id)
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => MarketDay::withTrashed()->findOrFail($id)]);
     }
 
 
+    /**
+     * @return string
+     */
     public function closestDay()
     {
         return $this->getClosestMarketDay() ?: "No Market Days Available";
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function getEditName($id)
     {
         return MarketDay::withTrashed()->findOrFail($id)->marketDay[config('app.locale')];
     }
 
+    /**
+     * @param $id
+     *
+     * @return array
+     */
     public function changeState($id)
     {
-
+        /** @var MarketDay $md */
         if ($md = MarketDay::find($id)) {
             $md->delete();
 
@@ -54,6 +77,12 @@ class MarketDaysController extends AdminController
         }
     }
 
+    /**
+     * @param Request $request
+     * @param         $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeMarketDay(Request $request, $id)
     {
 
@@ -68,7 +97,7 @@ class MarketDaysController extends AdminController
                 'hideBeforeDays.numeric' => 'Days should be number',
                 'hideBeforeDays.max'     => 'Order Can not be closed 7 days earlier',
             ]);
-
+        /** @var MarketDay $md */
         $md = MarketDay::withTrashed()->findOrFail($id);
 
         $md->fill(request(['marketDay', 'hideBeforeDays', 'hideBeforeHours']));
@@ -87,11 +116,17 @@ class MarketDaysController extends AdminController
         return view('admin.elements.table', ['list' => Vacation::all(), 'tableHeaders' => $this->getVacationList(), "header" => "Vacations", 'idField' => 'vacation_date', 'destroyName' => 'Vacation at']);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addVacationDay()
     {
         return view('admin.elements.form', ['formElements' => $this->vacationForm(), 'content' => new Vacation()]);
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeVacationDay()
     {
 
@@ -100,6 +135,11 @@ class MarketDaysController extends AdminController
         return redirect(route('vacations'))->with('message', ["msg" => "Vacation day saved"]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return array
+     */
     public function deleteVacationDay($id)
     {
         $result = Vacation::find($id)->forceDelete();

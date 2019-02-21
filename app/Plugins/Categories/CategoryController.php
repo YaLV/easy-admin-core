@@ -13,11 +13,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class CategoryController
+ *
+ * @package App\Plugins\Categories
+ */
 class CategoryController extends AdminController
 {
     use \App\Plugins\Categories\Functions\Category;
     use General;
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view('admin.elements.table',
@@ -30,11 +38,20 @@ class CategoryController extends AdminController
             ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add()
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Category()]);
     }
 
+    /**
+     * @param Request $request
+     * @param bool    $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, $id = false)
     {
         $val = $msg = [];
@@ -85,6 +102,11 @@ class CategoryController extends AdminController
         return redirect(route('categories.list'))->with(['message' => ['msg' => "Category Saved"]]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return array
+     */
     public function destroy($id)
     {
 
@@ -109,11 +131,21 @@ class CategoryController extends AdminController
         return ['status' => true, "message" => "Category Deleted"];
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Category::findOrFail($id)]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function getEditName($id)
     {
         return Category::findOrFail($id)->name;

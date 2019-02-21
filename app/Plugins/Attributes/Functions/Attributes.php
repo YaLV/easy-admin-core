@@ -5,8 +5,16 @@ namespace App\Plugins\Attributes\Functions;
 
 use App\Plugins\Attributes\Model\AttributeValue;
 
+/**
+ * Trait Attributes
+ *
+ * @package App\Plugins\Attributes\Functions
+ */
 trait Attributes
 {
+    /**
+     * @return array
+     */
     public function getList()
     {
         return [
@@ -15,6 +23,9 @@ trait Attributes
         ];
     }
 
+    /**
+     * @return array
+     */
     public function form()
     {
         return [
@@ -35,6 +46,9 @@ trait Attributes
         ];
     }
 
+    /**
+     * @param $collection
+     */
     public function attributeValues($collection) {
 
         $currentValues = $collection->values()->pluck('id')->toArray();

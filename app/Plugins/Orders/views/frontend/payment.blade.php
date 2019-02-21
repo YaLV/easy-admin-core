@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('pageTitle')
+    Maksājumi
+@endsection
+
+
 @section('content')
     @include("Orders::frontend.partials.step")
 

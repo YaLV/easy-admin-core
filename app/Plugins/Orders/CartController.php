@@ -11,11 +11,19 @@ use App\Plugins\Products\Model\Product;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class CartController
+ *
+ * @package App\Plugins\Orders
+ */
 class CartController extends Controller
 {
 
     use CartFunctions;
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $cart = $this->getCart();
@@ -23,6 +31,9 @@ class CartController extends Controller
         return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery']);
     }
 
+    /**
+     * @return array|\Illuminate\Http\RedirectResponse
+     */
     public function changeCartItem()
     {
         request()->validate([
@@ -36,6 +47,7 @@ class CartController extends Controller
             'id' => null,
         ];
 
+        /** @var OrderHeader $cart */
         $cart = $this->getCart();
 
         if ($cartItemId = request()->get('line')) {
@@ -90,6 +102,11 @@ class CartController extends Controller
 
     }
 
+    /**
+     * @param null $edit
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function checkout($edit = null)
     {
         $step = 2;
@@ -104,12 +121,20 @@ class CartController extends Controller
         return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function payment()
     {
         $step = 3;
         return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User]);
     }
 
+    /**
+     * @param Profile $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function saveUserInfo(Profile $request)
     {
 
@@ -124,6 +149,7 @@ class CartController extends Controller
         $user = $user->updateOrCreate(['id' => $user->id??null], request($user->getFillable()));
 
         if(!Auth::user()) {
+            /** @var OrderHeader $cart */
             $cart = $this->getCart();
             Auth::login($user);
             $cart->update(['user_id' => $user->id]);
@@ -133,8 +159,12 @@ class CartController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function saveOrder()
     {
+        /** @var OrderHeader $cart */
         $cart = $this->getCart();
 
         if($cart->items()->count()==0) {
@@ -154,8 +184,11 @@ class CartController extends Controller
         return redirect()->route('thankyou'.isDefaultLanguage());
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function thankyou() {
-        if(!Auth::user()->registered) {
+        if(Auth::user() && !Auth::user()->registered) {
             Auth::logout();
         }
         return view('Orders::frontend.thankyou');
