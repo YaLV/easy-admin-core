@@ -21,7 +21,7 @@ class MenuCache
                 'name'    => "{$item->menu_owner}.name.{$item->owner_id}",
                 'parent'  => $item->frontend_menu_item_id,
                 'urlType' => $item->menu_owner,
-                'id'      => $item->id,
+                'id'      => $item->owner_id,
             ];
             if (!($item->frontend_menu_item_id ?? false)) {
                 $this->tree['first'][$item->sequence] = $item->id;
@@ -43,18 +43,23 @@ class MenuCache
         return $this->tree[$itemLevel];
     }
 
-    public function getItemId($routeParam)
+    public function getItemId($routeParam, $type = "menuid", $strict = true)
     {
         $slugs = array_map(
-            function ($a) use ($routeParam) {
-                return (__($a->slug) == $routeParam && !($a->parent ?? false));
+            function ($a) use ($routeParam, $strict) {
+                if($strict) {
+                    return (__($a->slug) == $routeParam && !($a->parent ?? false));
+                }
+                return __($a->slug) == $routeParam;
             },
             $this->menuItems
         );
 
         $result = array_search(true, $slugs);
-
-        return $result;
+        if($type=='menuid') {
+            return $result;
+        }
+        return $this->menuItems[$result]->id??"";
     }
 
     public function hasChildren($item)
@@ -86,5 +91,23 @@ class MenuCache
         $nextLevel = $level - 1;
 
         return array_merge(["slug$level" => __($item->slug)], $this->getHierarchy($this->menuItems[$item->parent] ?? [], $nextLevel));
+    }
+
+    public function getCurrentId() {
+        $x=8;
+        do {
+            $x--;
+        } while(request()->route('slug'.$x)==null || $x==0);
+
+        return $this->getItemId(request()->route('slug'.$x), 'menuid', false);
+    }
+
+    public function getCurrentCatId() {
+        $x=8;
+        do {
+            $x--;
+        } while(request()->route('slug'.$x)==null || $x==0);
+
+        return $this->getItemId(request()->route('slug'.$x), 'catId', false);
     }
 }

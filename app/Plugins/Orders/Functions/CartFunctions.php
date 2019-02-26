@@ -4,6 +4,7 @@ namespace App\Plugins\Orders\Functions;
 
 
 use App\Http\Controllers\CacheController;
+use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -12,47 +13,55 @@ trait CartFunctions
 {
     private function getCart($changedUser = null)
     {
-        if($changedUser && Auth::user()) {
+        $cart = session()->get('ca');
+        if ($changedUser && Auth::user() && $cart) {
             /** @var OrderHeader $userCart */
             $userCart = OrderHeader::where(['user_id' => Auth::user()->id])->first();
             /** @var OrderHeader $anonCart */
             $anonCart = OrderHeader::find(session()->get('cart'));
 
-            if($anonCart->items()->count()==0) {
+            if ($anonCart->items()->count() == 0) {
                 session()->put('cart', $userCart->id);
                 $anonCart->delete();
             } else {
                 $userCart->items()->delete();
                 $userCart->delete();
             }
-        }
+        } elseif(!$cart) {
+            $md = (new CacheController)->getSelectedMarketDay();
 
-        $md = (new CacheController)->getSelectedMarketDay();
+            if(!$md) {
+                abort(404, "No Available MarketDays");
+            }
 
-        $cartFind = ['id' => null];
+            $cartFind = ['id' => null];
 
-        $user = Auth::user() ?? User::find('99');
-        if ($cartId = session()->get('cart')) {
-            $cartFind = [
-                'id'    => $cartId,
-                'state' => 'draft',
+
+            $user = currentUser($changedUser);
+
+            if ($cartId = session()->get('cart')) {
+                $cartFind = [
+                    'id'    => $cartId,
+                    'state' => 'draft',
+                ];
+            } elseif ($user->isAnonimous()) {
+                $cartFind = ['id' => null, 'state' => 'draft'];
+            } elseif (!$user->isAnonimous()) {
+                $cartFind = ['user_id' => $user->id, 'state' => 'draft'];
+            }
+
+
+            $cartUpdate = [
+                'user_id'         => $user->id,
+                'market_day_id'   => $md->id??null,
+                'market_day_date' => $md->date??null,
             ];
-        } elseif ($user->isAnonimous()) {
-            $cartFind = ['id' => null, 'state' => 'draft'];
-        } elseif (!$user->isAnonimous()) {
-            $cartFind = ['user_id' => $user->id, 'state' => 'draft'];
+
+            $cart = OrderHeader::updateOrCreate($cartFind, $cartUpdate);
+
+            session()->put('cart', $cart->id);
+            session()->put('ca', $cart);
         }
-
-
-        $cartUpdate = [
-            'user_id'         => $user->id,
-            'market_day_id'   => $md->id,
-            'market_day_date' => $md->date,
-        ];
-
-        $cart = OrderHeader::updateOrCreate($cartFind, $cartUpdate);
-
-        session()->put('cart', $cart->id);
 
         return $cart;
     }

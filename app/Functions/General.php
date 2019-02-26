@@ -12,19 +12,19 @@ trait General
 
         foreach ($metas as $meta) {
             foreach (languages() as $language) {
-                if(!($metaData[$meta][$language->code]??false) && $meta!='slug') continue;
-                $meta_value = $metaData[$meta][$language->code]??"";
-                if($meta=="slug") {
+                if (!($metaData[$meta][$language->code] ?? false) && $meta != 'slug') continue;
+                $meta_value = $metaData[$meta][$language->code] ?? "";
+                if ($meta == "slug") {
                     $slugPartsCoded = [];
-                    $slugParts = explode("-",$slug);
-                    foreach($slugParts??[] as $slug) {
-                        $slugPartsCoded[] = str_slug($metaData[$slug][$language->code]??$collection->$slug);
+                    $slugParts = explode("-", $slug);
+                    foreach ($slugParts ?? [] as $slug) {
+                        $slugPartsCoded[] = str_slug($metaData[$slug][$language->code] ?? $collection->$slug);
                     }
                     $meta_value = implode("-", $slugPartsCoded);
                 }
                 $collection->metaData()->updateOrCreate([
                     'meta_name' => $meta,
-                    'language' => $language->code
+                    'language'  => $language->code,
                 ], [
                     'meta_value' => $meta_value,
                 ]);
@@ -34,7 +34,12 @@ trait General
 
     public function handleImages($collection)
     {
-        if(!method_exists($collection,"images")) { return; }
+
+
+
+        if (!method_exists($collection, "images")) {
+            return;
+        }
         $x = 0;
         list($urls, $main, $id) = [request('image_url'), request('image_main'), request('image_id')];
 
@@ -42,12 +47,24 @@ trait General
 
         $imagesInFiles = $collection->images()->get()->pluck('id')->toArray();
 
-        if(!is_array($id)) return;
+        if (!is_array($id)) return;
 
         foreach (array_diff($imagesInFiles, $id) as $fileID) {
             $file = File::find($fileID);
+
+            $imageSizes = config("app.imageSize.".$file->owner, null);
+
+            if ($imageSizes) {
+                foreach ($imageSizes as $imageSize) {
+                    $path = implode("/", ["public", config("app.uploadFile.{$file->owner}"), $imageSize, $file->filePath]);
+                    \Storage::delete($path);
+                }
+            } else {
+                $path = implode("/", ["public", config("app.uploadFile.{$file->owner}"), $file->filePath]);
+                \Storage::delete($path);
+            }
             $file->delete();
-            unlink(storage_path(str_replace('/storage', 'app/public', $file->filePath)));
+//            unlink(storage_path(str_replace('/storage', 'app/public', $file->filePath)));
         }
 
         do {

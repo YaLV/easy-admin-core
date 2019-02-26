@@ -8,9 +8,11 @@ use App\Plugins\Categories\Model\CategoryMeta;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Orders\Model\OrderLines;
+use App\Plugins\Suppliers\Model\Supplier;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Class FrontController
@@ -29,6 +31,8 @@ class FrontController extends Controller
      */
     public function divert()
     {
+        session()->flash("cu", (Auth::user() ?? User::find(99)));
+
         $cache = (new CacheController)->getSlugCache();
 
 
@@ -69,7 +73,7 @@ class FrontController extends Controller
         $products = $products->paginate(20)
             ->pluck('id');
 
-        return view("Products::frontend.listitem", compact(['category', 'products']));
+        return view("Products::frontend.listitems", compact(['category', 'products']));
     }
 
     /**
@@ -128,7 +132,7 @@ class FrontController extends Controller
      */
     public function page()
     {
-        return view('frontend.pages.home');
+        return view('frontend.pages.home', ['supplier' => Supplier::inRandomOrder()->first()]);
     }
 
     public function redrawCart()
@@ -193,5 +197,26 @@ class FrontController extends Controller
         }
 
         return $currentCart;
+    }
+
+    public function showImage($folder, $size, $image = null)
+    {
+
+        $cr = Route::currentRouteName();
+
+        if ($cr === 'image') {
+            $path = implode("/", ["public", $folder, $size, $image]);
+        } elseif ($cr === 'image.nopath') {
+            $path = implode("/", ["public", $folder, $image]);
+        } else {
+            abort(404);
+        }
+
+        if (!\Storage::exists($path)) {
+            abort(404);
+        }
+
+        return response()->file(storage_path("app/$path"));
+
     }
 }

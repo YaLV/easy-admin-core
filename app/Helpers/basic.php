@@ -131,3 +131,28 @@ function getCartTotals($cart)
         'toPay'      => number_format($productSum + ($cart->delivery_amount ?? 0) - ($discount ?? 0), 2),
     ];
 }
+
+function currentUser($change = false) {
+    if(!$change) {
+        $cu = session()->get('cu');
+    }
+
+    $user = $cu??Auth::user()??\App\User::find(99);
+
+    session()->put('cu', $user);
+
+    return $user;
+}
+
+function currentCart($change = false) {
+    if(!$change) {
+        $ca = session()->get('ca');
+    }
+
+    $cart = $ca??Auth::user()??\App\User::find(99);
+
+    session()->put('ca', $cart);
+
+    return $cart;
+
+}

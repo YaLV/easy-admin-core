@@ -2,9 +2,10 @@
     <div class="container">
         <div class="row">
             <ul class="menu">
-                {{-- <pre>
-                {{ print_r(session()->all()) }}
-                </pre> --}}
+                <pre>
+{{ session()->get('cart') }}
+{{ currentUser()->id }}
+                </pre>
                 @include("frontend.partials.menu.main", ['slug' => 'footer'])
             </ul>
             <div class="social">

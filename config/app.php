@@ -9,18 +9,19 @@ return [
 
     'imageSize' => [
         'category_image' => [
-            'header' => '1473x247',
+            'default' => '1473x247',
         ],
         'product_image'  => [
             'list' => '210x210',
-            'view' => '702x470',
+            'view' => '700x',
         ],
-        'supplier' => [
+        'supplier_image' => [
             'main' => '100x100'
         ]
     ],
 
     'defaultProductImage' => '/assets/img/tmp/photo-5.jpg',
+    'defaultCategoryImage' => '/assets/img/tmp/photo-15.jpg',
     'defaultSupplierImage' => '/assets/img/tmp/photo-9.jpg',
     /*
     |--------------------------------------------------------------------------

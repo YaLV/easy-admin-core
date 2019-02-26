@@ -22,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
         View::share("pageLanguage", language());
         View::share("frontController", new FrontController);
         View::share("cache", new CacheController);
+        View::composer("Categories::frontend.list", function($view) {
+            $view->with("currentMenuId", (new CacheController)->getMenuCache('shop')->getCurrentId());
+            $view->with("currentCategoryId", (new CacheController)->getMenuCache('shop')->getCurrentCatId());
+        });
+
 
         // Register Plugin View/Migration Directory
         $dir = config('app.plugins', app_path('Plugins'));
@@ -52,22 +57,22 @@ class AppServiceProvider extends ServiceProvider
             $breadcrumbs = $title = [];
             do {
                 $editorId = request()->route('id');
-                if($editorId && preg_match("/[{}]/",$page->slug)) {
+                if ($editorId && preg_match("/[{}]/", $page->slug)) {
                     $controller = explode("@", $page->action);
                     $editName = (new $controller[0])->getEditName($editorId);
-                    $pageEl = (object)['displayName' => $page->displayName.": <strong>".$editName."</strong>"];
+                    $pageEl = (object)['displayName' => $page->displayName . ": <strong>" . $editName . "</strong>"];
                     $breadcrumbs[] = $pageEl;
                 } else {
                     $breadcrumbs[] = $page;
                 }
 
-                $page = Menu::find($page->parent_id??false);
-            } while($page);
+                $page = Menu::find($page->parent_id ?? false);
+            } while ($page);
 
             $breadcrumbs = array_reverse($breadcrumbs);
 
-            foreach($breadcrumbs as $crumb) {
-                $title[] = strip_tags($crumb->displayName??ucfirst(Route::currentRouteName()));
+            foreach ($breadcrumbs as $crumb) {
+                $title[] = strip_tags($crumb->displayName ?? ucfirst(Route::currentRouteName()));
             }
             $view->with('title', implode("::", $title));
 
@@ -75,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Admin pages - send current Route Name
-        View::composer('admin.*',function($view) {
+        View::composer('admin.*', function ($view) {
             $routeName = explode(".", Route::currentRouteName());
             $view->with('currentRoute', $routeName[0]);
         });

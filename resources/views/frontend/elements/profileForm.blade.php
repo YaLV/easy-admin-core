@@ -1,6 +1,9 @@
 <div class="sv-user-data-forms">
     <form method="post" action="{{$action}}">
         {{ csrf_field() }}
+        @if($user->registered)
+            <input type="hidden" name="id" value="{{$user->id}}" />
+        @endif
         <div class="section">
             <div class="input-wrapper req">
                 <label>E-pasts</label>
@@ -50,14 +53,14 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="input-wrapper checkbox-large">
-                        <input type="checkbox" id="is_legal" name="legal_person"
-                               value="1" {{ (old('legal_person')??$user->legal_person??false)?"checked=checked":"" }}/>
+                        <input type="checkbox" id="is_legal" name="is_legal"
+                               value="1" {{ (old('is_legal')??$user->is_legal??false)?"checked=checked":"" }}/>
                         <label for="is_legal">{{ $checkboxText??"Esmu Jurdiska persona"}}</label>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="section{{ (old("legal_person")??$user->legal_person??false)?"":" hidden" }}" id="legalform">
+        <div class="section{{ (old("is_legal")??$user->is_legal??false)?"":" hidden" }}" id="legalform">
             <div class="input-wrapper req">
                 <label>Uzņēmuma jurdiskais nosaukums</label>
                 <input type="text" name="legal_name" value="{{ old('legal_name')??$user->legal_name??"" }}" />
@@ -109,15 +112,18 @@
             @endif
             <div class="sv-blank-spacer very-small"></div>
             <div class="input-wrapper checkbox-large">
-                <input type="checkbox" id="check-11" name="newsletter" value="1" {{ (old('newsletter')??$user->newsletter??false)?"checked=checked":"" }}/>
+                <input type="checkbox" id="check-11" name="newsletter"
+                       value="1" {{ (old('newsletter')??$user->newsletter??false)?"checked=checked":"" }}/>
                 <label for="check-11">Vēlies saņemt Svaigi.lv jaunumus e-pastā?</label>
             </div>
-            <div class="sv-blank-spacer very-small"></div>
-            <div class="input-wrapper checkbox-large">
-                <input type="checkbox" id="check-12" name="rules" value="1" />
-                <label for="check-12">Piekrīti mūsu mājas lapas noteikumiem</label>
-                <a href="#">Lasīt noteikumus</a>
-            </div>
+            @if(!$user->registered)
+                <div class="sv-blank-spacer very-small"></div>
+                <div class="input-wrapper checkbox-large">
+                    <input type="checkbox" id="check-12" name="rules" value="1" />
+                    <label for="check-12">Piekrīti mūsu mājas lapas noteikumiem</label>
+                    <a href="#">Lasīt noteikumus</a>
+                </div>
+            @endif
             <div class="sv-blank-spacer small"></div>
             <button class="sv-btn">{{ $buttonText??"Uz Priekšu" }}</button>
         </div>

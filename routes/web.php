@@ -20,6 +20,22 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 
 // --------------- PUBLIC ROUTES ------------------- //
 
+// Images
+Route::pattern("imPath", implode("|", config('app.uploadFile')));
+Route::get('/{imPath}/{size}/{file}', "FrontController@showImage")->name('image')->where("size", "(\d{1,4}x\d{1,4}|x\d{1,4}|\d{1,4}x)");
+Route::get('/{imPath}/{file}', "FrontController@showImage")->name('image.nosize');
+
+// Profile Stuff
+Route::get("/{lang}/profile", 'ProfileController@index')->name('profile');
+Route::get("/profile",'ProfileController@index')->name('profile.default');
+Route::post("/{lang}/profile", 'ProfileController@store')->name('profile.save');
+Route::post("/profile",'ProfileController@store')->name('profile.save.default');
+
+// Verify Changed Email
+Route::get("/{lang}/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.save');
+Route::get("/verify/{action}/{verifyString}",'ProfileController@verify')->name('verifyChangedEmail.default');
+
+// Home Page
 Route::pattern('lang', implode("|",languages()->pluck("code")->toArray()));
 Route::get('/{lang?}', 'FrontController@page')->name('home');
 
@@ -31,19 +47,21 @@ Route::get("/cart", "\App\Plugins\Orders\CartController@index")->name('cart.defa
 Route::post("/{lang}/cart/save", "\App\Plugins\Orders\CartController@changeCartItem")->name('cartAdd');
 Route::post("/cart/save", "\App\Plugins\Orders\CartController@changeCartItem")->name('cartAdd.default');
 
-// Checkout
+// Checkout Step 2
 Route::get("/{lang}/checkout/{edit?}", "\App\Plugins\Orders\CartController@checkout")->name('checkout');
 Route::get("/checkout/{edit?}", "\App\Plugins\Orders\CartController@checkout")->name('checkout.default');
 
 Route::post("/{lang}/checkout", "\App\Plugins\Orders\CartController@saveUserInfo")->name('checkout.post');
 Route::post("/checkout", "\App\Plugins\Orders\CartController@saveUserInfo")->name('checkout.post.default');
 
+// Checkout Step 3
 Route::get("/{lang}/payment", "\App\Plugins\Orders\CartController@payment")->name('payment');
 Route::get("/payment", "\App\Plugins\Orders\CartController@payment")->name('payment.default');
 
 Route::post("/{lang}/payment", "\App\Plugins\Orders\CartController@saveOrder")->name('payment.post');
 Route::post("/payment", "\App\Plugins\Orders\CartController@saveOrder")->name('payment.post.default');
 
+// Checkout Thankyou
 Route::get("/{lang}/thankyou", "\App\Plugins\Orders\CartController@thankyou")->name('thankyou');
 Route::get("/thankyou", "\App\Plugins\Orders\CartController@thankyou")->name('thankyou.default');
 

@@ -4,6 +4,7 @@ namespace App\Cache;
 
 
 use App\Http\Controllers\CacheController;
+use App\Plugins\Products\Model\Product;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +56,7 @@ class ProductCache
     {
 
         // Image
-        $image = $product->image();
+        $image = $product->getImage();
         $this->imageUrl = $image ? $image->filePath : config("app.defaultProductImage");
 
         // New
@@ -144,7 +145,6 @@ class ProductCache
         }
     }
 
-
     public function getVariationPrice($vid)
     {
         if($this->hasManyPrices()) {
@@ -165,14 +165,19 @@ class ProductCache
 
     private function getNewUntil($created)
     {
-        $newLife = config('app.product.newLength', ['h' => 24]);
+        $newLife = config('app.product.newLength', ['h' => 168]);
 
         return $created->addSeconds((((($newLife['h'] ?? 0) * 60) + (($newLife['m'] ?? 0))) * 60));
     }
 
-    public function image($type = 'list')
+    public function image($size)
     {
-        return $this->imageUrl[$type] ?? config('app.defaultProductImage');
+        $path = "/".implode("/", ["products", $size, $this->imageUrl]);
+        if(\Storage::exists("public/$path")) {
+            return $path;
+        }
+
+        return config("app.defaultProductImage");
     }
 
     public function getUrl()
