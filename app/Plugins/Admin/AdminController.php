@@ -6,6 +6,8 @@ namespace App\Plugins\Admin;
 use App\Http\Controllers\Controller;
 use App\Plugins\Admin\Model\File;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Intervention\Image\Facades\Image;
 
 /**
  * Class AdminController
@@ -37,22 +39,74 @@ class AdminController extends Controller implements ControllerInterface
      */
     public function uploadFile(Request $request)
     {
-        $uploadFileName = request('path');
-        $returnData = [];
-        if ($request->hasFile($uploadFileName)) {
-            foreach ($request->file($uploadFileName) as $uploadedFile) {
-                $filename = $uploadedFile->store("public/" . (config("app.uploadFile.$uploadFileName") ?? "temp"));
-                $file = File::create([
-                    'main'     => false,
-                    'filePath' => "/" . str_replace('public', 'storage', $filename),
-                    'owner'    => request('owner'),
-                ]);
+        $uploadPath = request('path');
 
-                $returnData[] = view('Admin::fields.imagePreview', ['image' => $file])->render();
+        $returnData = [];
+        if ($request->hasFile($uploadPath)) {
+            foreach ($request->file($uploadPath) as $uploadedFile) {
+
+                $imageSizes = config("app.imageSize." . $uploadPath, null);
+                $fileSavePath = (config("app.uploadFile.$uploadPath") ?? "temp");
+                if (!$imageSizes) {
+                    $filename = basename($uploadedFile->store("public/" . $fileSavePath));
+
+                    $returnData[] = $this->saveFileDB($filename, $fileSavePath);
+
+                    continue;
+                }
+
+                /** @var Image $upImage */
+                $upImage = Image::make($uploadedFile->getRealPath());
+                list($origW, $origH) = [$upImage->width(), $upImage->height()];
+
+                $filename = str_random(40);
+                $fileExt = $uploadedFile->getClientOriginalExtension();
+                $saveFileName = "$filename.$fileExt";
+
+                foreach ($imageSizes as $imageSize) {
+                    $upImage->backup();
+                    list($width, $height) = explode("x", $imageSize);
+
+                    if($height!=$width && $width && $height) {
+                        $upImage->resize(($origH>=$origW?$width:null), ($origW>=$origH?$height:null), function ($l) {
+                            $l->aspectRatio();
+                        });
+                        $upImage->crop($width, $height);
+                    } else {
+                        $upImage->resize($width, $height, function ($l) {
+                            $l->aspectRatio();
+                        });
+                    }
+
+                    if (!\Storage::exists("public/$fileSavePath/$imageSize/")) {
+                        \Storage::makeDirectory("public/$fileSavePath/$imageSize/");
+                    }
+                    $upImage->save(storage_path("app/public/$fileSavePath/$imageSize/$saveFileName"), 100);
+                    $upImage->reset();
+                }
+                $returnData[] = $this->saveFileDB($saveFileName, $fileSavePath, current($imageSizes));
             }
         }
 
         return ["status" => true, 'message' => 'File Uploaded, please save form, to add file to current item', 'data' => $returnData];
+    }
+
+    /**
+     * @param      $filename
+     * @param      $path
+     * @param null $size
+     *
+     * @return View
+     */
+    private function saveFileDB($filename, $path, $size = null)
+    {
+        $file = File::create([
+            'main'     => false,
+            'filePath' => $filename,
+            'owner'    => request('owner'),
+        ]);
+
+        return view('Admin::fields.imagePreview', ['image' => $file, "path" => $size, 'owner' => $path])->render();
     }
 
     /**
@@ -142,6 +196,7 @@ class AdminController extends Controller implements ControllerInterface
     public function getApplicableMenuCategories()
     {
         $dir = app_path("Plugins");
+
         return $this->iteratePlugins($dir);
     }
 
@@ -152,7 +207,8 @@ class AdminController extends Controller implements ControllerInterface
      *
      * @return array
      */
-    public function iteratePlugins($dir) {
+    public function iteratePlugins($dir)
+    {
 
         $menuItems = [];
         $finder = new \DirectoryIterator($dir);
@@ -164,6 +220,7 @@ class AdminController extends Controller implements ControllerInterface
                 $menuItems[] = $class::getMenuItems();
             }
         }
+
         return $menuItems;
     }
 }

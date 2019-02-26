@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\MyEmailOrUnregistered;
 use App\Rules\UniqueNotRegistered;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
@@ -29,10 +30,10 @@ class Profile extends FormRequest
             'name'             => 'required',
             'last_name'        => 'required',
             'phone'            => 'required',
-            'legal_name'       => 'required_if:legal_person,1',
-            'legal_address'    => 'required_if:legal_person,1',
-            'legal_reg_nr'     => 'required_if:legal_person,1',
-            'legal_vat_reg_nr' => 'required_if:legal_person,1',
+            'legal_name'       => 'required_if:is_legal,1',
+            'legal_address'    => 'required_if:is_legal,1',
+            'legal_reg_nr'     => 'required_if:is_legal,1',
+            'legal_vat_reg_nr' => 'required_if:is_legal,1',
             'address'          => 'required',
             'city'             => 'required',
             'postal_code'      => 'required',
@@ -50,6 +51,11 @@ class Profile extends FormRequest
 
             case "checkout":
                 $rules['rules'] = 'accepted';
+                break;
+
+            case "profile":
+                $rules['password'] = 'confirmed';
+                $rules['email'] = ['required', 'email', new MyEmailOrUnregistered()];
                 break;
         }
 

@@ -43,9 +43,9 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        if (Auth::user()->isAdmin) {
+       /* if (Auth::user()->isAdmin) {
             return route('dashboard');
-        }
+        }*/
 
         return route('home');
     }
@@ -82,6 +82,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            session()->forget('cu');
             $fc = new FrontController;
             $fc->redrawCart();
 

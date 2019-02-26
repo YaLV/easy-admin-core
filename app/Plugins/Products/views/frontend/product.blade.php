@@ -1,5 +1,9 @@
 @extends('Categories::frontend.list')
 
+@php
+    $hideHeader = true;
+@endphp
+
 @section('wrapper')
     sv-product-single-wrapper
 @endsection
@@ -15,7 +19,7 @@
                         <img src="{{ asset('assets/img/badge-bio-1.svg') }}">
                     </div>
                 @endif
-                <img src="{{ $product->image() }}" class="title-image">
+                <img src="{{ $product->image(config('app.imageSize.product_image.view')) }}" class="title-image">
                 <div class="text">
                     {{ $product->getMeta('description') }}
                 </div>

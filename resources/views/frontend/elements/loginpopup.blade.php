@@ -23,7 +23,7 @@
                         Reģistrētiem lietotājiem ir iespēja redzēt savu pirkumu vēsturi, kā arī atkārtot kādu no
                         iepriekšējiem pasūtījumiem ar vienu peles klikšķi. Un dzīve ar mums kopā ir svaigāka!
                     </p>
-                    <a href="#" class="sv-btn black">Reģistrēties</a>
+                    <a href="{{ route('register'.isDefaultLanguage()) }}" class="sv-btn black">Reģistrēties</a>
                 </div>
             </div>
         </div>

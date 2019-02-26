@@ -9,6 +9,7 @@ use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductMeta;
 use App\Plugins\Products\Model\ProductVariation;
 use App\Plugins\Vat\Model\Vat;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -85,6 +86,7 @@ class ProductController extends AdminController
         try {
             DB::beginTransaction();
 
+            /** @var Product $product */
             $product = Product::updateOrCreate(['id' => $id], [
                 'sku'            => request('sku'),
                 'state'          => $this->switch(request('state')),
@@ -101,7 +103,7 @@ class ProductController extends AdminController
             ]);
             $this->handleMetas($product, $metas, 'name-id');
             $this->handleImages($product);
-            $this->setVariations($product)??$product->createVariation();
+            $res = $this->setVariations($product)??$product->createVariation();
             $this->addCategories($product);
             $this->addMarketDays($product);
             $product->attributeValues()->sync(request('attributeValues'));
@@ -122,6 +124,7 @@ class ProductController extends AdminController
 
     public function destroy($id)
     {
+        /** @var Product $cc */
         $cc = Product::findOrFail($id);
 
         try {
@@ -151,6 +154,7 @@ class ProductController extends AdminController
 
     public function state($id)
     {
+        /** @var Product $md */
         if ($md = Product::find($id)) {
             $md->delete();
 
@@ -217,22 +221,6 @@ class ProductController extends AdminController
         $id = request('id');
 
         return ['status' => true, "noMessage" => true, "result" => ProductVariation::findOrFail($id)];
-    }
-
-    public function asd()
-    {
-        Product::with('categories')
-            ->whereHas(
-                function ($q) use ($categories) {
-                    $q->whereIn('category_id', $categories);
-                }
-            )
-            ->with('attribute_values')
-            ->whereHasIn(
-                function ($q) use ($attributes) {
-                    $q->whereIn('attribute_value_id', $attributes);
-                }
-            )->get();
     }
 
 }

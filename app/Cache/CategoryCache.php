@@ -10,6 +10,7 @@ class CategoryCache
     private $categories;
     private $categoryTree;
     private $products = [];
+    private $image = [];
 
     public function __construct() {
         $categoryList = [];
@@ -20,10 +21,11 @@ class CategoryCache
         foreach($categories as $category) {
             $this->products[$category->id] = $category->products()->pluck('id')->toArray();
             $categoryList[$category->id] = $category->parent_id??0;
+            $cimage = $category->getImage();
+            $this->image[$category->id] = $cimage?$cimage->filePath:null;
         }
 
         $this->categoryTree = $categoryList;
-
     }
 
     public function getPath($categoryId) {
@@ -33,5 +35,15 @@ class CategoryCache
     public function findParent($categoryId) {
         if($categoryId==0) return [];
         return array_merge($this->findParent($this->categoryTree[$categoryId]), [$categoryId]);
+    }
+
+    public function image($size, $categoryId)
+    {
+        $path = "/".implode("/", ["categories", $size, $this->image[$categoryId]]);
+        if(\Storage::exists("public/$path")) {
+            return $path;
+        }
+
+        return config("app.defaultCategoryImage");
     }
 }

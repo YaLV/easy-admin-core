@@ -46,9 +46,9 @@ class Product extends BaseModel
     public $metaClass = __NAMESPACE__ . '\ProductMeta';
     public $imageTypes;
 
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
-        $this->imageTypes = config('app.imageSize.product_image');
     }
 
     public function main_cat()
@@ -74,11 +74,11 @@ class Product extends BaseModel
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $item
+     * @param $item
      *
      * @return array
      */
-    public function formatSelected(Model $item)
+    public function formatSelected($item)
     {
         switch ($item) {
             case "extra_categories":
@@ -129,47 +129,56 @@ class Product extends BaseModel
         return $this->belongsTo(Unit::class);
     }
 
-    public function createVariation() {
+    public function createVariation()
+    {
         $unitSize = $this->unit->unit;
-        return [$this->variations()->create([
-            'amount'    => 1,
-            'display_name' => "1".$unitSize,
-            'for_supplier' => "1".$unitSize,
-        ])];
+
+        return [
+            $this->variations()->create([
+                'amount'       => 1,
+                'display_name' => "1" . $unitSize,
+                'for_supplier' => "1" . $unitSize,
+            ]),
+        ];
     }
 
     /***************** Frontend Functions ********************/
 
-    public function isSale() {
+    public function isSale()
+    {
         return 1;
     }
 
-    public function isNew() {
-        return rand(0,1);
+    public function isNew()
+    {
+        return rand(0, 1);
     }
 
-    public function image() {
-        return $this->imageClass()->where('owner', 'product')->first();
-    }
-
-    public function imageClass() {
+    public function images()
+    {
         return $this->hasMany(File::class, 'owner_id');
     }
 
-    public function findDiscount() {
+    public function getProductImageAttribute() {
+        return $this->images()->where("owner", "product_image")->get();
+    }
+
+    public function findDiscount()
+    {
         $discounts = [
             $this->discount(),
-            (Auth::user()?Auth::user()->discount():0)
+            (Auth::user() ? Auth::user()->discount() : 0),
         ];
 
-        foreach($this->extra_categories as $category) {
+        foreach ($this->extra_categories as $category) {
             $discounts[] = $category->discount();
         }
 
         return min($discounts);
     }
 
-    public function discount() {
+    public function discount()
+    {
         return "-20";
     }
 }

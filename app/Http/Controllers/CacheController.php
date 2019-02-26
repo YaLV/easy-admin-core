@@ -65,6 +65,9 @@ class CacheController extends Controller
         if(!($marketDay instanceof MarketDays)) {
             $this->getClosestMarketDayList();
             $marketDay = $this->getSelectedMarketDay();
+            if(!$marketDay) {
+                return __("No Market Days Available");
+            }
         }
         return __("Uz :dayname, :date", ['dayname' => substr($marketDay->name, 0, -1)."u", 'date' => $marketDay->date->format("d.m")]);
     }
@@ -81,7 +84,6 @@ class CacheController extends Controller
         }
         $marketDay = $this->getClosestMarketDay();
         session()->put('marketDay', $marketDay);
-
         return $marketDay;
     }
 
@@ -97,6 +99,7 @@ class CacheController extends Controller
         if($marketDay) {
             session()->forget('marketDay');
             session()->put('marketDay', $marketDay);
+            session()->forget('ca');
             return redirect()->back();
         } else {
             abort(404);

@@ -85,7 +85,7 @@ class CategoryController extends AdminController
 
         try {
             DB::beginTransaction();
-
+            /** @var Category $category */
             $category = Category::updateOrCreate(['id' => $id], [
                 'parent_id' => request('parent_id'),
             ]);
@@ -93,6 +93,7 @@ class CategoryController extends AdminController
             $this->handleImages($category);
             $this->handleAttributes($category);
             DB::commit();
+            $category->forgetMeta();
             (new CacheController)->createCategoryCache(true);
         } catch(\PDOException $e) {
             DB::rollBack();
@@ -110,6 +111,7 @@ class CategoryController extends AdminController
     public function destroy($id)
     {
 
+        /** @var Category $cc */
         $cc = Category::findOrFail($id);
 
         if($cc->products_main()->count()) {

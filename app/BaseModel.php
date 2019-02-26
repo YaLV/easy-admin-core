@@ -111,13 +111,13 @@ class BaseModel extends Model
     }
 
     /**
-     * unused ???
+     *  Select "chosen" selectables
      *
      * @param $item
      *
      * @return array
      */
-    public function formatSelected(Model $item) {
+    public function formatSelected($item) {
         return $this->$item->pluck('id')->toArray()??[];
     }
 
@@ -129,8 +129,11 @@ class BaseModel extends Model
      * @return null
      */
     public function getImage($imageType = 'main') {
-        if(method_exists($this, 'image')) {
-            return $this->image()->whereIn('owner', $this->imageTypes)->get();
+        if(method_exists($this, 'images')) {
+            $types = array_flip(config('app.uploadFile'));
+            if($types[str_plural(strtolower(class_basename($this)))]) {
+                return $this->images()->where('owner', $types[str_plural(strtolower(class_basename($this)))])->first();
+            }
         }
         return null;
     }

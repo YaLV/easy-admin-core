@@ -31,7 +31,7 @@
 @include("frontend.elements.categorymenu")
 
 @yield('content')
-
+<div class="sv-blank-spacer medium"></div>
 @include("frontend.elements.footer")
 
 @include("frontend.elements.copyright")
