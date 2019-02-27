@@ -615,7 +615,7 @@ function farmersmap() {
 
   var map;
   var markers = []; // Create a marker array to hold your markers
-  var farmers = [
+/*  var farmers = [
     ['z/s Cimbuļi', 56.9680577, 23.9764266, 1],
     ['z/s Cimbuļi', 57.3905378, 21.6458912, 2],
     ['z/s Cimbuļi', 56.3640147, 21.0163034, 3],
@@ -630,23 +630,24 @@ function farmersmap() {
     ['Meistars', 57.2613051, 22.6613138, 4],
     ['Meistars', 56.6588643, 22.0284328, 5],
     ['Meistars', 56.3648658, 26.7031151, 6]
-  ];
+  ];*/
 
 
   function setMarkers(locations) {
 
-    var markerIcon = {
-      url: 'img/tmp/icon-map-farmer.png',
-      scale: 1,
-      width: 45,
-      height: 45,
-      // anchor: new google.maps.Point(12, 24),
-      optimized: false,
-      zIndex: 99999999
-    };
-
     for (var i = 0; i < locations.length; i++) {
       var farmer = locations[i];
+
+      var markerIcon = {
+          url: farmer[4],
+          scale: 1,
+          width: 45,
+          height: 45,
+          // anchor: new google.maps.Point(12, 24),
+          optimized: false,
+          zIndex: 99999999
+      };
+
       var myLatLng = new google.maps.LatLng(farmer[1], farmer[2]);
       var marker = new google.maps.Marker({
         position: myLatLng,

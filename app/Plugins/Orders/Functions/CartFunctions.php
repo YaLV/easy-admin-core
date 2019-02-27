@@ -13,7 +13,7 @@ trait CartFunctions
 {
     private function getCart($changedUser = null)
     {
-        $cart = session()->get('ca');
+        $cart = session()->get('cart');
         if ($changedUser && Auth::user() && $cart) {
             /** @var OrderHeader $userCart */
             $userCart = OrderHeader::where(['user_id' => Auth::user()->id])->first();
@@ -22,10 +22,12 @@ trait CartFunctions
 
             if ($anonCart->items()->count() == 0) {
                 session()->put('cart', $userCart->id);
+//                session()->put('ca', $userCart);
                 $anonCart->delete();
             } else {
                 $userCart->items()->delete();
                 $userCart->delete();
+//                session()->put('ca', $anonCart);
             }
         } elseif(!$cart) {
             $md = (new CacheController)->getSelectedMarketDay();
@@ -60,7 +62,9 @@ trait CartFunctions
             $cart = OrderHeader::updateOrCreate($cartFind, $cartUpdate);
 
             session()->put('cart', $cart->id);
-            session()->put('ca', $cart);
+//            session()->put('ca', OrderHeader::find($cart->id));
+        } else {
+            $cart = OrderHeader::find(session()->get('cart'));
         }
 
         return $cart;

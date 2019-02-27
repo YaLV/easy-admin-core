@@ -63,7 +63,7 @@ class AdminController extends Controller implements ControllerInterface
                 $fileExt = $uploadedFile->getClientOriginalExtension();
                 $saveFileName = "$filename.$fileExt";
 
-                foreach ($imageSizes as $imageSize) {
+                foreach ($imageSizes as $imageType => $imageSize) {
                     $upImage->backup();
                     list($width, $height) = explode("x", $imageSize);
 
@@ -76,6 +76,13 @@ class AdminController extends Controller implements ControllerInterface
                         $upImage->resize($width, $height, function ($l) {
                             $l->aspectRatio();
                         });
+                    }
+
+                    if($imageType=='round') {
+                        /** @var Image $mask */
+                        $mask = Image::canvas($width, $height);
+                        $mask->circle($width, $width/2, $height/2);
+                        $upImage->mask($mask, true);
                     }
 
                     if (!\Storage::exists("public/$fileSavePath/$imageSize/")) {
