@@ -30,7 +30,11 @@ class Supplier extends BaseModel
         return $this->hasMany(Product::class);
     }
 
-    public function image() {
+    public function images() {
         return $this->hasMany(File::class, 'owner_id');
+    }
+
+    public function getCoordsArrayAttribute() {
+        return explode(",",$this->coords);
     }
 }

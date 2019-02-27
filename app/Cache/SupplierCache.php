@@ -26,8 +26,9 @@ class SupplierCache
     }
 
     private function setImage(Supplier $supplier) {
-        $this->imageUrl = $supplier->image??config('supplier.defaultImage', asset('assets/img/tmp/photo-9.jpg'));
-    }
+        // Image
+        $image = $supplier->getImage();
+        $this->imageUrl = $image ? $image->filePath : config("app.defaultProductImage");    }
 
     private function setData(Supplier $supplier) {
         foreach(languages() as $language) {
@@ -35,7 +36,7 @@ class SupplierCache
                 $this->metaData[$meta->meta_name][$language->code] = $meta->meta_value;
             }
         }
-        $this->coods = $supplier->coords;
+        $this->coords = $supplier->coords;
         $this->isCraftsman = $supplier->craftsman;
         $this->isFarmer = $supplier->farmer;
         $this->isFeatured = $supplier->featured;
@@ -49,8 +50,23 @@ class SupplierCache
         return $this->metaData[$key][$language]??$this->metaData[$key][language()]??"";
     }
 
-    public function getImage() {
-        return $this->imageUrl;
+    public function image($size)
+    {
+        $path = "/".implode("/", ["suppliers", $size, $this->imageUrl]);
+        if(\Storage::exists("public/$path")) {
+            return $path;
+        }
+
+        return config("app.defaultSupplierImage");
+    }
+
+    public function getCoords() {
+        return explode(",", $this->coords);
+    }
+
+
+    public function hasCoords() {
+        return count($this->getCoords())==2 && $this->getCoords()[0] && $this->getCoords()[1];
     }
 
 }

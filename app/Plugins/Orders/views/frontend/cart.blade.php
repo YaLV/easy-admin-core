@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
     @forelse($cart->items as $item)
         @push('items')
             @include("Orders::frontend.partials.item")

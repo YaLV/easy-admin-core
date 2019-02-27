@@ -143,16 +143,3 @@ function currentUser($change = false) {
 
     return $user;
 }
-
-function currentCart($change = false) {
-    if(!$change) {
-        $ca = session()->get('ca');
-    }
-
-    $cart = $ca??Auth::user()??\App\User::find(99);
-
-    session()->put('ca', $cart);
-
-    return $cart;
-
-}

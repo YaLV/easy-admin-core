@@ -20,6 +20,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 
 // --------------- PUBLIC ROUTES ------------------- //
 
+Route::get('/sa', function() {
+    return view('frontend.pages.farmers', ['suppliers' => \App\Plugins\Suppliers\Model\Supplier::all()->pluck('id')]);
+});
+
 // Images
 Route::pattern("imPath", implode("|", config('app.uploadFile')));
 Route::get('/{imPath}/{size}/{file}', "FrontController@showImage")->name('image')->where("size", "(\d{1,4}x\d{1,4}|x\d{1,4}|\d{1,4}x)");

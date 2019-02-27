@@ -70,7 +70,6 @@ class CartController extends Controller
                 ];
             }
         }
-
         if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
             $item->increment('amount', (request()->get('amount') ?? 1));
         } else {

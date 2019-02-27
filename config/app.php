@@ -5,6 +5,7 @@ return [
     'uploadFile' => [
         'category_image' => 'categories',
         'product_image'  => 'products',
+        'supplier_image' => 'suppliers',
     ],
 
     'imageSize' => [
@@ -16,11 +17,12 @@ return [
             'view' => '700x',
         ],
         'supplier_image' => [
-            'main' => '100x100'
-        ]
+            'main'  => '260x260',
+            'round' => '260x260',
+        ],
     ],
 
-    'defaultProductImage' => '/assets/img/tmp/photo-5.jpg',
+    'defaultProductImage'  => '/assets/img/tmp/photo-5.jpg',
     'defaultCategoryImage' => '/assets/img/tmp/photo-15.jpg',
     'defaultSupplierImage' => '/assets/img/tmp/photo-9.jpg',
     /*
