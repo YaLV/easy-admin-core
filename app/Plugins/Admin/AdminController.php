@@ -67,7 +67,7 @@ class AdminController extends Controller implements ControllerInterface
                     $upImage->backup();
                     list($width, $height) = explode("x", $imageSize);
 
-                    if($height!=$width && $width && $height) {
+                    if($origW!=$origH && $width && $height) {
                         $upImage->resize(($origH>=$origW?$width:null), ($origW>=$origH?$height:null), function ($l) {
                             $l->aspectRatio();
                         });

@@ -26,7 +26,7 @@
     <div class="product">
         <div class="image">
             <a href="#">
-                <img src="{{ asset('assets/img/tmp/photo-20.jpg')}}" />
+                <img src="{{ $product->image(config('app.imageSize.product_image.list')) }}" />
             </a>
         </div>
         <div class="title">

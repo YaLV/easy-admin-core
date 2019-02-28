@@ -615,47 +615,21 @@ function farmersmap() {
 
   var map;
   var markers = []; // Create a marker array to hold your markers
-/*  var farmers = [
-    ['z/s Cimbuļi', 56.9680577, 23.9764266, 1],
-    ['z/s Cimbuļi', 57.3905378, 21.6458912, 2],
-    ['z/s Cimbuļi', 56.3640147, 21.0163034, 3],
-    ['z/s Cimbuļi', 56.3754104, 25.0451068, 4],
-    ['z/s Cimbuļi', 57.3780472, 25.8692115, 5],
-    ['z/s Cimbuļi', 56.5697352, 27.1985571, 6]
-  ];
-  var masters = [
-    ['Meistars', 56.7170924, 23.7973048, 1],
-    ['Meistars', 56.9484532, 24.8426623, 2],
-    ['Meistars', 57.3557291, 25.1895103, 3],
-    ['Meistars', 57.2613051, 22.6613138, 4],
-    ['Meistars', 56.6588643, 22.0284328, 5],
-    ['Meistars', 56.3648658, 26.7031151, 6]
-  ];*/
-
 
   function setMarkers(locations) {
 
     for (var i = 0; i < locations.length; i++) {
       var farmer = locations[i];
 
-      var markerIcon = {
-          url: farmer[4],
-          scale: 1,
-          width: 45,
-          height: 45,
-          // anchor: new google.maps.Point(12, 24),
-          optimized: false,
-          zIndex: 99999999
-      };
-
       var myLatLng = new google.maps.LatLng(farmer[1], farmer[2]);
-      var marker = new google.maps.Marker({
+      var marker = new RichMarker({
         position: myLatLng,
         map: map,
         animation: google.maps.Animation.DROP,
         title: farmer[0],
         zIndex: farmer[3],
-        icon: markerIcon
+        content: "<img title='"+farmer[0]+"' src='"+farmer[4]+"' class='googleMapsMarker'/>",
+        flat: true
       });
 
       // Push marker to markers array
