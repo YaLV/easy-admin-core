@@ -82,7 +82,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-            session()->forget('cu');
+
             $fc = new FrontController;
             $fc->redrawCart();
 
@@ -108,10 +108,10 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
 
-        $fc = new FrontController;
-
         $this->guard()->logout();
 
+        // Redraw cart - without user discount
+        $fc = new FrontController;
         $cartId = $fc->redrawCart();
 
         $request->session()->invalidate();

@@ -100,6 +100,15 @@ function isDefaultLang()
 
 function getCartTotals($cart)
 {
+    if(!$cart) {
+        return (object)[
+            'productSum' => 0,
+            'vatSum'     => 0,
+            'discount'   => 0,
+            'toPay'      => 0,
+        ];
+    }
+
     $sums = $cart->items()->selectRaw('sum(price*amount) as sum, sum(vat*amount) as vatsum ')->first();
     $productSum = $sums->sum ?? 0;
     $vatSum = $sums->vatsum ?? 0;

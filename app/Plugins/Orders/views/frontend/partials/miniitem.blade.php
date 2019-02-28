@@ -3,7 +3,7 @@
 @endphp
 <a href="{{ $product->getUrl() }}" class="item">
     <span class="image">
-        <img src="{{ asset('assets/img/tmp/photo-1.jpg') }}">
+        <img src="{{ $product->image(config('app.imageSize.product_image.list')) }}">
     </span>
     <span class="text">
         <h3>{{ $item->product_name }}</h3>

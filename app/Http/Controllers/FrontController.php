@@ -137,13 +137,8 @@ class FrontController extends Controller
 
     public function redrawCart()
     {
-        /** @var User $user */
-//        $user = (Auth::user() ?? User::find(99));
-
         /** @var OrderHeader $cart */
         $cart = $this->getCart(true);
-
-//        $cart->update(['user_id' => $user->id]);
 
         /** @var OrderLines $item */
         foreach ($cart->items as $item) {
@@ -171,32 +166,6 @@ class FrontController extends Controller
         }
 
         return $cart->id;
-    }
-
-    public function findCart($user)
-    {
-        /** @var OrderHeader $currentCart */
-        $currentCart = OrderHeader::find(session()->get('cart'))->first();
-
-        if ($user == 99) {
-            return $currentCart;
-        } else {
-            /** @var OrderHeader $previousCart */
-            $previousCart = OrderHeader::where(['user_id' => Auth::user()->id, 'state' => 'draft'])->first();
-        }
-
-        $cartHasItems = $currentCart->items()->count();
-        if ($previousCart) {
-            if (!$cartHasItems) {
-                session()->put('cart', $previousCart->id);
-
-                return $previousCart;
-            }
-            $previousCart->items()->delete();
-            $previousCart->delete();
-        }
-
-        return $currentCart;
     }
 
     public function showImage($folder, $size, $image = null)

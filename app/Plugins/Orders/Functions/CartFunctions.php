@@ -13,61 +13,66 @@ trait CartFunctions
 {
     private function getCart($changedUser = null)
     {
+        // Find Cart in Session
         $cart = session()->get('cart');
-        if ($changedUser && Auth::user() && $cart) {
+
+        // Check DB if it has a record
+        $cartObject = $cart?OrderHeader::find($cart):null;
+
+        // If user logged in
+        if ($changedUser && Auth::user() && $cart && $cartObject) {
             /** @var OrderHeader $userCart */
             $userCart = OrderHeader::where(['user_id' => Auth::user()->id])->first();
             /** @var OrderHeader $anonCart */
             $anonCart = OrderHeader::find(session()->get('cart'));
 
             if ($anonCart->items()->count() == 0) {
-                session()->put('cart', $userCart->id);
-//                session()->put('ca', $userCart);
-                $anonCart->delete();
+                if(!$userCart) {
+                    $anonCart->update(['user_id' => Auth::user()->id]);
+                    session()->put('cart', $anonCart->id);
+                    $cartObject = $anonCart;
+                } else {
+                    session()->put('cart', $userCart->id);
+                    $anonCart->delete();
+                    $cartObject = $userCart;
+                }
             } else {
-                $userCart->items()->delete();
-                $userCart->delete();
-//                session()->put('ca', $anonCart);
+                $anonCart->update(['user_id' => Auth::user()->id]);
+                if($userCart) {
+                    $userCart->items()->delete();
+                    $userCart->delete();
+                }
+                $cartObject = $anonCart;
             }
-        } elseif(!$cart) {
+            // if there is no cart or cartObject
+        } elseif(!$cart || !$cartObject) {
+            $user = Auth::user();
+
             $md = (new CacheController)->getSelectedMarketDay();
 
             if(!$md) {
                 abort(404, "No Available MarketDays");
             }
 
-            $cartFind = ['id' => null];
-
-
-            $user = currentUser($changedUser);
-
-            if ($cartId = session()->get('cart')) {
-                $cartFind = [
-                    'id'    => $cartId,
-                    'state' => 'draft',
-                ];
-            } elseif ($user->isAnonimous()) {
-                $cartFind = ['id' => null, 'state' => 'draft'];
-            } elseif (!$user->isAnonimous()) {
-                $cartFind = ['user_id' => $user->id, 'state' => 'draft'];
+            // if user is logged in - check if he has cart
+            if($user) {
+                $cartObject = $user->cart()->where('state', 'draft')->first();
             }
 
+            // if there is no cart - create one
+            if(!$cartObject) {
+                $cartObject = OrderHeader::create([
+                    'user_id'         => $user->id??99,
+                    'market_day_id'   => $md->id??null,
+                    'market_day_date' => $md->date??null,
+                ]);
+            }
 
-            $cartUpdate = [
-                'user_id'         => $user->id,
-                'market_day_id'   => $md->id??null,
-                'market_day_date' => $md->date??null,
-            ];
-
-            $cart = OrderHeader::updateOrCreate($cartFind, $cartUpdate);
-
-            session()->put('cart', $cart->id);
-//            session()->put('ca', OrderHeader::find($cart->id));
-        } else {
-            $cart = OrderHeader::find(session()->get('cart'));
+            // Save created/found cart id in session
+            session()->put('cart', $cartObject->id);
         }
 
-        return $cart;
+        return $cartObject;
     }
 
     private function getCartContents($cart, $cartType = false)

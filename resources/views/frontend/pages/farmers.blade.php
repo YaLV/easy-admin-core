@@ -133,4 +133,6 @@
         ];
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi1BNqkST_SmY7gsbRxuKZziOyF4ceJB4"></script>
+    <script src="{{ asset('assets/js/richmarker-compiled.js') }}">
+    </script>
 @endpush
