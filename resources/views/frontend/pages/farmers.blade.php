@@ -27,7 +27,7 @@
     @if($supplierCache->isCraftsman)
         @push('craftsman')
             <a href="#" class="item">
-                <img src="{{ $supplierCache->getImage() }}">
+                <img src="{{ $supplierCache->image(config('app.imageSize.supplier_image.main')) }}">
                 <h3>{{ __("supplier.name.$supplier") }}</h3>
                 <h4>{{ __("supplier.location.$supplier") }}</h4>
             </a>
