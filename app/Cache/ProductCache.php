@@ -4,6 +4,7 @@ namespace App\Cache;
 
 
 use App\Http\Controllers\CacheController;
+use App\Plugins\Categories\Model\Category;
 use App\Plugins\Products\Model\Product;
 use App\User;
 use Carbon\Carbon;
@@ -119,7 +120,7 @@ class ProductCache
 
     private function discount()
     {
-        $user = Auth::user() ?? User::find(99);
+        $user = Auth::user() ?? session()->get('user') ?? User::find(99);
 
         return $user->discount();
     }
@@ -187,7 +188,7 @@ class ProductCache
 
         if (count($path) == 0) return "#";
 
-        return r("url" . isDefaultLanguage(), array_merge($path, ['product' => __('product.slug.' . $this->id)]));
+        return r("url", array_merge($path, ['product' => __('product.slug.' . $this->id)]));
     }
 
     public function createPath($catList)
@@ -230,5 +231,16 @@ class ProductCache
     public function supplier()
     {
         return (new CacheController)->getSupplier($this->supplier_id);
+    }
+
+    public function getOtherProducts($exclude = false) {
+
+        $category = Category::find($this->mainCategory)->products();
+
+        if($exclude) {
+            $category = $category->where('products.id', '!=', $exclude);
+        }
+
+        return $category->limit(10)->pluck('products.id');
     }
 }

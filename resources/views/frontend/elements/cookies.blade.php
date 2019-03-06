@@ -1,9 +1,9 @@
 <div class="sv-cookies">
     <div>
-        Šī vietne izmanto sīkdatnes. Piekrītot to izmantošanai, tiks uzlabota mājaslapas lietošanas pieredze. Lasīt vairak par <a href="#">privātuma noteikumiem</a>
+        {!! __("translations.cookieAgreement") !!}
     </div>
     <div>
-        <a href="#">Piekrītu</a>
-        <a href="#">Nepiekrītu</a>
+        <a href="#">{!! __('translations.acceptCookies') !!}</a>
+        <a href="#">{!! __('translations.denyCookies') !!}</a>
     </div>
 </div>

@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
-@section('pageTitle')
-    Profils
-@endsection
-
 @section('content')
     @include("Orders::frontend.partials.step")
 
-    @include("frontend.elements.profileForm", ['action' => r("profile.save".isDefaultLanguage()), 'checkboxText' => 'Esmu Juridiska persona', 'showPassword' => true, 'buttonText' => 'Saglabāt'])
+    @include("frontend.elements.profileForm", ['action' => r("profile.save"), 'checkboxText' => __('translations.iAmLegalPerson'), 'showPassword' => true, 'buttonText' => __('translations.profileSaveButton')])
 @endsection

@@ -6,6 +6,7 @@ use App\Http\Requests\Profile;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -59,7 +60,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register', ['user' => new User]);
+        return view('auth.register', ['user' => new User, "pageTitle" => "Reģistrācija"]);
     }
 
     public function register(Profile $request)

@@ -1,18 +1,18 @@
 <div class="sv-product-card {{ $item->isSale() }}">
-    <form method="post" action="{{ r("cartAdd".isDefaultLanguage()) }}">
+    <form method="post" action="{{ r("cartAdd") }}">
         {{ @csrf_field() }}
         <input type="hidden" name="product_id" value="{{ $item->id }}" />
         @if($item->isSale())
             <div class="sv-tag sale">
-                Akcija
+                {!! __('translations.sale') !!}
             </div>
         @elseif($item->isSuggested)
             <div class="sv-tag sugg">
-                Ieteikts
+                {!! __('translations.suggested') !!}
             </div>
         @elseif($item->isNew())
             <div class="sv-tag new">
-                Jauns
+                {!! __('translations.new') !!}
             </div>
         @endif
 

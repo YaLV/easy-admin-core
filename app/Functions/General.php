@@ -2,13 +2,17 @@
 
 namespace App\Functions;
 
+use App\BaseModel;
 use App\Plugins\Admin\Model\File;
 
 trait General
 {
-    public function handleMetas($collection, $metas, $slug)
+    public function handleMetas($collection, $metas, $slug = false, $metaData = false)
     {
-        $metaData = request($metas);
+
+        /** @var BaseModel $collection */
+
+        $metaData = $metaData?:request($metas);
 
         foreach ($metas as $meta) {
             foreach (languages() as $language) {

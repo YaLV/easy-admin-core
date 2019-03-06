@@ -15,12 +15,12 @@
             </div>
             <div class="bg-parallax has-loaded">
                 <div class="image"
-                     style="background-image: url({{ $cache->getCategoryCache()->image(config('app.imageSize.category_image.default'), $currentCategoryId) }}); transform: translateY(-33.6px);"></div>
+                     style="background-image: url({{ $cache->getCategoryCache()->image(config('app.imageSize.category_image.default'), $currentCategoryId) }});"></div>
             </div>
         </div>
     @endif
     <div class="sv-category-title-mobile">
-        <h1>Gaļa</h1>
+        <h1>{{ __("category.name.$currentCategoryId") }}</h1>
         <a href="#sv-mobile-filters" data-toggle="collapse" class="sv-icon-filter collapsed">
             <s></s>
             <s></s>
@@ -29,7 +29,7 @@
     <div id="sv-mobile-filters" class="sv-mobile-filters panel-collapse collapse">
         <div class="sv-sidebar-filters">
             <div class="item">
-                <span data-toggle="collapse" data-target="#filter-1" class="title collapsed">Saimniecības</span>
+                <span data-toggle="collapse" data-target="#filter-1" class="title collapsed">{!! __('translations.suppliers') !!}</span>
                 <div id="filter-1" class="collapse">
                     <div class="content">
                         <div class="input-wrapper checkbox">
@@ -187,7 +187,7 @@
     </div>
     <form class="sv-sidebar-search is-mobile">
         <input type="text">
-        <input type="submit" value="Search">
+        <input type="submit" value="{{ __('translations.search') }}">
     </form>
     @if(!($hideHeader??false))
         <div class="sv-message">
@@ -214,7 +214,7 @@
                     </ul>
                     <form class="sv-sidebar-search">
                         <input type="text" />
-                        <input type="submit" value="Search" />
+                        <input type="submit" value="{{ __('translations.search') }}" />
                     </form>
                     <div class="sv-sidebar-filters">
                         <div class="item">
@@ -376,7 +376,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="sv-filters-cancel">Notīrīt filtru</a>
+                    <a href="#" class="sv-filters-cancel">{!! __('translations.clearFilter') !!}</a>
                 </div>
 
                 <div class="sv-products">

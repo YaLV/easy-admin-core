@@ -33,7 +33,7 @@
     <div class="sv-blank-spacer small"></div>
 
     <div class="sv-title">
-        <h3>Populāri</h3>
+        <h3>{!! __('translations.popular') !!}</h3>
     </div>
 
     <div class="sv-blank-spacer medium"></div>
@@ -96,7 +96,7 @@
     <div class="sv-blank-spacer medium"></div>
 
     <div class="sv-title">
-        <h3>Noderīgi</h3>
+        <h3>{!! __('translations.useful') !!}</h3>
     </div>
 
     <div class="sv-blank-spacer medium"></div>

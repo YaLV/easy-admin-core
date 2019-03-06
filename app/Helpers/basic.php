@@ -81,6 +81,9 @@ function calcPrice($price, $vat, $markup, $discount, $amount = 1)
 
 function r($name, $params = [], $absolute = true)
 {
+
+    $name = $name.isDefaultLanguage();
+
     if (!isDefaultLang()) {
         $params['lang'] = $params['lang'] ?? request()->route('lang') ?? "";
     }

@@ -51,6 +51,7 @@ class Profile extends FormRequest
 
             case "checkout":
                 $rules['rules'] = 'accepted';
+                $rules['email'] = ['required','email', new UniqueNotRegistered()];
                 break;
 
             case "profile":

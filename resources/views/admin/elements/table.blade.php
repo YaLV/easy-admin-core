@@ -29,10 +29,10 @@
                             @php
                                 $hasSoftDeletes = method_exists($listItem, "trashed");
                             @endphp
-                            <tr {{ ($hasSoftDeletes && $listItem->trashed())??false?"class=text-muted":"class=text-dark" }}>
+                            <tr class="{{ ($hasSoftDeletes && $listItem->trashed())??false?"text-muted":"text-dark" }} {{$listItem->rowClass??false}}" data-id="{{ $listItem->id??"" }}" class="">
                                 @foreach($tableHeaders as $headerItem)
                                     @if(($headerItem->type??$headerItem['type']??"")=='translate')
-                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ __(($headerItem['use']??"").($listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"")) }}</td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }} >{{ __(($headerItem['use']??"").($listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"")) }}</td>
                                     @elseif(($headerItem->field??$headerItem['field']??"")=='buttons')
                                         <td style="width:200px;" class="text-right {{ $headerItem['class']??false }}">
                                             <div class="btn-group">

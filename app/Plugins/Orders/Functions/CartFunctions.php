@@ -17,12 +17,13 @@ trait CartFunctions
         $cart = session()->get('cart');
 
         // Check DB if it has a record
-        $cartObject = $cart?OrderHeader::find($cart):null;
+        $cartObject = $cart?(session()->get('cartObject')??OrderHeader::find($cart)):null;
 
         // If user logged in
         if ($changedUser && Auth::user() && $cart && $cartObject) {
             /** @var OrderHeader $userCart */
             $userCart = OrderHeader::where(['user_id' => Auth::user()->id])->first();
+
             /** @var OrderHeader $anonCart */
             $anonCart = OrderHeader::find(session()->get('cart'));
 
@@ -72,6 +73,7 @@ trait CartFunctions
             session()->put('cart', $cartObject->id);
         }
 
+        session()->flash('cartObject', $cartObject);
         return $cartObject;
     }
 

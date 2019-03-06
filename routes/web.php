@@ -2,27 +2,42 @@
 
 // DEBUG
 
-Route::any('/debug', function(){
+Route::any('/debug', function () {
     dd(Auth::user());
 });
 
 
-
 // --------------- ADMIN ROUTES ------------------- //
-Route::group(['prefix' => 'admin'], function() {
+Route::group(['prefix' => 'admin'], function () {
     Auth::routes(['register' => false, 'reset' => false]);
 });
 
-Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function(){
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
     \App\Plugins\Admin\AdminController::adminRoutes();
 });
 
 
 // --------------- PUBLIC ROUTES ------------------- //
 
-Route::get('/sa', function() {
+Route::get('/{lang}/sa', function () {
     return view('frontend.pages.farmers', ['suppliers' => \App\Plugins\Suppliers\Model\Supplier::all()->pluck('id')]);
-});
+})->name('farmers');
+Route::get('/sa', function () {
+    return view('frontend.pages.farmers', ['suppliers' => \App\Plugins\Suppliers\Model\Supplier::all()->pluck('id')]);
+})->name('farmers.default');
+
+
+Route::get('{lang}/sa/{farmer}', function ($farmer) {
+    $farmer = (new \App\Plugins\Suppliers\Model\SupplierMeta)->where(['meta_name' => 'slug', 'meta_value' => $farmer])->firstOrFail()->supplier;
+
+    return view('frontend.pages.farmer', ['supplier' => $farmer, 'supplierCache' => (new \App\Http\Controllers\CacheController)->getSupplier($farmer->id)]);
+})->name('farmer');
+Route::get('/sa/{farmer}', function ($farmer) {
+    $farmer = (new \App\Plugins\Suppliers\Model\SupplierMeta)->where(['meta_name' => 'slug', 'meta_value' => $farmer])->firstOrFail()->supplier;
+
+    return view('frontend.pages.farmer', ['supplier' => $farmer, 'supplierCache' => (new \App\Http\Controllers\CacheController)->getSupplier($farmer->id)]);
+})->name('farmer.default');
+
 
 // Images
 Route::pattern("imPath", implode("|", config('app.uploadFile')));
@@ -31,17 +46,18 @@ Route::get('/{imPath}/{file}', "FrontController@showImage")->name('image.nosize'
 
 // Profile Stuff
 Route::get("/{lang}/profile", 'ProfileController@index')->name('profile');
-Route::get("/profile",'ProfileController@index')->name('profile.default');
+Route::get("/profile", 'ProfileController@index')->name('profile.default');
 Route::post("/{lang}/profile", 'ProfileController@store')->name('profile.save');
-Route::post("/profile",'ProfileController@store')->name('profile.save.default');
+Route::post("/profile", 'ProfileController@store')->name('profile.save.default');
 
 // Verify Changed Email
 Route::get("/{lang}/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.save');
-Route::get("/verify/{action}/{verifyString}",'ProfileController@verify')->name('verifyChangedEmail.default');
+Route::get("/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.default');
 
 // Home Page
-Route::pattern('lang', implode("|",languages()->pluck("code")->toArray()));
-Route::get('/{lang?}', 'FrontController@page')->name('home');
+Route::pattern('lang', implode("|", languages()->pluck("code")->toArray()));
+Route::get('/{lang}', 'FrontController@page')->name('home');
+Route::get('/', 'FrontController@page')->name('home.default');
 
 // Cart
 Route::get("/{lang}/cart", "\App\Plugins\Orders\CartController@index")->name('cart');
@@ -71,7 +87,8 @@ Route::get("/thankyou", "\App\Plugins\Orders\CartController@thankyou")->name('th
 
 
 // Change MarketDay
-Route::get("/setMarketDay/{timestamp}", "CacheController@selectMarketDay")->name('setMarketDay');
+Route::get("{lang}/setMarketDay/{timestamp}", "CacheController@selectMarketDay")->name('setMarketDay');
+Route::get("/setMarketDay/{timestamp}", "CacheController@selectMarketDay")->name('setMarketDay.default');
 
 //Login/register
 Route::post('/{lang}/login', 'Auth\LoginController@login')->name('frontlogin');

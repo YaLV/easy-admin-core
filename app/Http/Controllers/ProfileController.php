@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
     public function index()
     {
-        return view('frontend.pages.profile', ['user' => Auth::user()]);
+        return view('frontend.pages.profile', ['user' => Auth::user(), 'pageTitle' => "Profils"]);
     }
 
     public function store(Profile $request)
@@ -51,7 +51,7 @@ class ProfileController extends Controller
             Auth::user()->update($changes);
         }
 
-        return redirect()->route('profile'.isDefaultLanguage());
+        return redirect()->route('profile');
     }
 
     public function verify($action, $string)
@@ -80,7 +80,7 @@ class ProfileController extends Controller
                     if (!Auth::user()) {
                         Auth::login($usr->id);
                     }
-                    return redirect()->route('profile' . isDefaultLanguage());
+                    return redirect()->route('profile');
                 }
             }
         } elseif($changes && $changes->state=='verified') {
