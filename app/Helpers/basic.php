@@ -155,3 +155,26 @@ function currentUser($change = false) {
 
     return $user;
 }
+
+/**
+ * Translate the given message.
+ *
+ * @param  string  $key
+ * @param  array  $replace
+ * @param  string  $locale
+ * @return string|array|null
+ */
+function _t($key, $replace = [], $locale = null)
+{
+
+    $translation = app('translator')->getFromJson($key, $replace, $locale);
+
+    $user = \Illuminate\Support\Facades\Auth::user();
+
+    if($user && $user->isAdmin) {
+        $translation = $key==$translation?"UndefinedProperty":$translation;
+        return view("admin.partials.translation", compact(['key', 'translation']))->render();
+    }
+
+    return $translation==$key?"Undefined Property":$translation;
+}

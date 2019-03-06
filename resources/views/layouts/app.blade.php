@@ -50,6 +50,9 @@
 <script src="{{ asset("assets/js/imagesloaded.pkgd.min.js") }}"></script>
 <script src="{{ asset("assets/js/svaigi.js") }}?ver={{ filemtime(public_path("assets/js/svaigi.js")) }}"></script>
 <script src="{{ asset("assets/js/custom.js") }}?ver={{ filemtime(public_path("assets/js/custom.js")) }}"></script>
+@if(Auth::user() && Auth::user()->isAdmin)
+    <script src="{{ asset('js/trans.js') }}"></script>
+@endif
 </body>
 
 </html>
