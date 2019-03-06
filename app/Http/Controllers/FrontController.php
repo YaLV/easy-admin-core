@@ -76,10 +76,6 @@ class FrontController extends Controller
         return view("Products::frontend.listitems", compact(['category', 'products']));
     }
 
-    public function cache() {
-        return new CacheController;
-    }
-
     /**
      * Show Product opening
      *

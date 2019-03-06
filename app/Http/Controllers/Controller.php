@@ -21,5 +21,8 @@ class Controller extends BaseController
             session()->put('user', $user);
         }
     }
-
+    
+    public function cache() {
+        return new CacheController;
+    }
 }

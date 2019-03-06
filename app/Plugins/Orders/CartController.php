@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
+use App\Plugins\Products\Cache\ProductCache;
 use App\Plugins\Products\Model\Product;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +74,7 @@ class CartController extends Controller
         if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
             $item->increment('amount', (request()->get('amount') ?? 1));
         } else {
+            /** @var \App\Cache\ProductCache $product */
             $product = $this->cache()->getProduct(request('product_id'));
             $variation = $product->getVariationPrice(request('variation_id'));
 
