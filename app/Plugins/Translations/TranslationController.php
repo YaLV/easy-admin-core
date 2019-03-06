@@ -93,6 +93,8 @@ class TranslationController
             "/trans\('translations.([^']*)'([^)]*)/",
             '/__\("translations.([^"]*)"([^)]*)/',
             '/trans\("translations.([^"]*)"([^)]*)/',
+            "/_t\('translations.([^']*)'([^)]*)/",
+            '/_t\("translations.([^"]*)"([^)]*)/',
         ];
 
         $translations = [];
