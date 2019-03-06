@@ -47,7 +47,7 @@ class LoginController extends Controller
             return route('dashboard');
         }*/
 
-        return route('home');
+        return r('home');
     }
 
     public function username()
@@ -96,7 +96,12 @@ class LoginController extends Controller
 
         $this->sendFailedLoginResponse($request);
 
+        $cr = explode(".", Route::currentRouteName());
+        if($cr[0]=='frontlogin') {
+            return redirect(r('frontlogin'));
+        }
         return redirect()->route('login');
+
     }
 
     /**
