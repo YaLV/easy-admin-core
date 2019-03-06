@@ -56,7 +56,7 @@ Route::get("/verify/{action}/{verifyString}", 'ProfileController@verify')->name(
 
 // Home Page
 Route::pattern('lang', implode("|", languages()->pluck("code")->toArray()));
-Route::get('/{lang}', 'FrontController@page')->name('home');
+Route::get('/{lang?}', 'FrontController@page')->name('home');
 Route::get('/', 'FrontController@page')->name('home.default');
 
 // Cart

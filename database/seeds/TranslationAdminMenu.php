@@ -76,7 +76,7 @@ class TranslationAdminMenu extends Seeder
             ]);
         \App\Model\Admin\Menu::firstOrCreate(
             [
-                'slug'      => "find/{id}",
+                'slug'      => "find",
                 'routeName' => "$main.add",
             ],
             [
