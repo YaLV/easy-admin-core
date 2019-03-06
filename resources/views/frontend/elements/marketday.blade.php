@@ -7,9 +7,9 @@
             <div class="container">
                 <div class="row">
                     <div class="intro">
-                        <h3>{!! __('translations.beforeProceedSelectMarketday') !!}</h3>
+                        <h3>{!! _t('translations.beforeProceedSelectMarketday') !!}</h3>
                         <p>
-                            {!! __('translations.marketDayInfoWithUrl') !!}
+                            {!! _t('translations.marketDayInfoWithUrl') !!}
                         </p>
                     </div>
                     <div class="days">
@@ -24,7 +24,7 @@
                                     {{ $marketDay->name }}
                                 </div>
                             </div>
-                            <a href="{{ r('setMarketDay', [$availableTo]) }}" class="button">{!! __('translations.chooseMarketDay') !!}</a>
+                            <a href="{{ r('setMarketDay', [$availableTo]) }}" class="button">{!! _t('translations.chooseMarketDay') !!}</a>
                         </div>
                         @endforeach
                     </div>

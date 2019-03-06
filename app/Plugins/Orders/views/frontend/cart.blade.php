@@ -23,7 +23,7 @@
         <div class="sv-blank-spacer small"></div>
 
         <div class="sv-title">
-            <h4>{!! __('translations.cartChooseTimeAndType') !!}</h4>
+            <h4>{!! _t('translations.cartChooseTimeAndType') !!}</h4>
         </div>
 
         <div class="sv-blank-spacer small"></div>
@@ -36,16 +36,16 @@
             <div class="list">
                 <div class="item header">
                     <div class="product">
-                        {!! __('translations.cartProducts') !!}
+                        {!! _t('translations.cartProducts') !!}
                     </div>
                     <div class="price">
-                        {!! __('translations.cartPrice') !!}
+                        {!! _t('translations.cartPrice') !!}
                     </div>
                     <div class="quantity">
-                        {!! __('translations.cartQuantity') !!}
+                        {!! _t('translations.cartQuantity') !!}
                     </div>
                     <div class="total">
-                        {!! __('translations.cartSum') !!}
+                        {!! _t('translations.cartSum') !!}
                     </div>
                 </div>
                 @stack('items')
@@ -59,11 +59,11 @@
             </div>
             <div class="sidebar sticky">
                 <div class="totals">
-                    <h3>{!! __('translations.cartTotals') !!}</h3>
+                    <h3>{!! _t('translations.cartTotals') !!}</h3>
                     <div class="list">
                         <div class="item">
                             <div>
-                                {!! __('translations.cartProducts') !!}
+                                {!! _t('translations.cartProducts') !!}
                             </div>
                             <div>
                                 {{ $cartTotals->productSum }} €
@@ -72,7 +72,7 @@
                         @if($cart->delivery_id)
                             <div class="item">
                                 <div>
-                                    {!! __('translations.cartDelivery') !!}
+                                    {!! _t('translations.cartDelivery') !!}
                                 </div>
                                 <div>
                                     {{$cart->delivery_amount}} €
@@ -82,7 +82,7 @@
                         @if($cart->discount_target??false)
                             <div class="item">
                                 <div>
-                                    {!! __('translations.cartDiscount') !!} (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
+                                    {!! _t('translations.cartDiscount') !!} (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
                                     <a href="#" class="remove"></a>
                                 </div>
                                 <div>
@@ -95,14 +95,14 @@
                         <div class="list">
                             <div class="item">
                                 <div>
-                                    {!! __('translations.cartToPay') !!}
+                                    {!! _t('translations.cartToPay') !!}
                                 </div>
                                 <div>
                                     {{ $cartTotals->toPay }} €
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ r('checkout') }}" class="sv-btn">{!! __('translations.cartFormOrder') !!}</a>
+                        <a href="{{ r('checkout') }}" class="sv-btn">{!! _t('translations.cartFormOrder') !!}</a>
                     </div>
                 </div>
             </div>

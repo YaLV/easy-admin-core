@@ -33,13 +33,13 @@
                         </li>
                     @endif
                     <li class="history">
-                        <a href="#"><span>{!! __('translations.orderHistory') !!}</span></a>
+                        <a href="#"><span>{!! _t('translations.orderHistory') !!}</span></a>
                     </li>
                     <li class="docs">
-                        <a href="{{ r('profile') }}"><span>{!! __('translations.profile') !!}</span></a>
+                        <a href="{{ r('profile') }}"><span>{!! _t('translations.profile') !!}</span></a>
                     </li>
                     <li>
-                        <a href="{{ r('frontlogout') }}"><span>{!! __('translations.logout') !!}</span></a>
+                        <a href="{{ r('frontlogout') }}"><span>{!! _t('translations.logout') !!}</span></a>
                     </li>
                 </ul>
             </div>
@@ -61,7 +61,7 @@
                         @include("Orders::frontend.partials.miniitem")
                     @endforeach
                 </div>
-                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! __('translations.openCart') !!}</span></a>
+                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! _t('translations.openCart') !!}</span></a>
             </div>
         </div>
     </div>

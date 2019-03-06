@@ -6,8 +6,8 @@
             <a href="{{ r('farmer', [__("supplier.slug.{$supplier->id}")]) }}">{{ __("supplier.name.{$supplier->id}") }}</a>
         </h2>
         <h3>
-            <a href="{{ r('home') }}">{{ __('translations.startpage') }}</a>
-            <a href="{{ r('farmers') }}">{{ __('translations.suppliers') }}</a>
+            <a href="{{ r('home') }}">{!! _t('translations.startpage') !!}</a>
+            <a href="{{ r('farmers') }}">{!! _t('translations.suppliers') !!}</a>
         </h3>
     </div>
 

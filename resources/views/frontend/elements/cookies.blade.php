@@ -3,7 +3,7 @@
         {!! __("translations.cookieAgreement") !!}
     </div>
     <div>
-        <a href="#">{!! __('translations.acceptCookies') !!}</a>
-        <a href="#">{!! __('translations.denyCookies') !!}</a>
+        <a href="#">{!! _t('translations.acceptCookies') !!}</a>
+        <a href="#">{!! _t('translations.denyCookies') !!}</a>
     </div>
 </div>

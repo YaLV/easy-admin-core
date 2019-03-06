@@ -28,7 +28,7 @@ class CartController extends Controller
     {
         $cart = $this->getCart();
 
-        return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery', 'pageTitle' => 'Grozs']);
+        return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery', 'pageTitle' => _t('translations.cart')]);
     }
 
     /**
@@ -117,7 +117,7 @@ class CartController extends Controller
             return redirect(r('payment'));
         }
 
-        return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => 'Pircēja Dati']);
+        return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.checkoutForm')]);
     }
 
     /**
@@ -126,7 +126,7 @@ class CartController extends Controller
     public function payment()
     {
         $step = 3;
-        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User, 'pageTitle' => 'Maksājumi']);
+        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User, 'pageTitle' => _t('translations.payments')]);
     }
 
     /**

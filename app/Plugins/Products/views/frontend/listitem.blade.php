@@ -4,15 +4,15 @@
         <input type="hidden" name="product_id" value="{{ $item->id }}" />
         @if($item->isSale())
             <div class="sv-tag sale">
-                {!! __('translations.sale') !!}
+                {!! _t('translations.sale') !!}
             </div>
         @elseif($item->isSuggested)
             <div class="sv-tag sugg">
-                {!! __('translations.suggested') !!}
+                {!! _t('translations.suggested') !!}
             </div>
         @elseif($item->isNew())
             <div class="sv-tag new">
-                {!! __('translations.new') !!}
+                {!! _t('translations.new') !!}
             </div>
         @endif
 

@@ -14,7 +14,7 @@
 
                     <div class="sv-text-block">
                         <p style="font-size: 18px; line-height: 30px;">
-                            {!! __('translations.orderCompleteThankYouText') !!}
+                            {!! _t('translations.orderCompleteThankYouText') !!}
                         </p>
                     </div>
                 </div>

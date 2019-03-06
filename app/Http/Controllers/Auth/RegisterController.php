@@ -60,7 +60,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register', ['user' => new User, "pageTitle" => "Reģistrācija"]);
+        return view('auth.register', ['user' => new User, "pageTitle" => _t('translations.registerForm')]);
     }
 
     public function register(Profile $request)

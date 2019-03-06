@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
     public function index()
     {
-        return view('frontend.pages.profile', ['user' => Auth::user(), 'pageTitle' => "Profils"]);
+        return view('frontend.pages.profile', ['user' => Auth::user(), 'pageTitle' => _t('translations.profile')]);
     }
 
     public function store(Profile $request)
