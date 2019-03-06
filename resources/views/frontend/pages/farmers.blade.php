@@ -77,10 +77,10 @@
             <div class="row">
                 <ul class="">
                     <li class="active">
-                        <a href="#farmers" class="tab" id="reloadFarmersMarkers">{!! __('translations.suppliers') !!}</a>
+                        <a href="#farmers" class="tab" id="reloadFarmersMarkers">{!! _t('translations.suppliers') !!}</a>
                     </li>
                     <li>
-                        <a href="#masters" class="tab" id="reloadMastersMarkers">{!! __('translations.craftsmen') !!}</a>
+                        <a href="#masters" class="tab" id="reloadMastersMarkers">{!! _t('translations.craftsmen') !!}</a>
                     </li>
                 </ul>
             </div>

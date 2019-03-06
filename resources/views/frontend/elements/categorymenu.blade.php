@@ -18,7 +18,7 @@
                         @include("Orders::frontend.partials.miniitem")
                     @endforeach
                 </div>
-                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! __('translations.openCart') !!}</span></a>
+                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! _t('translations.openCart') !!}</span></a>
             </div>
         </div>
     </div>

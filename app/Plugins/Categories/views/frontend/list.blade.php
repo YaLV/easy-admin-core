@@ -29,7 +29,7 @@
     <div id="sv-mobile-filters" class="sv-mobile-filters panel-collapse collapse">
         <div class="sv-sidebar-filters">
             <div class="item">
-                <span data-toggle="collapse" data-target="#filter-1" class="title collapsed">{!! __('translations.suppliers') !!}</span>
+                <span data-toggle="collapse" data-target="#filter-1" class="title collapsed">{!! _t('translations.suppliers') !!}</span>
                 <div id="filter-1" class="collapse">
                     <div class="content">
                         <div class="input-wrapper checkbox">
@@ -187,7 +187,7 @@
     </div>
     <form class="sv-sidebar-search is-mobile">
         <input type="text">
-        <input type="submit" value="{{ __('translations.search') }}">
+        <input type="submit" value="{{ _t('translations.search') }}">
     </form>
     @if(!($hideHeader??false))
         <div class="sv-message">
@@ -214,7 +214,7 @@
                     </ul>
                     <form class="sv-sidebar-search">
                         <input type="text" />
-                        <input type="submit" value="{{ __('translations.search') }}" />
+                        <input type="submit" value="{{ _t('translations.search') }}" />
                     </form>
                     <div class="sv-sidebar-filters">
                         <div class="item">
@@ -376,7 +376,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="sv-filters-cancel">{!! __('translations.clearFilter') !!}</a>
+                    <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
                 </div>
 
                 <div class="sv-products">

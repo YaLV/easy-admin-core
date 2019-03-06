@@ -26,7 +26,7 @@
                 </div>
                 @if($expire = $product->getMeta('expire_date'))
                     <div class="sv-exp-date">
-                        <b>{!! __('translations.expireDate', ['date' => 1]) !!}</b>
+                        <b>{!! _t('translations.expireDate', ['date' => 1]) !!}</b>
                         {{$expire}}
                     </div>
                 @endif
@@ -69,7 +69,7 @@
                         <input type="text" name="amount" value="1" class="qty" />
                     </div>
                     <button class="sv-btn {{ in_array((new \App\Http\Controllers\CacheController)->getSelectedMarketDay()->id,$product->marketDays)?"":"is-disabled" }}">
-                        {!! __('translations.addToCart') !!}
+                        {!! _t('translations.addToCart') !!}
                     </button>
                 </form>
             </div>
@@ -79,9 +79,9 @@
         <div class="sv-blank-spacer medium"></div>
 
         <div class="sv-marketday-access">
-            <h3>{!! __('translations.productMarketDaysAvailableHeader') !!}</h3>
+            <h3>{!! _t('translations.productMarketDaysAvailableHeader') !!}</h3>
             <p>
-                {!! __('translations.productMarketDaysAvailableText') !!}
+                {!! _t('translations.productMarketDaysAvailableText') !!}
             </p>
             <div class="sv-blank-spacer medium"></div>
             <div class="days">
@@ -114,7 +114,7 @@
 
         <div class="sv-blank-spacer medium"></div>
         <div class="sv-title">
-            <h3>{!! __('translations.otherProducts') !!}</h3>
+            <h3>{!! _t('translations.otherProducts') !!}</h3>
         </div>
 
         <div class="sv-blank-spacer medium"></div>
