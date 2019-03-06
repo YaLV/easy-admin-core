@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @forelse($cart->items as $item)
+    @forelse($cart->items()->get() as $item)
         @push('items')
             @include("Orders::frontend.partials.item")
         @endpush
