@@ -45,6 +45,20 @@ jQuery(document).ready(function () {
     })
 
     $('select.multiselect').multiSelect();
+
+    $('.editTranslation').click(function(){
+        $.get(editUrl.replace("ID", $(this).data('id')), '', function(response) {
+            showTranslation(response);
+        });
+    })
+
+
+    $('#custom-search input').keyup(function(e){
+        if(e.keyCode==13) {
+            document.location = searchUrl.replace('ID', $(this).val());
+        }
+    });
+
 });
 
 
@@ -150,4 +164,21 @@ function bindButtons() {
         jQuery(this).find('.mainImage').toggleClass('fa-thumbs-up fa-thumbs-down');
         return false;
     });
+}
+
+function showTranslation(result) {
+    form = $('#post'+modalID);
+    form.find('input').val("");
+    for(y in result.translation.meta_data) {
+        form.find('input[data-transFor='+result.translation.meta_data[y].language+']').val(result.translation.meta_data[y].meta_value);
+    }
+    $('.saveTranslation').unbind().click(function(){
+       $.post(storeUrl.replace("ID", result.translation.id), form.serialize(), function(result) {
+          if(result.status) {
+              $("[data-id="+result.lineID+"] .transVal").text(result.edited);
+              $('#modalWin'+modalID).modal("hide");
+          }
+       });
+    });
+    $('#modalWin'+modalID).modal("show");
 }

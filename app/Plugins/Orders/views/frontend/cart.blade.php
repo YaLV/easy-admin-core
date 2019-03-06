@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('pageTitle')
-    Grozs
-@endsection
-
 @section('content')
 
     @forelse($cart->items as $item)
@@ -21,14 +17,13 @@
     @endphp
 
     @if(!($noItems??false))
-        @include("Orders::frontend.partials.step")
 
         @includeIf("Orders::frontend.partials.$stepInclude")
 
         <div class="sv-blank-spacer small"></div>
 
         <div class="sv-title">
-            <h4>Izvēlies produktu saņemšanas laiku un veidu:</h4>
+            <h4>{!! __('translations.cartChooseTimeAndType') !!}</h4>
         </div>
 
         <div class="sv-blank-spacer small"></div>
@@ -41,34 +36,34 @@
             <div class="list">
                 <div class="item header">
                     <div class="product">
-                        Produkti
+                        {!! __('translations.cartProducts') !!}
                     </div>
                     <div class="price">
-                        Cena
+                        {!! __('translations.cartPrice') !!}
                     </div>
                     <div class="quantity">
-                        Daudzums
+                        {!! __('translations.cartQuantity') !!}
                     </div>
                     <div class="total">
-                        Summa
+                        {!! __('translations.cartSum') !!}
                     </div>
                 </div>
                 @stack('items')
                 <div class="sv-blank-spacer small"></div>
                 <div class="coupon">
                     <div class="enter">
-                        <input type="text" class="nr" placeholder="Tev ir akcijas kods?" />
+                        <input type="text" class="nr" placeholder="{!! __('translations.cartDiscountCode') !!}" />
                     </div>
                     <input type="button" class="sv-btn" value="OK" />
                 </div>
             </div>
             <div class="sidebar sticky">
                 <div class="totals">
-                    <h3>Kopsavilkums</h3>
+                    <h3>{!! __('translations.cartTotals') !!}</h3>
                     <div class="list">
                         <div class="item">
                             <div>
-                                Produkti
+                                {!! __('translations.cartProducts') !!}
                             </div>
                             <div>
                                 {{ $cartTotals->productSum }} €
@@ -77,7 +72,7 @@
                         @if($cart->delivery_id)
                             <div class="item">
                                 <div>
-                                    Piegāde
+                                    {!! __('translations.cartDelivery') !!}
                                 </div>
                                 <div>
                                     {{$cart->delivery_amount}} €
@@ -87,7 +82,7 @@
                         @if($cart->discount_target??false)
                             <div class="item">
                                 <div>
-                                    Atlaide (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
+                                    {!! __('translations.cartDiscount') !!} (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
                                     <a href="#" class="remove"></a>
                                 </div>
                                 <div>
@@ -100,14 +95,14 @@
                         <div class="list">
                             <div class="item">
                                 <div>
-                                    Kopā apmaksai
+                                    {!! __('translations.cartToPay') !!}
                                 </div>
                                 <div>
                                     {{ $cartTotals->toPay }} €
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ route('checkout'.isDefaultLanguage()) }}" class="sv-btn">Noformēt pasūtījumu</a>
+                        <a href="{{ r('checkout') }}" class="sv-btn">{!! __('translations.cartFormOrder') !!}</a>
                     </div>
                 </div>
             </div>

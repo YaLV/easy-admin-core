@@ -43,6 +43,14 @@ class MenuCache
         return $this->tree[$itemLevel];
     }
 
+    public function hasItems($itemLevel) {
+        return count($this->tree[$itemLevel]??[]);
+    }
+
+    public function getMenuImage() {
+        return true;
+    }
+
     public function getItemId($routeParam, $type = "menuid", $strict = true)
     {
         $slugs = array_map(
@@ -82,7 +90,7 @@ class MenuCache
         $menuItem = $this->menuItems[$item];
         $menuItems = $this->getHierarchy($menuItem);
 
-        return r("url" . isDefaultLanguage(), $menuItems);
+        return r("url", $menuItems);
     }
 
     private function getHierarchy($item, $level = 7)

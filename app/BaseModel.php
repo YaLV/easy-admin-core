@@ -105,7 +105,13 @@ class BaseModel extends Model
             $metaDataCollection = $metaDataCollection->whereIn('meta_name', $slugs);
         }
         foreach($metaDataCollection->get()??[] as $meta) {
-            $metaData[$meta->meta_name][$meta->owner_id] = $meta->meta_value;
+            $tKey = $meta->transKey??false;
+            if(!$tKey) {
+                $tKey = $meta->owner_id;
+            } else {
+                $tKey = $meta->$tKey;
+            }
+            $metaData[$meta->meta_name][$tKey] = $meta->meta_value;
         }
         return $metaData;
     }

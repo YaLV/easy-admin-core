@@ -2,10 +2,12 @@
     <div class="container">
         <div class="row">
             <ul class="menu">
-                <pre>
-{{ session()->get('cart') }}
-{{ currentUser()->id }}
+                @if(env('APP_ENV')=='local')
+                    <pre>
+                    {{ session()->get('cart') }}
+                        {{ currentUser()->id }}
                 </pre>
+                @endif
                 @include("frontend.partials.menu.main", ['slug' => 'footer'])
             </ul>
             <div class="social">

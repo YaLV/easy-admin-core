@@ -2,50 +2,9 @@
     <div>
         <ul>
             @include("frontend.partials.menu.main", ['menuSlug' => 'shop'])
-            <li class="sv-default-dropdown-toggle">
-                <a href="#"><span>Citi</span></a>
-                <div class="sv-dropdown sv-default-dropdown">
-                    <div class="left">
-                        <ul>
-                            <li>
-                                <a href="#">Gaļa</a>
-                            </li>
-                            <li>
-                                <a href="#">Zivis</a>
-                            </li>
-                            <li>
-                                <a href="#">Dārzeņi</a>
-                            </li>
-                            <li>
-                                <a href="#">Augļi</a>
-                            </li>
-                            <li>
-                                <a href="#">Piens</a>
-                            </li>
-                            <li>
-                                <a href="#">Olas</a>
-                            </li>
-                            <li>
-                                <a href="#">Maize</a>
-                            </li>
-                            <li>
-                                <a href="#">Konditoreja</a>
-                            </li>
-                            <li>
-                                <a href="#">Kaut kas vēl</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="right">
-                        <div class="bg-static">
-                            <div class="image" style="background-image: url({{ asset("assets/img/tmp/photo-15.jpg") }});"></div>
-                        </div>
-                    </div>
-                </div>
-            </li>
         </ul>
         <div class="cart has-items">
-            <a href="#">
+            <a href="{{ r('cart') }}">
 						<span class="icon">
 							<s></s>
 							<svg xmlns="http://www.w3.org/2000/svg" width="26" height="14" viewBox="0 0 26 14">
@@ -59,7 +18,7 @@
                         @include("Orders::frontend.partials.miniitem")
                     @endforeach
                 </div>
-                <a href="#" class="go-to-cart"><span>Atvērt grozu</span></a>
+                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! __('translations.openCart') !!}</span></a>
             </div>
         </div>
     </div>

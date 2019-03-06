@@ -1,10 +1,5 @@
 @extends('layouts.app')
 
-@section('pageTitle')
-    Paldies!
-@endsection
-
-
 @section('content')
     @include("Orders::frontend.partials.step")
 
@@ -19,12 +14,9 @@
 
                     <div class="sv-text-block">
                         <p style="font-size: 18px; line-height: 30px;">
-                            Tavs pasūtījums zemnieku virtuālajā tirgū ir svaigi veikts, un to apstiprinās arī ziņa Tavā e-pastā.<br /><br />
-                            Tavs pasūtījums tiks nodots saimniecībām produktu sagatavošanai: vākšanai, lasīšanai, griešanai, šmorēšanai un piegādei.<br /><br />
-                            Samaksu par pasūtījumu vari veikt ar pārskaitījumu uz bankas kontu vai skaidrā naudā pasūtījuma saņemšanas brīdī.
+                            {!! __('translations.orderCompleteThankYouText') !!}
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -1,3 +1,3 @@
 You have changed email in
 
-<a href="{{ r('verifyChangedEmail'.isDefaultLanguage(), ['emailchange', $verify->verifyString]) }}">Verify Email</a>
+<a href="{{ r('verifyChangedEmail', ['emailchange', $verify->verifyString]) }}">Verify Email</a>

@@ -1,4 +1,5 @@
 @php
+    /** @var \App\Cache\ProductCache $product */
     $product = $cache->getProduct($item->product_id);
     $random_id = str_random(20);
 @endphp
@@ -31,7 +32,7 @@
         </div>
         <div class="title">
             <a href="{{ $product->getUrl() }}" class="name">{{ $item->product_name }}</a>
-            <a href="#" class="farmer">{{ $item->supplier_name }}</a>
+            <a href="{{ r('farmer', [__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">{{ $item->supplier_name }}</a>
             @stack("variations-$random_id")
         </div>
     </div>

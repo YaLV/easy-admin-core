@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('pageTitle')
-    Saimniecības
-@endsection
-
 @foreach($suppliers as $supplier)
     @php
         $supplierCache = $cache->getSupplier($supplier);
@@ -11,7 +7,7 @@
 
     @if($supplierCache->isFarmer)
         @push('farmers')
-            <a href="#" class="item">
+            <a href="{{ r('farmer', [ __("supplier.slug.$supplier")]) }}" class="item">
                 <img src="{{ $supplierCache->image(config('app.imageSize.supplier_image.main')) }}">
                 <h3>{{ __("supplier.name.$supplier") }}</h3>
                 <h4>{{ __("supplier.location.$supplier") }}</h4>
@@ -26,7 +22,7 @@
 
     @if($supplierCache->isCraftsman)
         @push('craftsman')
-            <a href="#" class="item">
+            <a href="{{ r('farmer', [__("supplier.slug.$supplier")]) }}" class="item">
                 <img src="{{ $supplierCache->image(config('app.imageSize.supplier_image.main')) }}">
                 <h3>{{ __("supplier.name.$supplier") }}</h3>
                 <h4>{{ __("supplier.location.$supplier") }}</h4>
@@ -81,10 +77,10 @@
             <div class="row">
                 <ul class="">
                     <li class="active">
-                        <a href="#farmers" class="tab" id="reloadFarmersMarkers">Saimniecības</a>
+                        <a href="#farmers" class="tab" id="reloadFarmersMarkers">{!! __('translations.suppliers') !!}</a>
                     </li>
                     <li>
-                        <a href="#masters" class="tab" id="reloadMastersMarkers">Meistari</a>
+                        <a href="#masters" class="tab" id="reloadMastersMarkers">{!! __('translations.craftsmen') !!}</a>
                     </li>
                 </ul>
             </div>
@@ -93,7 +89,7 @@
 
     <div id="farmersmap-canvas"></div>
 
-    <div vc-row style="background: #f3f3f3;">
+    <div style="background: #f3f3f3;">
         <div class="sv-tab-content">
             <div class="tab-pane fade in active" id="farmers">
                 <div class="container">

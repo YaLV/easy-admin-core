@@ -28,7 +28,7 @@ class CartController extends Controller
     {
         $cart = $this->getCart();
 
-        return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery']);
+        return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery', 'pageTitle' => 'Grozs']);
     }
 
     /**
@@ -96,7 +96,7 @@ class CartController extends Controller
         if(request()->ajax()) {
             return $this->getCartContents($cart, (($item ?? false) ? true : false));
         } else {
-            return redirect()->route('cart'.isDefaultLanguage());
+            return redirect(r('cart'));
         }
 
     }
@@ -114,10 +114,10 @@ class CartController extends Controller
         }
 
         if (Auth::user() && !$edit) {
-            return redirect()->route('payment' . isDefaultLanguage());
+            return redirect(r('payment'));
         }
 
-        return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User]);
+        return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => 'Pircēja Dati']);
     }
 
     /**
@@ -126,7 +126,7 @@ class CartController extends Controller
     public function payment()
     {
         $step = 3;
-        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User]);
+        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User, 'pageTitle' => 'Maksājumi']);
     }
 
     /**
@@ -154,7 +154,7 @@ class CartController extends Controller
             $cart->update(['user_id' => $user->id]);
         }
 
-        return redirect()->route('payment'.isDefaultLanguage());
+        return redirect(r('payment'));
 
     }
 
@@ -167,20 +167,20 @@ class CartController extends Controller
         $cart = $this->getCart();
 
         if($cart->items()->count()==0) {
-            return redirect()->route('cart'.isDefaultLanguage());
+            return redirect()->route('cart');
         }
 
         $user = Auth::user()??User::where('email', (session()->get('email')??"noemailSpecified"))->first();
 
         if(!$user) {
-            return redirect()->route('checkout'.isDefaultLanguage());
+            return redirect()->route('checkout');
         }
 
         $cart->update([
             'state'   => 'ordered',
         ]);
 
-        return redirect()->route('thankyou'.isDefaultLanguage());
+        return redirect(r('thankyou'));
     }
 
     /**

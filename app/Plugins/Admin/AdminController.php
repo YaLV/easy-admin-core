@@ -78,13 +78,6 @@ class AdminController extends Controller implements ControllerInterface
                         });
                     }
 
-                    if($imageType=='round') {
-                        /** @var Image $mask */
-                        $mask = Image::canvas($width, $height);
-                        $mask->circle($width, $width/2, $height/2);
-                        $upImage->mask($mask, true);
-                    }
-
                     if (!\Storage::exists("public/$fileSavePath/$imageSize/")) {
                         \Storage::makeDirectory("public/$fileSavePath/$imageSize/");
                     }

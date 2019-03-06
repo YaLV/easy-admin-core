@@ -1,7 +1,7 @@
 <div class="row">
     <span class="sv-menu-mobile-close"></span>
     <div class="logo">
-        <a href="{{ route('home') }}"><img src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" /></a>
+        <a href="{{ r('home') }}"><img src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" /></a>
     </div>
     <a href="javascript:void(0)" class="sv-btn-menu toggle-sv-menu-mobile">
 						<span>
@@ -33,20 +33,20 @@
                         </li>
                     @endif
                     <li class="history">
-                        <a href="#"><span>Pirkumu vēsture</span></a>
+                        <a href="#"><span>{!! __('translations.orderHistory') !!}</span></a>
                     </li>
                     <li class="docs">
-                        <a href="#"><span>Profila dati</span></a>
+                        <a href="{{ r('profile') }}"><span>{!! __('translations.profile') !!}</span></a>
                     </li>
                     <li>
-                        <a href="{{ route('frontlogout'.isDefaultLanguage()) }}"><span>Iziet</span></a>
+                        <a href="{{ r('frontlogout') }}"><span>{!! __('translations.logout') !!}</span></a>
                     </li>
                 </ul>
             </div>
             @endif
         </div>
         <div class="cart has-items">
-            <a href="{{ route('cart'.isDefaultLanguage()) }}">
+            <a href="{{ r('cart') }}">
                 <span class="icon">
                     <s></s>
                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="14" viewBox="0 0 26 14">
@@ -61,7 +61,7 @@
                         @include("Orders::frontend.partials.miniitem")
                     @endforeach
                 </div>
-                <a href="{{ route('cart'.isDefaultLanguage()) }}" class="go-to-cart"><span>Atvērt grozu</span></a>
+                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! __('translations.openCart') !!}</span></a>
             </div>
         </div>
     </div>

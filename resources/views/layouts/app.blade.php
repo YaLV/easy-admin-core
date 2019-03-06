@@ -30,6 +30,9 @@
 </div>
 @include("frontend.elements.categorymenu")
 
+@include("frontend.partials.pageTitle")
+@include("frontend.partials.errors")
+
 @yield('content')
 <div class="sv-blank-spacer medium"></div>
 @include("frontend.elements.footer")

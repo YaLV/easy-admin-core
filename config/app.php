@@ -18,7 +18,6 @@ return [
         ],
         'supplier_image' => [
             'main'  => '260x260',
-            'masked' => '45x45',
         ],
     ],
 

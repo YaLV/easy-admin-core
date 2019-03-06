@@ -4,26 +4,25 @@
             <div class="content-sv-signin">
                 <a href="javascript:void(0)" class="sv-close toggle-sv-signin"></a>
                 <div class="signin" style="background-image: url({{ asset("assets/img/tmp/photo-13.jpg") }});">
-                    <form method="post" action="{{ route('frontlogin'.isDefaultLanguage()) }}">
+                    <form method="post" action="{{ r('frontlogin') }}">
                         @csrf
                         <img class="logo" src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" />
                         <div class="input-wrapper">
-                            <input type="text" name='email' placeholder="Tavs e-pasts" />
+                            <input type="text" name='email' placeholder="{!! __('translations.loginEmailField') !!}" />
                         </div>
                         <div class="input-wrapper">
-                            <input type="password" name='password' placeholder="Parole" />
+                            <input type="password" name='password' placeholder="{!! __('translations.loginPasswordField') !!}" />
                         </div>
-                        <button href="#" class="sv-btn">Autorizēties</button>
-                        <a href="#">Aizmirsi paroli?</a>
+                        <button href="#" class="sv-btn">{!! __('translations.login') !!}</button>
+                        <a href="#">{!! __('translations.forgotPassword') !!}</a>
                     </form>
                 </div>
                 <div class="register">
-                    <h3>Kāpēc reģistrēties?</h3>
+                    <h3>{!! __('translations.whyRegisterQuestion') !!}</h3>
                     <p>
-                        Reģistrētiem lietotājiem ir iespēja redzēt savu pirkumu vēsturi, kā arī atkārtot kādu no
-                        iepriekšējiem pasūtījumiem ar vienu peles klikšķi. Un dzīve ar mums kopā ir svaigāka!
+                        {!! __('translations.whyRegisterAnswer') !!}
                     </p>
-                    <a href="{{ route('register'.isDefaultLanguage()) }}" class="sv-btn black">Reģistrēties</a>
+                    <a href="{{ r('register') }}" class="sv-btn black">{!! __('translations.register') !!}</a>
                 </div>
             </div>
         </div>

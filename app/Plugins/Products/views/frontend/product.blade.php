@@ -2,6 +2,7 @@
 
 @php
     $hideHeader = true;
+    /** @var \App\Cache\ProductCache $product **/
 @endphp
 
 @section('wrapper')
@@ -25,7 +26,7 @@
                 </div>
                 @if($expire = $product->getMeta('expire_date'))
                     <div class="sv-exp-date">
-                        <b>Exp. dat</b>
+                        <b>{!! __('translations.expireDate', ['date' => 1]) !!}</b>
                         {{$expire}}
                     </div>
                 @endif
@@ -33,7 +34,7 @@
 
             <div class="sv-product-title">
                 <div class="title">
-                    <h2>Liellopa gaļa malšanai</h2>
+                    <h2>{{ __("product.name.{$product->id}") }}</h2>
                     <div class="breadcrumbs">
                         @foreach($product->createBreadcrumbs() as $crumb)
                             <a href="{{$crumb['url']}}">{{$crumb['name']}}</a>
@@ -44,12 +45,12 @@
                         <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                     </a>
                 </div>
-                <form action="{{ r("cartAdd".isDefaultLanguage()) }}" method="post">
+                <form action="{{ r("cartAdd") }}" method="post">
                     {{ csrf_field() }}
                     <input type="hidden" name="product_id" value="{{ $product->id }}" />
 
-                @if($product->hasManyPrices())
-                        <select name="variation_id" class="selectpicker">
+                    @if($product->hasManyPrices())
+                        <select name="variation_id" class="selectpicker" title="variation">
                             @foreach($product->prices() as $priceID => $price)
                                 <option value="{{ $priceID }}" {{$loop->first?"selected":""}} {{ $product->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
                             @endforeach
@@ -68,7 +69,7 @@
                         <input type="text" name="amount" value="1" class="qty" />
                     </div>
                     <button class="sv-btn {{ in_array((new \App\Http\Controllers\CacheController)->getSelectedMarketDay()->id,$product->marketDays)?"":"is-disabled" }}">
-                        Pievienot grozam
+                        {!! __('translations.addToCart') !!}
                     </button>
                 </form>
             </div>
@@ -78,10 +79,9 @@
         <div class="sv-blank-spacer medium"></div>
 
         <div class="sv-marketday-access">
-            <h3>Tirgus dienas, kurās produkts pieejams</h3>
+            <h3>{!! __('translations.productMarketDaysAvailableHeader') !!}</h3>
             <p>
-                Trigus diena ir diena, uz kuru vari veikt pasūtījumu. Svaigi.lv organizē produktu pasūtījumus no
-                saimniecībām uz divām Tirgus dienām nedēļā - Pirmdienu un Ceturtdienu.
+                {!! __('translations.productMarketDaysAvailableText') !!}
             </p>
             <div class="sv-blank-spacer medium"></div>
             <div class="days">
@@ -113,8 +113,22 @@
         </div>
 
         <div class="sv-blank-spacer medium"></div>
+        <div class="sv-title">
+            <h3>{!! __('translations.otherProducts') !!}</h3>
+        </div>
 
+        <div class="sv-blank-spacer medium"></div>
 
+        <div class="sv-linked-products-slider">
+            <div class="owl-carousel">
+                @foreach($product->getOtherProducts($product->id) as $otherProduct)
+                    @php
+                        $item = $cache->getProduct($otherProduct);
+                    @endphp
+                    @include("Products::frontend.listitem")
+                @endforeach
+            </div>
+        </div>
     </div>
 
 @endsection
