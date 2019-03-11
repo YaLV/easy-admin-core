@@ -58,7 +58,7 @@ class DeliveryController extends AdminController
                 'vat_id'       => request()->get('vat_id'),
                 'freeAbove'    => request()->get('freeAbove'),
                 'type'         => request()->get('type'),
-                'sequence'     => ++$maxSeq->sequence,
+                'sequence'     => $maxSeq?++$maxSeq->sequence:1,
             ]);
 
             $delivery->marketDays()->sync(request('marketDays'));
