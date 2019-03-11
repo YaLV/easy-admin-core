@@ -2,6 +2,7 @@
 
 namespace App\Plugins\MarketDays\Model;
 
+use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\Products\Model\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -42,5 +43,9 @@ class MarketDay extends Model
 
     public function products() {
         return $this->belongsToMany(Product::class);
+    }
+
+    public function deliveries() {
+        return $this->belongsToMany(Delivery::class);
     }
 }

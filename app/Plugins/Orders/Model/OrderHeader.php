@@ -2,11 +2,12 @@
 
 namespace App\Plugins\Orders\Model;
 
+use App\Plugins\Deliveries\Model\Delivery;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderHeader extends Model
 {
-    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target'];
+    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target', 'delivery_amount', 'delivery_id'];
 
     public function cartItems() {
         return $this->whereHas('items', function($q) {
@@ -16,5 +17,9 @@ class OrderHeader extends Model
 
     public function items() {
         return $this->hasMany(OrderLines::class);
+    }
+
+    public function delivery() {
+        return $this->belongsTo(Delivery::class);
     }
 }

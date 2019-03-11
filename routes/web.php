@@ -63,6 +63,9 @@ Route::get('/', 'FrontController@page')->name('home.default');
 Route::get("/{lang}/cart", "\App\Plugins\Orders\CartController@index")->name('cart');
 Route::get("/cart", "\App\Plugins\Orders\CartController@index")->name('cart.default');
 
+Route::get('/{lang}/cart/delivery/{delivery}', '\App\Plugins\Orders\CartController@setDelivery')->name('setDelivery');
+Route::get('/cart/delivery/{delivery}', '\App\Plugins\Orders\CartController@setDelivery')->name('setDelivery.default');
+
 // Add to cart/Change item in cart
 Route::post("/{lang}/cart/save", "\App\Plugins\Orders\CartController@changeCartItem")->name('cartAdd');
 Route::post("/cart/save", "\App\Plugins\Orders\CartController@changeCartItem")->name('cartAdd.default');

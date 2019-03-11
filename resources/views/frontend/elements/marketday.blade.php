@@ -1,4 +1,6 @@
-
+@php
+/** @var \App\Http\Controllers\CacheController $cache **/
+@endphp
 <div class="sv-marketday-dropdown">
     <a href="javascript:void(0)" class="title"><span>{{ $cache->getSelectedMarketDayFormatted() }}</span></a>
     <div class="content">
@@ -18,7 +20,7 @@
                             <div>
                                 <div class="nr">
                                     <span>{{ $marketDay->date->format('d') }}</span>
-                                    <span>{!! __(":month", ["month" => $marketDay->date->format('F')]) !!}</span>
+                                    <span>{!! _t(":month", ["month" => $marketDay->date->format('F')]) !!}</span>
                                 </div>
                                 <div class="name">
                                     {{ $marketDay->name }}

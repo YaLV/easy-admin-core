@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\Categories\Model\CategoryMeta;
+use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Orders\Model\OrderLines;
@@ -186,6 +187,6 @@ class FrontController extends Controller
         }
 
         return response()->file(storage_path("app/$path"));
-
     }
+
 }

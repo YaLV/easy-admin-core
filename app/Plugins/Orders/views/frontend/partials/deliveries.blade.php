@@ -1,5 +1,6 @@
 <div class="sv-cart-tabs">
-    <div class="tab active">
+@include("Deliveries::frontend.deliveries")
+    {{--    <div class="tab active">
         <div class="icon"></div>
         <h3>Pirmdiena, 28. augusts</h3>
         <div class="text">
@@ -43,5 +44,5 @@
         <div class="price">
             2.99 €
         </div>
-    </div>
+    </div>--}}
 </div>

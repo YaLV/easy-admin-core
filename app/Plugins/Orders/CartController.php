@@ -5,6 +5,7 @@ namespace App\Plugins\Orders;
 use App\Http\Controllers\CacheController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile;
+use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Products\Cache\ProductCache;
@@ -30,6 +31,16 @@ class CartController extends Controller
         $cart = $this->getCart();
 
         return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery', 'pageTitle' => _t('translations.cart')]);
+    }
+
+    public function setDelivery($deliveryId) {
+        $cart = $this->getCart();
+        /** @var OrderHeader $origCart */
+        $origCart = OrderHeader::find($cart->id);
+        $origCart->delivery()->associate(Delivery::findOrFail($deliveryId))->save();
+        $this->checkFreeDelivery($cart->id);
+        session()->forget('cartObject');
+        return redirect(r('cart'));
     }
 
     /**
@@ -95,12 +106,36 @@ class CartController extends Controller
             $cartItem = $cart->items()->updateOrCreate($lineData, $itemData);
         }
 
+        $this->checkFreeDelivery($cart->id);
+
         if(request()->ajax()) {
             return $this->getCartContents($cart, (($item ?? false) ? true : false));
         } else {
             return redirect(r('cart'));
         }
 
+    }
+
+    private function checkFreeDelivery($cartId) {
+        $cart = OrderHeader::find($cartId);
+        $totalAmount = getCartTotals($cart)??0;
+        if($cart->delivery_id) {
+            $delivery = $cart->delivery;
+            if($totalAmount->productSum>=($delivery->freeAbove??0)) {
+                $r = $cart->update(['delivery_amount' => "0"]);
+                return true;
+            } else {
+                if($cart->discount_target=='all' || $cart->discount_target=='delivery') {
+                    $deliveryPrice = number_format(round($delivery->price/(1+($cart->discount_amount/100)), 2),2);
+                } else {
+                    $deliveryPrice = $delivery->price;
+                }
+                $cart->update(['delivery_amount' => $deliveryPrice]);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
