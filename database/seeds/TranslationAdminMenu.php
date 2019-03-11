@@ -86,7 +86,7 @@ class TranslationAdminMenu extends Seeder
                 'inMenu'      => '0',
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,
-                'method'      => 'POST',
+                'method'      => 'GET',
             ]);
         \App\Model\Admin\Menu::firstOrCreate(
             [

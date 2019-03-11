@@ -392,9 +392,10 @@ function forms() {
     });
   });
 
-  jQuery('.sv-cart-tabs .tab').on('click', function() {
+  jQuery('.sv-cart-tabs .tab:not(.active)').on('click', function() {
     jQuery('.sv-cart-tabs .tab').removeClass('active');
     jQuery(this).addClass('active');
+    document.location=$(this).data('run');
   });
 
   jQuery('#spinner, .spinner').spinner({

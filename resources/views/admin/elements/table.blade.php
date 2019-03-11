@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@php
+    $orderable = Route::has($currentRoute.".sort")?:false;
+@endphp
+
 @section('content')
     <div class="ro">
         <div class="col-md-12">
@@ -19,21 +23,29 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            @if($orderable)
+                                <td style="width:20px;">
+                                </td>
+                            @endif
                             @foreach($tableHeaders as $headerItem)
                                 <th>{{ $headerItem['label'] }}</th>
                             @endforeach
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody {{ $orderable?"data-sortable":"" }}>
                         @foreach($list as $listItem)
                             @php
                                 $hasSoftDeletes = method_exists($listItem, "trashed");
                             @endphp
-                            <tr class="{{ ($hasSoftDeletes && $listItem->trashed())??false?"text-muted":"text-dark" }} {{$listItem->rowClass??false}}" data-id="{{ $listItem->id??"" }}" class="">
+                            <tr class="{{ ($hasSoftDeletes && $listItem->trashed())??false?"text-muted":"text-dark" }} {{$listItem->rowClass??false}}"
+                                data-id="{{ $listItem->id??"" }}">
+                                @if($orderable)
+                                    <td>
+                                        <i class="fas fa-arrows-alt handle" style="cursor:grab;"></i>
+                                    </td>
+                                @endif
                                 @foreach($tableHeaders as $headerItem)
-                                    @if(($headerItem->type??$headerItem['type']??"")=='translate')
-                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }} >{{ __(($headerItem['use']??"").($listItem->{$headerItem['field']}??$listItem[[$headerItem]['field']]??"")) }}</td>
-                                    @elseif(($headerItem->field??$headerItem['field']??"")=='buttons')
+                                    @if(($headerItem->field??$headerItem['field']??"")=='buttons')
                                         <td style="width:200px;" class="text-right {{ $headerItem['class']??false }}">
                                             <div class="btn-group">
                                                 @foreach($headerItem['buttons'] as $button)
@@ -82,3 +94,32 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    @if($orderable)
+        <script src="{{asset('js/Sortable.min.js')}}"></script>
+        <script>
+            jQuery(document).ready(function() {
+                new Sortable($('[data-sortable]')[0], {
+                    handle: "td:first-child",
+                    ghostClass: 'blue-background-class',
+                    onEnd: function(evt) {
+                        let sequence = [];
+                        rows = $('[data-sortable]').find('tr').each(function(index, el, list) {
+                            sequence.push($(el).data('id'));
+                        });
+                        console.log(sequence);
+                        $.post("{{ route("$currentRoute.sort") }}", "sequence="+sequence.join(","), function(response) {
+                           if(response.status) {
+                               for(x in response.sequence) {
+                                   $('[data-id='+x+'] .seqTarget').text(response.sequence[x]);
+                               }
+                           }
+                        });
+                    }
+
+                });
+            });
+        </script>
+    @endif
+@endpush
