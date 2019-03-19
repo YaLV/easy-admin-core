@@ -1,5 +1,5 @@
 <?php
 if(!pageTable()) {
-    return [];
+    return ['slugs' => []];
 }
 return (new \App\Plugins\Pages\Model\Page)->MetaLanguage();
