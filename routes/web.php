@@ -27,8 +27,8 @@ Route::get('/{pageSlug?}', 'PageController@show')->name('page.default');
 
 
 // farmer Page
-Route::pattern('supplierSlug', implode('|', __('supplier.slug')));
-Route::pattern('suppliersSlug', getSupplierSlugs());
+Route::pattern('supplierSlug', implode('|', __('supplier.slug')??[]));
+Route::pattern('suppliersSlug', getSupplierSlugs()??[]);
 Route::get('/{lang}/{suppliersSlug}/{supplierSlug}', 'PageController@show')->name('supplierOpen');
 Route::get('/{suppliersSlug}/{supplierSlug}', 'PageController@show')->name('supplierOpen.default');
 
