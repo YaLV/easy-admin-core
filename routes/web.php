@@ -20,7 +20,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 // --------------- PUBLIC ROUTES ------------------- //
 
 Route::pattern('lang', implode("|", languages()->pluck("code")->toArray()));
-Route::pattern('pageSlug', implode('|', __('pages.slug')));
+Route::pattern('pageSlug', implode('|', __('pages.slug')??[]));
 
 Route::get('/{lang}/{pageSlug?}', 'PageController@show')->name('page');
 Route::get('/{pageSlug?}', 'PageController@show')->name('page.default');
