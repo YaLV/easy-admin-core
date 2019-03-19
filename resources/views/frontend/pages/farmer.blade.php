@@ -3,11 +3,11 @@
 @section('content')
     <div class="sv-page-title">
         <h2>
-            <a href="{{ r('farmer', [__("supplier.slug.{$supplier->id}")]) }}">{{ __("supplier.name.{$supplier->id}") }}</a>
+            <a href="{{ r('supplierOpen', [__("pages.slug.{$page->id}"), __("supplier.slug.{$supplier->id}")]) }}">{{ __("supplier.name.{$supplier->id}") }}</a>
         </h2>
         <h3>
-            <a href="{{ r('home') }}">{!! _t('translations.startpage') !!}</a>
-            <a href="{{ r('farmers') }}">{!! _t('translations.suppliers') !!}</a>
+            <a href="{{ r('page') }}">{!! _t('translations.startpage') !!}</a>
+            <a href="{{ r('page', [__("pages.slug.{$page->id}")]) }}">{!! _t('translations.suppliers') !!}</a>
         </h3>
     </div>
 

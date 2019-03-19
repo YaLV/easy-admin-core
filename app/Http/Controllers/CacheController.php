@@ -7,6 +7,7 @@ use App\Plugins\Categories\Cache\CategoryCache;
 use App\Plugins\MarketDays\Functions\MarketDays;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Menu\Cache\MenuCache;
+use App\Plugins\Pages\Cache\PageCache;
 use App\Plugins\Products\Cache\ProductCache;
 use App\Plugins\Suppliers\Cache\SupplierCache;
 use Illuminate\Support\Facades\Cache;
@@ -24,6 +25,7 @@ class CacheController extends Controller
     use SlugCache;
     use MarketDays;
     use SupplierCache;
+    use PageCache;
 
     /**
      * Set cache

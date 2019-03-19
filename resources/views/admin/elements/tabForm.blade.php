@@ -103,7 +103,8 @@
 
 
 @section('content')
-    <form action="{{ route($currentRoute.".store",[$content->id??null]) }}" method="post">
+
+    <form action="{{ route($currentRoute.".store",request()->route()->parameters) }}" method="post">
         {{ @csrf_field() }}
         <div class="tab-vertical">
             <div class="row">

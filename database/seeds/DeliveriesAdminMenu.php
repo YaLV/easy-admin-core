@@ -131,5 +131,21 @@ class DeliveriesAdminMenu extends Seeder
                 'method'      => 'POST',
             ]
         );
+
+        \App\Model\Admin\Menu::firstOrCreate(
+            [
+                'slug'      => "sort",
+                'routeName' => "$main.sort",
+            ],
+            [
+                'icon'        => 'fas fa-arrows-alt-v',
+                'displayName' => 'Sort',
+                'action'      => '\App\Plugins\Deliveries\DeliveryController@setOrder',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]
+        );
     }
 }

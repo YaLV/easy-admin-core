@@ -7,56 +7,68 @@ use App\Plugins\Admin\Model\File;
 
 trait General
 {
-    public function handleMetas($collection, $metas, $slug = false, $metaData = false)
+    public function handleMetas($collection, $metas, $slug = false, $metaData = false, $owner = false)
     {
 
         /** @var BaseModel $collection */
 
-        $metaData = $metaData?:request($metas);
+        $metaData = $metaData ?: request($metas);
+
+        $owner = $owner ? ["owner" => $owner] : [];
 
         foreach ($metas as $meta) {
             foreach (languages() as $language) {
                 if (!($metaData[$meta][$language->code] ?? false) && $meta != 'slug') continue;
                 $meta_value = $metaData[$meta][$language->code] ?? "";
                 if ($meta == "slug") {
-                    $slugPartsCoded = [];
-                    $slugParts = explode("-", $slug);
-                    foreach ($slugParts ?? [] as $slug) {
-                        $slugPartsCoded[] = str_slug($metaData[$slug][$language->code] ?? $collection->$slug);
+                    if ($slug) {
+                        $slugPartsCoded = [];
+                        $slugParts = explode("-", $slug);
+                        foreach ($slugParts ?? [] as $slug) {
+                            $slugPartsCoded[] = str_slug($metaData[$slug][$language->code] ?? $collection->$slug);
+                        }
+                        $meta_value = implode("-", $slugPartsCoded);
                     }
-                    $meta_value = implode("-", $slugPartsCoded);
                 }
                 $collection->metaData()->updateOrCreate([
                     'meta_name' => $meta,
                     'language'  => $language->code,
-                ], [
+                ], array_merge([
                     'meta_value' => $meta_value,
-                ]);
+                ], $owner));
             }
         }
     }
 
-    public function handleImages($collection)
+    public function handleImages($collection, $owner = false)
     {
 
+        $owner = $owner ?: array_search(str_plural(strtolower(class_basename($collection))), config('app.uploadFile'));
 
+        if (!$owner) {
+            return;
+        }
+        if (!is_array($owner)) {
+            $owner = [$owner];
+        }
 
         if (!method_exists($collection, "images")) {
             return;
         }
+
         $x = 0;
         list($urls, $main, $id) = [request('image_url'), request('image_main'), request('image_id')];
 
         $type = "image";
 
-        $imagesInFiles = $collection->images()->get()->pluck('id')->toArray();
+        $imagesInFiles = $collection->images()->whereIn('owner', $owner)->get()->pluck('id')->toArray();
 
         if (!is_array($id)) return;
 
         foreach (array_diff($imagesInFiles, $id) as $fileID) {
             $file = File::find($fileID);
 
-            $imageSizes = config("app.imageSize.".$file->owner, null);
+            $imageSizes = config("app.imageSize." . $file->owner, null);
 
             if ($imageSizes) {
                 foreach ($imageSizes as $imageSize) {
@@ -64,11 +76,10 @@ trait General
                     \Storage::delete($path);
                 }
             } else {
-                $path = implode("/", ["public", config("app.uploadFile.{$file->owner}"), $file->filePath]);
+                $path = implode("/", ["public", config("app.uploadFile.{$file->owner}"), 'original', $file->filePath]);
                 \Storage::delete($path);
             }
             $file->delete();
-//            unlink(storage_path(str_replace('/storage', 'app/public', $file->filePath)));
         }
 
         do {

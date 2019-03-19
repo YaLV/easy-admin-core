@@ -10,7 +10,7 @@
 @endif
 
 @section('content')
-    <form action="{{ route($currentRoute.".store",[$content->id??null]) }}" method="post" autocomplete="off">
+    <form action="{{ route($currentRoute.".store", request()->route()->parameters) }}" method="post" autocomplete="off">
         {{ @csrf_field() }}
         <div class="card">
             <div class="card-body">

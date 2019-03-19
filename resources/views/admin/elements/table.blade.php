@@ -13,7 +13,7 @@
                         <div class="col-md-6">{{ $header??"" }}</div>
                         <div class="col-md-6 text-right">
                             @if(Route::has($currentRoute.".add"))
-                                <a href="{{ route($currentRoute.".add") }}" class="btn btn-primary btn-xs"><i
+                                <a href="{{ route($currentRoute.".add", request()->route()->parameters) }}" class="btn btn-primary btn-xs"><i
                                             class="fas fa-plus"></i></a>
                             @endif
                         </div>
@@ -109,7 +109,7 @@
                             sequence.push($(el).data('id'));
                         });
                         console.log(sequence);
-                        $.post("{{ route("$currentRoute.sort") }}", "sequence="+sequence.join(","), function(response) {
+                        $.post("{{ route("$currentRoute.sort", request()->route()->parameters) }}", "sequence="+sequence.join(","), function(response) {
                            if(response.status) {
                                for(x in response.sequence) {
                                    $('[data-id='+x+'] .seqTarget').text(response.sequence[x]);

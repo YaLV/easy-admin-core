@@ -144,4 +144,18 @@ class BaseModel extends Model
         return null;
     }
 
+    public function getImageByKey($imageType = 'main', $size = false) {
+        if(method_exists($this, 'images')) {
+            $image = $this->images()->where('owner', $imageType)->first();
+            $path = config("app.uploadFile.$imageType","temp");
+            $size = config("app.imageSize.$imageType.$size", 'original');
+
+            if(!$image) {
+                return null;
+            }
+            return "/$path/$size/{$image->filePath}";
+        }
+        return null;
+
+    }
 }
