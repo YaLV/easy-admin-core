@@ -208,7 +208,9 @@ function getSupplierSlugs()
         foreach (($slug?$slug->page:[]) as $page) {
             $slugs[] = __("pages.slug.{$page->id}");
         }
-
+        if(count($slugs)==0) {
+            $slugs = ['401'];
+        }
         return implode("|", $slugs);
     }
     return str_random(20);

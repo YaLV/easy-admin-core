@@ -8,4 +8,6 @@ $routes = (new \App\Plugins\Pages\Model\Page)->MetaLanguage();
 
 if(!$routes) {
     return $defaultRoute;
+} else {
+    return $routes;
 }
