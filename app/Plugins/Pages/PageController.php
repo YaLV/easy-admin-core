@@ -6,6 +6,7 @@ namespace App\Plugins\Pages;
 use App\Functions\General;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Pages\Model\Page;
+use App\Plugins\Pages\Model\PageComponent;
 use App\Plugins\Pages\Model\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -98,5 +99,27 @@ class PageController extends AdminController
                 return redirect()->back();
             }
         }
+    }
+
+    public function destroy($id) {
+
+        DB::beginTransaction();
+        /** @var Page $page */
+        $page = Page::withTrashed()->find($id);
+        /** @var PageComponent $components */
+        $components = $page->components;
+
+        foreach($components as $component) {
+            $component->metaData()->delete();
+            $component->delete();
+        }
+
+        $page->metaData()->delete();
+        $result = $page->forceDelete();
+        DB::commit();
+
+        $page->forgetMeta();
+        return ['status' => $result, "message" => $result ? "Page Deleted" : "Error Deleting Page"];
+
     }
 }
