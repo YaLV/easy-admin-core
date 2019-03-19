@@ -1,5 +1,11 @@
 <?php
+$defaultRoute = ['slug' => ['404']];
+
 if(!pageTable()) {
-    return ['slug' => []];
+    return $defaultRoute;
 }
-return (new \App\Plugins\Pages\Model\Page)->MetaLanguage();
+$routes = (new \App\Plugins\Pages\Model\Page)->MetaLanguage();
+
+if(!$routes) {
+    return $defaultRoute;
+}
