@@ -8,11 +8,14 @@ use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 trait CartFunctions
 {
     private function getCart($changedUser = null)
     {
+        if(!Schema::hasTable('users')) { return new OrderHeader(); }
+
         // Find Cart in Session
         $cart = session()->get('cart');
 
