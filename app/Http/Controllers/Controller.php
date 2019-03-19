@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class Controller extends BaseController
 {
@@ -16,6 +17,7 @@ class Controller extends BaseController
 
     public function __construct()
     {
+        if(!Schema::hasTable('users')) { return false; }
         if (!Auth::user() && !session()->get('user')) {
             $user = User::find(99);
             session()->put('user', $user);
