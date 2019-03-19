@@ -134,6 +134,9 @@ class FrontController extends Controller
      */
     public function homepage()
     {
+        if(!pageTable()) {
+            abort(404);
+        }
         $homepageId = Page::where("homepage", 1)->first()->id??0;
         $slug = __("pages.slug.$homepageId");
         return (new PageController)->show($slug);
