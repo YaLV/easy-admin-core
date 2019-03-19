@@ -46,9 +46,9 @@ class AdminController extends Controller implements ControllerInterface
             foreach ($request->file($uploadPath) as $uploadedFile) {
 
                 $imageSizes = config("app.imageSize." . $uploadPath, null);
-                $fileSavePath = (config("app.uploadFile.$uploadPath") ?? "temp");
+                $fileSavePath = (config("app.uploadFile.$uploadPath") ?? 'temp');
                 if (!$imageSizes) {
-                    $filename = basename($uploadedFile->store("public/" . $fileSavePath));
+                    $filename = basename($uploadedFile->store("public/" . $fileSavePath."/original"));
 
                     $returnData[] = $this->saveFileDB($filename, $fileSavePath);
 

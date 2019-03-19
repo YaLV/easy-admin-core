@@ -47,7 +47,7 @@ class LoginController extends Controller
             return route('dashboard');
         }*/
 
-        return r('home');
+        return r('page');
     }
 
     public function username()

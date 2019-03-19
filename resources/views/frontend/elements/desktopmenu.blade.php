@@ -1,7 +1,7 @@
 <div class="row">
     <span class="sv-menu-mobile-close"></span>
     <div class="logo">
-        <a href="{{ r('home') }}"><img src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" /></a>
+        <a href="{{ r('page') }}"><img src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" /></a>
     </div>
     <a href="javascript:void(0)" class="sv-btn-menu toggle-sv-menu-mobile">
 						<span>

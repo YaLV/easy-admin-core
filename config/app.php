@@ -6,6 +6,10 @@ return [
         'category_image' => 'categories',
         'product_image'  => 'products',
         'supplier_image' => 'suppliers',
+        'pageimage'      => 'pages',
+        'pageimage1'     => 'pages',
+        'pageimage2'     => 'pages',
+        'pageimage3'     => 'pages',
     ],
 
     'imageSize' => [
@@ -17,7 +21,7 @@ return [
             'view' => '700x',
         ],
         'supplier_image' => [
-            'main'  => '260x260',
+            'main' => '260x260',
         ],
     ],
 

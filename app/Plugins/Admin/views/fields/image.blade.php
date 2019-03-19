@@ -1,7 +1,10 @@
 @php
     $id = $id??str_random(5);
+    /** @var \App\Plugins\Admin\Model\File $oldImages */
     $oldImages = \App\Plugins\Admin\Model\File::whereIn('id', old('image_id')??[]);
     $images = $oldImages->count()?$oldImages->get():null;
+
+
 @endphp
 
 <div class="row">
@@ -21,7 +24,7 @@
     </div>
 </div>
 @if($preview??false)
-<div class="row">
+    <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8 preview" data-file="{{$id}}" data-path='{{ $name }}'>
         @foreach($images??$content->$name??[] as $image)

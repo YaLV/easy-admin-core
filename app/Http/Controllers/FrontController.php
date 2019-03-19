@@ -9,6 +9,7 @@ use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Orders\Model\OrderLines;
+use App\Plugins\Pages\Model\Page;
 use App\Plugins\Suppliers\Model\Supplier;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -131,9 +132,11 @@ class FrontController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function page()
+    public function homepage()
     {
-        return view('frontend.pages.home', ['supplier' => Supplier::inRandomOrder()->first()]);
+        $homepageId = Page::where("homepage", 1)->first()->id??0;
+        $slug = __("pages.slug.$homepageId");
+        return (new PageController)->show($slug);
     }
 
     public function redrawCart()
@@ -187,6 +190,10 @@ class FrontController extends Controller
         }
 
         return response()->file(storage_path("app/$path"));
+    }
+
+    public function getFeaturedSupplier() {
+        return Supplier::inRandomOrder()->first();
     }
 
 }

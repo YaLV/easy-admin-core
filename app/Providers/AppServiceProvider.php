@@ -56,8 +56,9 @@ class AppServiceProvider extends ServiceProvider
             $page = Menu::where('routeName', Route::currentRouteName())->first();
             $breadcrumbs = $title = [];
             do {
-                $editorId = request()->route('id');
-                if ($editorId && preg_match("/[{}]/", $page->slug)) {
+
+                if ($page && preg_match("/{([^}]*)}/", $page->slug, $matches)) {
+                    $editorId = request()->route($matches[1]);
                     $controller = explode("@", $page->action);
                     $editName = (new $controller[0])->getEditName($editorId);
                     $pageEl = (object)['displayName' => $page->displayName . ": <strong>" . $editName . "</strong>"];

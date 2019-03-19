@@ -19,29 +19,22 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
 
 // --------------- PUBLIC ROUTES ------------------- //
 
-Route::get('/{lang}/sa', function () {
-    return view('frontend.pages.farmers', ['suppliers' => \App\Plugins\Suppliers\Model\Supplier::all()->pluck('id')]);
-})->name('farmers');
-Route::get('/sa', function () {
-    return view('frontend.pages.farmers', ['suppliers' => \App\Plugins\Suppliers\Model\Supplier::all()->pluck('id')]);
-})->name('farmers.default');
+Route::pattern('lang', implode("|", languages()->pluck("code")->toArray()));
+Route::pattern('pageSlug', implode('|', __('pages.slug')));
+
+Route::get('/{lang}/{pageSlug?}', 'PageController@show')->name('page');
+Route::get('/{pageSlug?}', 'PageController@show')->name('page.default');
 
 
-Route::get('{lang}/sa/{farmer}', function ($farmer) {
-    $farmer = (new \App\Plugins\Suppliers\Model\SupplierMeta)->where(['meta_name' => 'slug', 'meta_value' => $farmer])->firstOrFail()->supplier;
-
-    return view('frontend.pages.farmer', ['supplier' => $farmer, 'supplierCache' => (new \App\Http\Controllers\CacheController)->getSupplier($farmer->id)]);
-})->name('farmer');
-Route::get('/sa/{farmer}', function ($farmer) {
-    $farmer = (new \App\Plugins\Suppliers\Model\SupplierMeta)->where(['meta_name' => 'slug', 'meta_value' => $farmer])->firstOrFail()->supplier;
-
-    return view('frontend.pages.farmer', ['supplier' => $farmer, 'supplierCache' => (new \App\Http\Controllers\CacheController)->getSupplier($farmer->id)]);
-})->name('farmer.default');
-
+// farmer Page
+Route::pattern('supplierSlug', implode('|', __('supplier.slug')));
+Route::pattern('suppliersSlug', getSupplierSlugs());
+Route::get('/{lang}/{suppliersSlug}/{supplierSlug}', 'PageController@show')->name('supplierOpen');
+Route::get('/{suppliersSlug}/{supplierSlug}', 'PageController@show')->name('supplierOpen.default');
 
 // Images
-Route::pattern("imPath", implode("|", config('app.uploadFile')));
-Route::get('/{imPath}/{size}/{file}', "FrontController@showImage")->name('image')->where("size", "(\d{1,4}x\d{1,4}|x\d{1,4}|\d{1,4}x)");
+Route::pattern("imPath", implode("|", array_merge(config('app.uploadFile'),['temp'])));
+Route::get('/{imPath}/{size}/{file}', "FrontController@showImage")->name('image')->where("size", "(\d{1,4}x\d{1,4}|x\d{1,4}|\d{1,4}x|original)");
 Route::get('/{imPath}/{file}', "FrontController@showImage")->name('image.nosize');
 
 // Profile Stuff
@@ -53,11 +46,10 @@ Route::post("/profile", 'ProfileController@store')->name('profile.save.default')
 // Verify Changed Email
 Route::get("/{lang}/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.save');
 Route::get("/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.default');
-
+/*
 // Home Page
-Route::pattern('lang', implode("|", languages()->pluck("code")->toArray()));
-Route::get('/{lang?}', 'FrontController@page')->name('home');
-Route::get('/', 'FrontController@page')->name('home.default');
+Route::get('/{lang?}', 'FrontController@homepage')->name('home');
+Route::get('/', 'FrontController@homepage')->name('home.default');*/
 
 // Cart
 Route::get("/{lang}/cart", "\App\Plugins\Orders\CartController@index")->name('cart');
