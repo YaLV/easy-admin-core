@@ -199,18 +199,28 @@ function transOrEmpty($key, $replace = [], $locale = null)
     return $translation == $key ? "" : $translation;
 }
 
-function getSupplierSlugs()
+function getSupplierSlugs($language = false)
 {
 
+
+
     if(pageTable()) {
-        $slugs = [];
         $slug = \App\Plugins\Pages\Model\Template::where('template', 'suppliers')->first();
+        $slugs = [];
         foreach (($slug?$slug->page:[]) as $page) {
             $slugs[] = __("pages.slug.{$page->id}");
         }
         if(count($slugs)==0) {
+            if($language) {
+                return "#";
+            }
             $slugs = ['401'];
         }
+
+        if($language) {
+            return current($slugs);
+        }
+
         return implode("|", $slugs);
     }
     return str_random(20);
