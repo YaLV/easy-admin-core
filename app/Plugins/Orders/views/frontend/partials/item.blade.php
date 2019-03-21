@@ -32,7 +32,7 @@
         </div>
         <div class="title">
             <a href="{{ $product->getUrl() }}" class="name">{{ $item->product_name }}</a>
-            <a href="{{ r('farmer', [__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">{{ $item->supplier_name }}</a>
+            <a href="{{ r('supplierOpen', [__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">{{ $item->supplier_name }}</a>
             @stack("variations-$random_id")
         </div>
     </div>
