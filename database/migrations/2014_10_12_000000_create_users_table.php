@@ -35,6 +35,7 @@ class CreateUsersTable extends Migration
             $table->string('postal_code');
             $table->boolean('newsletter')->default(false);
             $table->boolean('isAdmin')->default(false);
+            $table->string('address_comments')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

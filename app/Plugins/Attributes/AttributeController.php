@@ -4,6 +4,7 @@ namespace App\Plugins\Attributes;
 
 
 use App\Functions\General;
+use App\Http\Controllers\CacheController;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Attributes\Functions\Attributes;
 use App\Plugins\Attributes\Model\Attribute;
@@ -59,8 +60,10 @@ class AttributeController extends AdminController
             $attribute = Attribute::updateOrCreate(['id' => $id]);
             $this->handleMetas($attribute, $metas, 'name');
             $this->attributeValues($attribute);
-
             DB::commit();
+
+
+            (new CacheController)->createAttributeCache($attribute->id, true);
 
             return redirect(route('attributes.list'));
         } catch (\PDOException $e) {
@@ -91,6 +94,7 @@ class AttributeController extends AdminController
             DB::beginTransaction();
             $attributeValue = AttributeValue::updateOrCreate(['id' => request('id')]);
             $this->handleMetas($attributeValue, $metas, 'name');
+            $attributeValue->forgetMeta();
             DB::commit();
         } catch(\PDOException $e) {
             DB::rollBack();

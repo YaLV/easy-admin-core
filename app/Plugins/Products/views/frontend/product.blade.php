@@ -40,8 +40,8 @@
                             <a href="{{$crumb['url']}}">{{$crumb['name']}}</a>
                         @endforeach
                     </div>
-                    <a href="#" class="farmer">
-                        <img src="{{ asset("assets/img/tmp/photo-9.jpg") }}">
+                    <a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">
+                        <img src="{{ $product->supplier()->image(config('app.imageSize.supplier_image.main')) }}">
                         <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                     </a>
                 </div>
@@ -104,8 +104,8 @@
         <div class="sv-blank-spacer medium"></div>
 
         <div class="sv-farmer-about">
-            <a href="#" class="farmer">
-                <img src="{{ asset("assets/img/tmp/photo-9.jpg") }}">
+            <a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">
+                <img src="{{ $product->supplier()->image(config('app.imageSize.supplier_image.main')) }}">
                 <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                 <h4>{{ __("supplier.location.".$product->supplier_id) }}</h4>
             </a>

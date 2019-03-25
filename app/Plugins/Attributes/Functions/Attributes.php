@@ -3,6 +3,7 @@
 namespace App\Plugins\Attributes\Functions;
 
 
+use App\Plugins\Attributes\Model\Attribute;
 use App\Plugins\Attributes\Model\AttributeValue;
 
 /**
@@ -49,7 +50,7 @@ trait Attributes
     /**
      * @param $collection
      */
-    public function attributeValues($collection) {
+    public function attributeValues(Attribute $collection) {
 
         $currentValues = $collection->values()->pluck('id')->toArray();
 
@@ -57,6 +58,7 @@ trait Attributes
 
         AttributeValue::whereIn('id', $removableValues)->delete();
 
+        /** @var AttributeValue $attributeValues */
         $attributeValues = AttributeValue::whereIn('id', request('attributeValue'));
         $attributeValues->update(['attribute_id' => $collection->id]);
     }

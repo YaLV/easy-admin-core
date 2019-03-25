@@ -9,7 +9,7 @@
         /** @var Carbon\Carbon $dt */
         $dt = $md->date->copy();
         $modifiedMD = $dt->addDays($delivery->deliveryTime??0);
-        $mdDate = $modifiedMD->format('d');
+        $mdDate = $modifiedMD->format('j');
         $month = __("translations.".$modifiedMD->format('F'));
         $dayName = __("translations.".$modifiedMD->format('l'));
     @endphp

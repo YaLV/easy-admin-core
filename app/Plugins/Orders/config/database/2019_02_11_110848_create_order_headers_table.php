@@ -25,6 +25,7 @@ class CreateOrderHeadersTable extends Migration
             $table->enum('discount_type', ['percent', 'amount'])->nullable();
             $table->integer('delivery_id')->nullable();
             $table->decimal('delivery_amount', 8, 2)->nullable();
+            $table->string("comments")->nullable();
             $table->timestamps();
         });
     }

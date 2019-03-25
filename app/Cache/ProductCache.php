@@ -233,6 +233,10 @@ class ProductCache
         return (new CacheController)->getSupplier($this->supplier_id);
     }
 
+    public function getData($param) {
+        return $this->$param;
+    }
+
     public function getOtherProducts($exclude = false) {
 
         $category = Category::find($this->mainCategory)->products();

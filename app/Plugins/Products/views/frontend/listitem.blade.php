@@ -37,7 +37,7 @@
                     {{ implode(" / ",[$item->prices()->price."€", $item->prices()->display_name]) }}
                 </h3>
             @endif
-            <h4><a href="#">{{ __("supplier.name.{$item->supplier_id}") }}</a></h4>
+            <h4><a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$item->supplier_id}")]) }}">{{ __("supplier.name.{$item->supplier_id}") }}</a></h4>
         </div>
         <button class="add-to-cart">
                 <span class="icon">

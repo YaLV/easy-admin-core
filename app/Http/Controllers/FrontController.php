@@ -26,6 +26,8 @@ class FrontController extends Controller
 
     use CartFunctions;
 
+    private $slugPath;
+
     /**
      * Open page - detected by cache
      *
@@ -37,10 +39,11 @@ class FrontController extends Controller
 
         $cache = (new CacheController)->getSlugCache();
 
-
         $action = $cache->findAction();
 
         if (!($action ?? false)) abort(404);
+
+        $this->slugPath = $cache->getSlugs();
 
         return $this->{$action['action']}($action['slug'], $action['id']);
     }
@@ -55,6 +58,8 @@ class FrontController extends Controller
      */
     public function showCategory($categorySlug, $categoryId)
     {
+        session()->put('lastCategory', request()->route()->parameters);
+
         /** @var \App\Plugins\Categories\Model\Category $category */
         $category = Category::findOrFail($categoryId);
 
@@ -66,16 +71,32 @@ class FrontController extends Controller
                 return $q->where('market_day_id', $md->id);
             });
 
-        if (($filters ?? false)) {
-            $products = $products->whereHas('attributeValues', function (Builder $q) {
-                $q->whereIn('attribute_value_id', request('attributes'));
+        $filters = session()->get('filters');
+
+        if (($filters['filters'] ?? false) && $filters['category']==$category->id) {
+            $products = $products->whereHas('attributeValues', function (Builder $q) use($filters) {
+                $q->whereIn('attribute_value_id', $filters['filters']);
+            });
+        }
+
+        if(($filters['suppliers']??false) && $filters['category']==$category->id) {
+            $products = $products->whereIn('supplier_id', $filters['suppliers']);
+        }
+
+        if($searchString = request()->get('search')) {
+            $products = $products->whereHas('metaData', function (Builder $q) use($searchString) {
+               $q->where('meta_value', 'like', "%$searchString%")->where('language', language())->whereIn('meta_name', ['name']);
             });
         }
 
         $products = $products->paginate(20)
             ->pluck('id');
 
-        return view("Products::frontend.listitems", compact(['category', 'products']));
+        $suppliers = Supplier::all()->pluck('id');
+
+        $categoryPath = $this->slugPath;
+
+        return view("Products::frontend.listitems", compact(['category', 'products', 'suppliers', 'categoryPath']));
     }
 
     /**
@@ -90,8 +111,11 @@ class FrontController extends Controller
     {
 
         $product = (new CacheController)->getProduct($productId);
+        $suppliers = Supplier::all()->pluck('id');
+        $category = Category::findOrFail($product->getData('mainCategory'));
+        $categoryPath = $this->slugPath;
 
-        return View("Products::frontend.product", compact(['product']));
+        return View("Products::frontend.product", compact(['product', 'suppliers', 'categoryPath', 'category']));
     }
 
     /**
