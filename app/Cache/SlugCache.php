@@ -39,4 +39,8 @@ class SlugCache
         }
         return $lastAction;
     }
+
+    public function getSlugs() {
+        return $this->slugs;
+    }
 }

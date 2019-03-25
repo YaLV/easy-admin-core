@@ -3,6 +3,7 @@
 namespace App\Cache;
 
 
+use App\Plugins\Admin\Model\File;
 use App\Plugins\Categories\Model\Category;
 
 class CategoryCache
@@ -11,6 +12,7 @@ class CategoryCache
     private $categoryTree;
     private $products = [];
     private $image = [];
+    private $filters = [];
 
     public function __construct() {
         $categoryList = [];
@@ -19,8 +21,11 @@ class CategoryCache
         $this->categories = $categories->pluck('id')->toArray();
 
         foreach($categories as $category) {
+            /** @var Category $category */
+            $this->filters[$category->id] = $category->filters()->pluck('id')->toArray();
             $this->products[$category->id] = $category->products()->pluck('id')->toArray();
             $categoryList[$category->id] = $category->parent_id??0;
+            /** @var File|null $cimage */
             $cimage = $category->getImage();
             $this->image[$category->id] = $cimage?$cimage->filePath:null;
         }
@@ -45,5 +50,9 @@ class CategoryCache
         }
 
         return config("app.defaultCategoryImage");
+    }
+
+    public function getFilters($categoryId) {
+        return $this->filters[$categoryId];
     }
 }

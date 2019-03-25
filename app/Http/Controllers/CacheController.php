@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Plugins\Admin\Cache\SlugCache;
+use App\Plugins\Attributes\Cache\AttributeCache;
 use App\Plugins\Categories\Cache\CategoryCache;
 use App\Plugins\MarketDays\Functions\MarketDays;
 use App\Plugins\MarketDays\Model\MarketDay;
@@ -26,6 +27,7 @@ class CacheController extends Controller
     use MarketDays;
     use SupplierCache;
     use PageCache;
+    use AttributeCache;
 
     /**
      * Set cache

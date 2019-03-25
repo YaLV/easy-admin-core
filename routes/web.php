@@ -1,6 +1,6 @@
 <?php
 
-if(\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
+if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 
 // DEBUG
 
@@ -105,8 +105,27 @@ if(\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::get("/{lang}/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}", 'FrontController@divert')->name('url');
     Route::get("/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}", 'FrontController@divert')->name('url.default');
 
+    Route::post('filter/{category}', function ($category) {
+        session()->put('filters', [
+            'category'  => $category,
+            'filters'   => request('filter'),
+            'suppliers' => request('suppliers'),
+        ]);
+
+        /*
+        $cache = (new \App\Http\Controllers\CacheController)->getCategoryCache();
+
+        $urlParams = [];
+        foreach($cache->getPath($category) as $pathItem) {
+            $urlParams[] = __("category.slug.$pathItem");
+        }
+        */
+
+        return redirect(r('url', session()->get('lastCategory')));
+    })->name('setFilter');
+
 } else {
-    Route::get("/", function() {
+    Route::get("/", function () {
         return "Site has not been set up";
     });
 }

@@ -101,6 +101,10 @@
                     </div>
                 </div>
             </div>
+            <div class="input-wrapper">
+                <label>{!! _t('translations.addressComments') !!}</label>
+                <input type="text" name="address_comments" value="{{ old('address_comments')??$user->address_comments??"" }}" />
+            </div>
         </div>
         <div class="sv-line-spacer"></div>
         <div class="section">

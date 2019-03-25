@@ -229,3 +229,25 @@ function getSupplierSlugs($language = false)
 function pageTable() {
     return \Illuminate\Support\Facades\Schema::hasTable("templates");
 }
+
+function getCurrentAttributes($catId) {
+    if($filters = session()->get('filters')) {
+        if($filters['category']==$catId) {
+            return $filters['filters']??[];
+        }
+        session()->forget('filters');
+        return [];
+    }
+    return [];
+}
+
+function getCurrentSuppliers($catId) {
+    if($filters = session()->get('filters')) {
+        if($filters['category']==$catId) {
+            return $filters['suppliers']??[];
+        }
+        session()->forget('filters');
+        return [];
+    }
+    return [];
+}

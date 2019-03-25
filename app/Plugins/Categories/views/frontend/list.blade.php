@@ -29,37 +29,20 @@
     <div id="sv-mobile-filters" class="sv-mobile-filters panel-collapse collapse">
         <div class="sv-sidebar-filters">
             <div class="item">
-                <span data-toggle="collapse" data-target="#filter-1" class="title collapsed">{!! _t('translations.suppliers') !!}</span>
-                <div id="filter-1" class="collapse">
+                <span data-toggle="collapse" data-target="#filter-1-m"
+                      class="title collapsed">{!! _t('translations.suppliers') !!}</span>
+                <div id="filter-1-m" class="collapse">
                     <div class="content">
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-1">
-                            <label for="check-1">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-2">
-                            <label for="check-2">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-3">
-                            <label for="check-3">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-4">
-                            <label for="check-4">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-5">
-                            <label for="check-5">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-6">
-                            <label for="check-6">Filtra opcija</label>
-                        </div>
+                        @foreach($suppliers as $supplier)
+                            <div class="input-wrapper checkbox">
+                                <input type="checkbox" id="check-{{$supplier}}-m">
+                                <label for="check-{{$supplier}}-m">{{ __('supplier.name.'.$supplier) }}</label>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
-            <div class="item">
+            {{--<div class="item">
                 <span data-toggle="collapse" data-target="#filter-2" class="title collapsed">Filtrs</span>
                 <div id="filter-2" class="collapse">
                     <div class="content">
@@ -89,100 +72,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="item">
-                <span data-toggle="collapse" data-target="#filter-3" class="title collapsed">Otrs filtrs</span>
-                <div id="filter-3" class="collapse">
-                    <div class="content">
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-111">
-                            <label for="check-111">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-222">
-                            <label for="check-222">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-333">
-                            <label for="check-333">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-444">
-                            <label for="check-444">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-555">
-                            <label for="check-555">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-666">
-                            <label for="check-666">Filtra opcija</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <span data-toggle="collapse" data-target="#filter-4" class="title collapsed">Trešais filtrs</span>
-                <div id="filter-4" class="collapse">
-                    <div class="content">
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-1111">
-                            <label for="check-1111">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-2222">
-                            <label for="check-2222">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-3333">
-                            <label for="check-3333">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-4444">
-                            <label for="check-4444">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-5555">
-                            <label for="check-5555">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-6666">
-                            <label for="check-6666">Filtra opcija</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <span data-toggle="collapse" data-target="#filter-5" class="title collapsed">Pēdejais filtrs</span>
-                <div id="filter-5" class="collapse">
-                    <div class="content">
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-11111">
-                            <label for="check-11111">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-22222">
-                            <label for="check-22222">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-33333">
-                            <label for="check-33333">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-44444">
-                            <label for="check-44444">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-55555">
-                            <label for="check-55555">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-66666">
-                            <label for="check-66666">Filtra opcija</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div>--}}
+
         </div>
     </div>
     <form class="sv-sidebar-search is-mobile">
@@ -207,178 +98,88 @@
     <div class="@yield('wrapper')">
         <div class="container">
             <div class="row">
-
                 <div class="sv-sidebar-category">
+                    @if(request()->route('slug2'))
+                        <a href="{{ r('url', ['slug1' => request()->route('slug1')]) }}" class="sv-back-link">{{ __('category.name.'.$categoryPath[request()->route('slug1')]['id']??"") }}</a>
+                    @elseif(request()->route('slug3'))
+                        <a href="{{ r('url', ['slug1' => request()->route('slug1'),'slug2' => request()->route('slug2')]) }}" class="sv-back-link">{{__('category.name.'.$categoryPath[request()->route('slug2')]['id']??"")}}</a>
+                    @endif
                     <ul class="menu">
                         @include("frontend.partials.menu.main", ['menuSlug' => 'shop', 'menuId' => "auto"])
                     </ul>
-                    <form class="sv-sidebar-search">
-                        <input type="text" />
+                    <form class="sv-sidebar-search" method="get">
+                        <input type="text" name="search" value="{{request()->get('search')}}" />
                         <input type="submit" value="{{ _t('translations.search') }}" />
                     </form>
-                    <div class="sv-sidebar-filters">
-                        <div class="item">
-                            <span data-toggle="collapse" data-target="#filter-1"
-                                  class="title collapsed">Saimniecības</span>
-                            <div id="filter-1" class="collapse">
-                                <div class="content">
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-1" />
-                                        <label for="check-1">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-2" />
-                                        <label for="check-2">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-3" />
-                                        <label for="check-3">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-4" />
-                                        <label for="check-4">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-5" />
-                                        <label for="check-5">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-6" />
-                                        <label for="check-6">Filtra opcija</label>
+                    <form method="post" action="{{ route('setFilter', [$category->id]) }}">
+                        {{ csrf_field() }}
+                        @php
+                            $in="";
+                            $open="collapsed";
+                            $currentSuppliers = getCurrentSuppliers($category->id);
+                            if(count($currentSuppliers)>0) {
+                                $in = "in";
+                                $open = "";
+                            }
+                        @endphp
+                        <div class="sv-sidebar-filters">
+                            <div class="item">
+                            <span data-toggle="collapse" data-target="#filter-supp"
+                                  class="title {{$open}}">Saimniecības</span>
+                                <div id="filter-supp" class="collapse {{$in}}">
+                                    <div class="content">
+                                        @foreach($suppliers as $supplier)
+                                            <div class="input-wrapper checkbox">
+                                                <input type="checkbox" id="check-{{$supplier}}-supp" name="suppliers[]"
+                                                       {{ in_array($supplier, $currentSuppliers)?"checked":"" }} value="{{$supplier}}">
+                                                <label for="check-{{$supplier}}-supp">{{ __('supplier.name.'.$supplier) }}</label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <span data-toggle="collapse" data-target="#filter-2" class="title collapsed">Filtrs</span>
-                            <div id="filter-2" class="collapse">
-                                <div class="content">
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-11" />
-                                        <label for="check-11">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-22" />
-                                        <label for="check-22">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-33" />
-                                        <label for="check-33">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-44" />
-                                        <label for="check-44">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-55" />
-                                        <label for="check-55">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-66" />
-                                        <label for="check-66">Filtra opcija</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <span data-toggle="collapse" data-target="#filter-3"
-                                  class="title collapsed">Otrs filtrs</span>
-                            <div id="filter-3" class="collapse">
-                                <div class="content">
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-111" />
-                                        <label for="check-111">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-222" />
-                                        <label for="check-222">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-333" />
-                                        <label for="check-333">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-444" />
-                                        <label for="check-444">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-555" />
-                                        <label for="check-555">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-666" />
-                                        <label for="check-666">Filtra opcija</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <span data-toggle="collapse" data-target="#filter-4" class="title">Trešais filtrs</span>
-                            <div id="filter-4" class="collapse in">
-                                <div class="content">
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-1111" />
-                                        <label for="check-1111">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-2222" />
-                                        <label for="check-2222">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-3333" />
-                                        <label for="check-3333">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-4444" />
-                                        <label for="check-4444">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-5555" />
-                                        <label for="check-5555">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-6666" />
-                                        <label for="check-6666">Filtra opcija</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <span data-toggle="collapse" data-target="#filter-5"
-                                  class="title collapsed">Pēdejais filtrs</span>
-                            <div id="filter-5" class="collapse">
-                                <div class="content">
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-11111" />
-                                        <label for="check-11111">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-22222" />
-                                        <label for="check-22222">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-33333" />
-                                        <label for="check-33333">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-44444" />
-                                        <label for="check-44444">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-55555" />
-                                        <label for="check-55555">Filtra opcija</label>
-                                    </div>
-                                    <div class="input-wrapper checkbox">
-                                        <input type="checkbox" id="check-66666" />
-                                        <label for="check-66666">Filtra opcija</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
-                </div>
 
+                            @php
+                                $currentAttributes = getCurrentAttributes($category->id);
+                            @endphp
+                            @foreach($cache->getCategoryCache()->getFilters($category->id) as $attribute)
+                                @php
+                                    $open = false;
+                                    $attributeValues = $cache->getAttributeCache($attribute)->getValues();
+                                @endphp
+
+                                @push('filter-'.$attribute)
+                                    @foreach($attributeValues as $attributeValue)
+                                        @php
+                                            $checked = in_array($attributeValue,$currentAttributes)?"checked":"";
+
+                                            $open = ($checked||($open??null))?true:null;
+                                        @endphp
+                                        <div class="input-wrapper checkbox">
+                                            <input type="checkbox" id="check-{{$attributeValue}}"
+                                                   class="filterValue"
+                                                   name="filter[]"
+                                                   value="{{$attributeValue}}" {{ $checked }}/>
+                                            <label for="check-{{$attributeValue}}">{{ __('attributevalues.name.'.$attributeValue) }}</label>
+                                        </div>
+                                    @endforeach
+                                @endpush
+
+                                <div class="item">
+                                <span data-toggle="collapse" data-target="#filter-{{ $attribute }}"
+                                      class="title {{ ($open?"":"collapsed") }}">{{ __('attributes.name.'.$attribute) }}</span>
+                                    <div id="filter-{{ $attribute }}" class="collapse {{ $open?"in":"" }}">
+                                        <div class="content">
+                                            @stack('filter-'.$attribute)
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <button class="sv-filters-save">{!! _t('translations.setFilter') !!}</button>
+                        <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
+                    </form>
+                </div>
                 <div class="sv-products">
                     @yield('leftSide')
                 </div>

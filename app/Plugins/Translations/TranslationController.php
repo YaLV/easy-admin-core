@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class TranslationController
 {
@@ -110,5 +111,11 @@ class TranslationController
         }
 
         return redirect()->route('translations');
+    }
+
+    public function getEditName() {
+        if(Route::currentRouteName()=='translations.search') {
+            return request()->route('id');
+        }
     }
 }

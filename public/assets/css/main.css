@@ -159,6 +159,12 @@ ul, li {
 		clear: both;
 }
 
+.sv-or-spacer {
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 20px;
+		text-align: center;
+}
+
 .sv-dock {
 		background: #1f9363;
 		color: #ffffff;
@@ -979,6 +985,9 @@ ul, li {
 		line-height: 54px;
 		background: #ffffff;
 		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 }
 
 .sv-products-menu-mobile .selectric .button {
@@ -1063,6 +1072,8 @@ ul, li {
 		font-size: 50px;
 		line-height: 60px;
 		font-family: "NeutraDisp Titling", sans-serif;
+		position: relative;
+		z-index: 1000;
 }
 
 .sv-page-title h2 a {
@@ -2686,6 +2697,42 @@ ul, li {
 		text-decoration: underline;
 }
 
+.sv-lightbox.sv-signin .content-sv-signin .signin .btn-fb {
+		transition: all 350ms ease;
+		width: 100%;
+		height: 70px;
+		background-color: #4469b0;
+		background-image: url(../img/icon-facebook-1.svg);
+		background-repeat: no-repeat;
+		background-position: center left 25px;
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 22px;
+		letter-spacing: 0.5px;
+		font-weight: 400;
+		border: none;
+		color: #ffffff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+}
+
+.sv-lightbox.sv-signin .content-sv-signin .signin .btn-fb:hover {
+		background-color: #3b5a96;
+}
+
+.sv-lightbox.sv-signin .content-sv-signin .signin .sv-or-spacer {
+		padding-top: 35px;
+		margin-bottom: 35px;
+		color: #ffffff;
+}
+
+@media only screen and (max-width: 767px) {
+		.sv-lightbox.sv-signin .content-sv-signin .signin .sv-or-spacer {
+				padding-top: 15px;
+				margin-bottom: 15px;
+		}
+}
+
 .sv-lightbox.sv-signin .content-sv-signin .register {
 		padding: 0 10%;
 		background: #1f9363;
@@ -3100,6 +3147,11 @@ ul, li {
 		display: block;
 }
 
+.sv-sidebar-category .sv-back-link {
+		display: block;
+		margin-bottom: 25px;
+}
+
 .sv-message {
 		padding: 10px;
 		font-size: 16px;
@@ -3289,6 +3341,10 @@ ul, li {
 		left: 5px;
 		display: block;
 		transition: all 150ms ease;
+}
+
+.sv-filters-cancel:hover:before {
+		background: #1b7e55;
 }
 
 .sv-exp-date {
@@ -3860,6 +3916,38 @@ body.farmers-open #farmersmap-canvas {
 		width: 100%;
 }
 
+.sv-user-data-forms .btn-fb {
+		transition: all 350ms ease;
+		width: 100%;
+		height: 70px;
+		background-color: #4469b0;
+		background-image: url(../img/icon-facebook-1.svg);
+		background-repeat: no-repeat;
+		background-position: center left 25px;
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 22px;
+		letter-spacing: 0.5px;
+		font-weight: 400;
+		border: none;
+		color: #ffffff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+}
+
+.sv-user-data-forms .btn-fb:hover {
+		background-color: #3b5a96;
+}
+
+.sv-user-data-forms .sv-or-spacer {
+		padding-top: 30px;
+		margin-bottom: -30px;
+}
+
+.sv-user-data-forms textarea {
+		height: 115px;
+}
+
 .vc_row {
 		position: relative;
 }
@@ -4333,6 +4421,7 @@ body.farmers-open #farmersmap-canvas {
 		width: 50%;
 		display: flex;
 		align-items: center;
+		position: relative;
 }
 
 .sv-cart .list .item .product .selectric-wrapper {
@@ -4370,6 +4459,33 @@ body.farmers-open #farmersmap-canvas {
 		color: #1f9363;
 }
 
+.sv-cart .list .item .product .title .remove {
+		opacity: 0;
+		visibility: none;
+		position: absolute;
+		right: 15%;
+		top: 50%;
+		transform: translateY(-50%);
+		flex-shrink: 0;
+		display: inline-block;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		margin-left: 15px;
+		background: #ff7171 url(../img/icon-cross-5.svg) center center no-repeat;
+		transition: all 150ms ease;
+}
+
+@media only screen and (max-width: 998px) {
+		.sv-cart .list .item .product .title .remove {
+				display: none;
+		}
+}
+
+.sv-cart .list .item .product .title .remove:hover {
+		background: #ff3e3e url(../img/icon-cross-5.svg) center center no-repeat;
+}
+
 .sv-cart .list .item .total {
 		width: 10%;
 }
@@ -4380,6 +4496,7 @@ body.farmers-open #farmersmap-canvas {
 }
 
 .sv-cart .list .item .quantity {
+		width: 20%;
 		text-align: center;
 }
 
@@ -4406,6 +4523,10 @@ body.farmers-open #farmersmap-canvas {
 		border: none !important;
 }
 
+.sv-cart .list .item .selectric h3 {
+		font-size: 16px !important;
+}
+
 .sv-cart .list .item .selectric .label {
 		font-family: "DINPro Light", sans-serif;
 		font-size: 16px;
@@ -4414,7 +4535,8 @@ body.farmers-open #farmersmap-canvas {
 		color: #323234;
 		margin: 0;
 		padding: 0;
-		display: inline-block;
+		display: flex;
+		align-items: center;
 		transition: all 350ms ease;
 }
 
@@ -4425,6 +4547,7 @@ body.farmers-open #farmersmap-canvas {
 		height: 26px;
 		line-height: 26px;
 		background: none;
+		top: 0;
 }
 
 .sv-cart .list .item .selectric:hover .button:after {
@@ -4442,6 +4565,127 @@ body.farmers-open #farmersmap-canvas {
 		font-size: 16px;
 		line-height: 26px;
 		padding: 8px 15px;
+}
+
+.sv-cart .list .item .selectric-items li h3 {
+		font-size: 16px !important;
+}
+
+.sv-cart .list .item.is-disabled .product .title .name {
+		color: #ff7171 !important;
+}
+
+.sv-cart .list .item.is-disabled .product .title .name:hover {
+		color: #ff3e3e !important;
+}
+
+.sv-cart .list .item.is-disabled .product .title .farmer {
+		color: #ff7171 !important;
+}
+
+.sv-cart .list .item.is-disabled .product .title .farmer:hover {
+		color: #ff3e3e !important;
+}
+
+.sv-cart .list .item.is-disabled .product .title .selectric-wrapper {
+		display: none;
+}
+
+.sv-cart .list .item.is-disabled .product .title .quantity-disabled {
+		font-size: 16px;
+		color: #ff7171 !important;
+		display: none;
+}
+
+@media only screen and (max-width: 998px) {
+		.sv-cart .list .item.is-disabled .product .title .quantity-disabled {
+				display: inline-block;
+		}
+}
+
+.sv-cart .list .item.is-disabled .product .image img {
+		filter: grayscale(1);
+		opacity: 0.4;
+}
+
+.sv-cart .list .item.is-disabled .controls {
+		width: 30%;
+		display: flex;
+		justify-content: flex-end;
+		flex-grow: 0;
+}
+
+@media only screen and (max-width: 998px) {
+		.sv-cart .list .item.is-disabled .controls {
+				width: 100%;
+				justify-content: space-between;
+		}
+}
+
+.sv-cart .list .item.is-disabled .price {
+		color: #ff7171 !important;
+}
+
+.sv-cart .list .item.is-disabled .change {
+		margin-right: 15%;
+		transition: all 150ms ease;
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 18px;
+		color: #1f9363;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+}
+
+.sv-cart .list .item.is-disabled .change svg {
+		margin-right: 10px;
+		transition: all 150ms ease;
+}
+
+.sv-cart .list .item.is-disabled .change svg path {
+		transition: all 150ms ease;
+		fill: #1f9363;
+}
+
+.sv-cart .list .item.is-disabled .change:hover {
+		color: #1b8258;
+}
+
+.sv-cart .list .item.is-disabled .change:hover svg path {
+		fill: #1b8258;
+}
+
+.sv-cart .list .item.is-disabled .discard {
+		transition: all 150ms ease;
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 18px;
+		color: #ff7171;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+}
+
+.sv-cart .list .item.is-disabled .discard svg {
+		margin-right: 10px;
+		transition: all 150ms ease;
+}
+
+.sv-cart .list .item.is-disabled .discard svg path {
+		transition: all 150ms ease;
+		fill: #ff7171;
+}
+
+.sv-cart .list .item.is-disabled .discard:hover {
+		color: #ff3e3e;
+}
+
+.sv-cart .list .item.is-disabled .discard:hover svg path {
+		fill: #ff3e3e;
+}
+
+.sv-cart .list .item:hover .title .remove {
+		opacity: 1;
+		visibility: visible;
 }
 
 .sv-cart .list .coupon {
@@ -4918,6 +5162,209 @@ body.farmers-open #farmersmap-canvas {
 				padding-right: 0;
 				padding-top: 15px;
 		}
+}
+
+.sv-back-link {
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 16px;
+		position: relative;
+		padding-left: 30px;
+		display: inline-block;
+}
+
+.sv-back-link:before {
+		transition: all 150ms ease;
+		content: "";
+		width: 19px;
+		height: 19px;
+		border-radius: 50%;
+		background: #1f9363;
+		position: absolute;
+		top: 5px;
+		left: 0;
+}
+
+.sv-back-link:after {
+		transition: all 150ms ease;
+		content: "";
+		width: 6px;
+		height: 9px;
+		background: url(../img/arrow-4-left.svg) 0 0 no-repeat;
+		position: absolute;
+		top: 10px;
+		left: 6px;
+}
+
+.sv-back-link:hover:before {
+		background: #1b7e55;
+}
+
+.sv-back-link:hover:after {
+		left: 5px;
+}
+
+.sv-payment {
+		overflow: hidden;
+}
+
+.sv-payment h3 {
+		text-align: center;
+		font-size: 22px;
+		line-height: 26px;
+		font-family: "NeutraDisp Titling", sans-serif;
+		padding: 50px 0;
+}
+
+.sv-payment .col-wrapper > .container {
+		display: flex;
+		padding: 0;
+}
+
+.sv-payment .col-wrapper .row {
+		display: flex;
+		margin: 0 -15px;
+		flex-grow:1;
+}
+
+.sv-payment .col-wrapper .col {
+		width: 50%;
+		margin: 0;
+		padding: 0 15px;
+}
+
+.sv-payment .payment-cards {
+		display: flex;
+		flex-flow: column;
+}
+
+.sv-payment .payment-cards a {
+		transition: all 150ms ease;
+		padding: 40px;
+		box-shadow: #e2e2e2 1px 0 0 inset,
+ #e2e2e2 -1px 0 0 inset,
+ #e2e2e2 0 1px 0 inset,
+ #e2e2e2 0 -1px 0 inset;
+		margin-bottom: -1px;
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+		text-align: center;
+		font-size: 18px;
+		line-height: 26px;
+		font-family: "DINPro Regular", sans-serif;
+}
+
+.sv-payment .payment-cards a:hover {
+		box-shadow: #1f9363 2px 0 0 inset, #1f9363 -2px 0 0 inset, #1f9363 0 2px 0 inset, #1f9363 0 -2px 0 inset;
+		z-index: 1000;
+		position: relative;
+		color: #323234;
+}
+
+.sv-payment .payment-cards h4 {
+		font-size: 22px;
+		line-height: 26px;
+		font-family: "NeutraDisp Titling", sans-serif;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+}
+
+.sv-payment .payment-cards .visa {
+		max-width: 167px;
+}
+
+.sv-payment .summary h3 {
+		font-size: 22px;
+		line-height: 26px;
+		font-family: "NeutraDisp Titling", sans-serif;
+		text-transform: uppercase;
+		background: #1f9363;
+		color: #ffffff;
+		padding: 20px 40px;
+		min-height: 70px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		z-index: 1000;
+}
+
+.sv-payment .summary h3 a {
+		transition: all 150ms ease;
+		display: flex;
+		position: absolute;
+		align-items: center;
+		top: 50%;
+		right: 25px;
+		transform: translateY(-50%);
+}
+
+.sv-payment .summary h3 a svg path {
+		fill: #ffffff;
+}
+
+.sv-payment .summary h3 a:hover {
+		opacity: 0.7;
+}
+
+.sv-payment .summary .content {
+		background: #f1f1f1;
+		padding: 30px 40px;
+		font-size: 18px;
+		line-height: 26px;
+		font-family: "DINPro Regular", sans-serif;
+		border-top: 1px solid #e4e4e4;
+		margin-top: -1px;
+}
+
+.sv-payment .summary .totals {
+		display: flex;
+		flex-flow: column;
+}
+
+.sv-payment .summary .totals > div {
+		display: flex;
+		justify-content: space-between;
+		padding: 8px 0;
+}
+
+.sv-payment .summary .totals > div > span {
+		display: flex;
+		align-items: center;
+}
+
+.sv-payment .summary .totals .remove {
+		flex-shrink: 0;
+		display: inline-block;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		margin-left: 15px;
+		background: #ff7171 url(../img/icon-cross-5.svg) center center no-repeat;
+		transition: all 150ms ease;
+}
+
+.sv-payment .summary .totals .remove:hover {
+		background: #ff3e3e url(../img/icon-cross-5.svg) center center no-repeat;
+}
+
+.sv-payment .summary .totals .heading-big {
+		font-size: 22px;
+		line-height: 28px;
+		font-family: "DINPro Medium", sans-serif;
+		margin-bottom: 10px;
+}
+
+.sv-payment .summary .totals .heading-small {
+		font-size: 18px;
+		line-height: 26px;
+		font-family: "DINPro Medium", sans-serif;
+		margin-bottom: -8px;
+		margin-top: 10px;
+}
+
+.sv-payment .summary .totals .notes {
+		padding-top: 25px;
 }
 
 .selectric-wrapper {
@@ -6102,6 +6549,43 @@ input[type="radio"]:checked + label:after {
 		.sv-message {
 				padding: 15px;
 		}
+		.sv-payment {
+				padding: 0 20px;
+				margin-bottom: 5px;
+		}
+		.sv-payment h3 {
+				padding: 30px 0;
+		}
+		.sv-payment .col-wrapper .row {
+				flex-wrap: wrap;
+				margin: 0;
+		}
+		.sv-payment .col-wrapper .row .col {
+				width: 100%;
+				margin-left: 0;
+				margin-right: 0;
+				padding: 0;
+				margin-bottom: 20px;
+		}
+		.sv-payment .col-wrapper .row .col:last-child {
+				margin-bottom: 0;
+		}
+		.sv-payment .payment-cards a {
+				padding: 30px;
+		}
+		.sv-payment .summary .content {
+				padding: 20px;
+		}
+		.sv-payment .summary .totals .heading-big span {
+				flex-shrink: 1 !important;
+		}
+		.sv-payment .summary .totals > div span:first-child {
+				padding-right: 20px;
+				flex-shrink: 1;
+		}
+		.sv-payment .summary .totals > div span:nth-child(2) {
+				flex-shrink: 0;
+		}
 }
 
 @media only screen and (max-width: 767px) {
@@ -6323,7 +6807,7 @@ input[type="radio"]:checked + label:after {
 				top: 0;
 				position: fixed;
 				width: 100%;
-				z-index: 200;
+				z-index: 2000;
 		}
 		.sv-dock .right {
 				z-index: 200;
@@ -6782,8 +7266,4 @@ input[type="radio"]:checked + label:after {
 		.sv-404 .title {
 				margin-bottom: -25px;
 		}
-}
-
-.addEuro:after {
-	content: "€";
 }

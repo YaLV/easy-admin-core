@@ -53,6 +53,7 @@
 @if(Auth::user() && Auth::user()->isAdmin)
     <script src="{{ asset('js/trans.js') }}"></script>
 @endif
+@stack('scripts')
 </body>
 
 </html>

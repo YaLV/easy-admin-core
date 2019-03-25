@@ -17,7 +17,6 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        if(!Schema::hasTable('users')) { return false; }
         if (!Auth::user() && !session()->get('user')) {
             $user = User::find(99);
             session()->put('user', $user);

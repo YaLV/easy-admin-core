@@ -14,7 +14,6 @@ trait CartFunctions
 {
     private function getCart($changedUser = null)
     {
-        if(!Schema::hasTable('users')) { return new OrderHeader(); }
 
         // Find Cart in Session
         $cart = session()->get('cart');
