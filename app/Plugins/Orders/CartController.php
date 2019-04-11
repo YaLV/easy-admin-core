@@ -12,6 +12,9 @@ use App\Plugins\Products\Cache\ProductCache;
 use App\Plugins\Products\Model\Product;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Antcern\Paysera\PayseraManager;
+use App\Paysera;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class CartController
@@ -162,9 +165,63 @@ class CartController extends Controller
      */
     public function payment()
     {
+		session()->forget(['paymetMethod', 'order_header_id']);
+
         $step = 3;
         return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User, 'pageTitle' => _t('translations.payments')]);
     }
+
+	/**
+	 * Initiate Paysera payment
+	 *
+	 * @return void
+	 */
+	public function payseraMake() {
+		$cart = $this->getCart();
+		$cart_totals = getCartTotals($cart);
+
+		Session::put('paymetMethod', 'paysera');
+		Session::put('order_header_id', $cart->id);
+		Session::save();
+
+		PayseraManager::makePayment($cart->id, $cart_totals->toPay * 100);
+	}
+
+	/**
+	 * Validate Paysera response
+	 *
+	 * return void
+	 */
+	public function payseraValidate() {
+		$response = PayseraManager::parsePayment(request());
+
+		Paysera::create(['status' => 'success', 'order_header_id' => $response['orderid'], 'amount' => $response['amount'] / 100]);
+
+		echo 'OK';
+	}
+
+	/**
+	 * Check payment status
+	 *
+	 * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function payseraSuccess() {
+		if( request()->ajax() ) {
+			if(
+				session()->get('paymetMethod') == 'paysera' &&
+				is_int($order_header_id = session()->get('order_header_id')) &&
+				$paymentSuccess = !empty(Paysera::where(['order_header_id' => $order_header_id, 'status' => 'success'])->first())
+			) {
+				session()->forget(['paymetMethod', 'order_header_id']);
+
+				return response()->json(true);
+			} else {
+				return response()->json(false);
+			}
+		} else {
+			return redirect(r('checkout'));
+		}
+	}
 
     /**
      * @param Profile $request
@@ -227,7 +284,11 @@ class CartController extends Controller
         if(Auth::user() && !Auth::user()->registered) {
             Auth::logout();
         }
-        return view('Orders::frontend.thankyou');
+
+		if( session()->get('paymetMethod') == 'paysera' ) $paymentMethod = 'paysera';
+		else $paymentMethod = null;
+
+        return view('Orders::frontend.thankyou', compact('paymentMethod'));
     }
 
 }

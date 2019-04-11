@@ -187,6 +187,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+		Antcern\Paysera\PayseraServiceProvider::class,
 
         /*
          * Package Service Providers...
