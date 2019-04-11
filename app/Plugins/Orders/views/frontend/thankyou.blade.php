@@ -14,7 +14,11 @@
 
                     <div class="sv-text-block">
                         <p style="font-size: 18px; line-height: 30px;">
-                            {!! _t('translations.orderCompleteThankYouText') !!}
+                            @if($paymentMethod == 'paysera')
+                                {!! _t('translations.orderPaymentProcessingText') !!}
+                            @else
+                                {!! _t('translations.orderCompleteThankYouText') !!}
+                            @endif
                         </p>
                     </div>
                 </div>
@@ -35,5 +39,22 @@
             </div>
         </div>
     </div>
-
 @endsection
+
+@if($paymentMethod == 'paysera')
+    @push('scripts')
+        <script>
+            var payseraInterval;
+            $(document).ready(function () {
+                payseraInterval = setInterval(function(){
+                    $.get('{{ route('paysera.success') }}', function( data ) {
+                        if(data) {
+                            clearInterval(payseraInterval);
+                            $('sv-text-block p').html('{!! str_replace( array( "\n", "\r" ), array( "\\n", "\\r" ), _t("translations.orderCompleteThankYouText") ) !!}');
+                        }
+                    });
+                }, 500);
+            });
+        </script>
+    @endpush
+@endif

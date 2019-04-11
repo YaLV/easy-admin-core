@@ -29,13 +29,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="payment-cards">
+                           <a href="{{ r('paysera.make') }}">
+                                <h4>{!! _t('translations.payWithCard') !!}</h4>
+                                <span><img src="img/icon-visa.png" class="visa"></span>
+                            </a>
 
-                            {{--
-                                                        <a href="#">
-                                                            <h4>Ar bankas karti</h4>
-                                                            <span><img src="img/icon-visa.png" class="visa"></span>
-                                                        </a>
-                            --}}
                             <a href="#" class="payWithMoney">
                                 <h4>{!! _t('translations.payWithCash') !!}</h4>
                                 <span>{!! _t('translations.payWithCashDesc') !!}</span>
