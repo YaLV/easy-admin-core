@@ -160,11 +160,14 @@ class CartController extends Controller
         return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.checkoutForm')]);
     }
 
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
+	/**
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+	 */
     public function payment()
     {
+    	// handle Paysera accepturl
+    	if( !is_null(request()->get('data')) ) return $this->saveOrder();
+
 		session()->forget(['paymetMethod', 'order_header_id']);
 
         $step = 3;
