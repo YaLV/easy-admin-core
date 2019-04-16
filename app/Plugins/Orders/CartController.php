@@ -195,7 +195,11 @@ class CartController extends Controller
 	public function payseraValidate() {
 		$response = PayseraManager::parsePayment(request());
 
-		Paysera::create(['status' => 'success', 'order_header_id' => $response['orderid'], 'amount' => $response['amount']]);
+		Paysera::create([
+			'status' => 'success',
+			'order_header_id' => $response['orderid'],
+			'amount' => number_format(round($response['amount'] / 100, 2), 2)
+		]);
 
 		echo 'OK';
 	}
