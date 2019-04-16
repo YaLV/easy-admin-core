@@ -27,7 +27,8 @@ return [
     'routes_names' => [
 		'callback' => 'paysera.validate.default',
         'accept' => 'payment.post.default',
-        'cancel' => 'payment.default'
+//        'cancel' => 'payment.default'
+        'cancel' => 'thankyou.default'
     ],
 
     /*
