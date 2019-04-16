@@ -1,7 +1,7 @@
 <?php
 return [
-    'projectid'     => '0',
-    'sign_password' => 'd41d8cd98f00b204e9800998ecf8427e',
+    'projectid'     => '138034',
+    'sign_password' => 'b4c77e5ea1c199ea6a3e78f366287262',
     'currency'      => 'EUR',
     'country'       => 'LV',
 
@@ -26,7 +26,7 @@ return [
      */
     'routes_names' => [
 		'callback' => 'paysera.validate.default',
-        'accept' => 'payment.post',
+        'accept' => 'payment.post.default',
         'cancel' => 'payment.default'
     ],
 
