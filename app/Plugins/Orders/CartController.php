@@ -184,7 +184,7 @@ class CartController extends Controller
 		Session::put('order_header_id', $cart->id);
 		Session::save();
 
-		PayseraManager::makePayment($cart->id, $cart_totals->toPay * 100);
+		PayseraManager::makePayment($cart->id, $cart_totals->toPay);
 	}
 
 	/**
@@ -195,7 +195,7 @@ class CartController extends Controller
 	public function payseraValidate() {
 		$response = PayseraManager::parsePayment(request());
 
-		Paysera::create(['status' => 'success', 'order_header_id' => $response['orderid'], 'amount' => $response['amount'] / 100]);
+		Paysera::create(['status' => 'success', 'order_header_id' => $response['orderid'], 'amount' => $response['amount']]);
 
 		echo 'OK';
 	}
