@@ -13,7 +13,7 @@ class TranslationAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::orderBy('sequence', 'desc')->first();
 
-        $mainMenu = \App\Model\Admin\Menu::firstOrCreate(
+        $mainMenu = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'content',
                 'routeName' => 'content',
@@ -30,7 +30,7 @@ class TranslationAdminMenu extends Seeder
 
         $main = "translations";
 
-        $mainCat = \App\Model\Admin\Menu::firstOrCreate(
+        $mainCat = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => $main,
                 'routeName' => $main,
@@ -46,7 +46,7 @@ class TranslationAdminMenu extends Seeder
             ]);
 
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "edit/{id}",
                 'routeName' => "$main.edit",
@@ -60,7 +60,7 @@ class TranslationAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store/{id?}",
                 'routeName' => "$main.store",
@@ -74,7 +74,7 @@ class TranslationAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "find",
                 'routeName' => "$main.add",
@@ -88,7 +88,7 @@ class TranslationAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "search:{id}",
                 'routeName' => "$main.search",

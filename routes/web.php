@@ -48,10 +48,6 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 // Verify Changed Email
     Route::get("/{lang}/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.save');
     Route::get("/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.default');
-    /*
-    // Home Page
-    Route::get('/{lang?}', 'FrontController@homepage')->name('home');
-    Route::get('/', 'FrontController@homepage')->name('home.default');*/
 
 // Cart
     Route::get("/{lang}/cart", "\App\Plugins\Orders\CartController@index")->name('cart');
@@ -59,6 +55,9 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 
     Route::get('/{lang}/cart/delivery/{delivery}', '\App\Plugins\Orders\CartController@setDelivery')->name('setDelivery');
     Route::get('/cart/delivery/{delivery}', '\App\Plugins\Orders\CartController@setDelivery')->name('setDelivery.default');
+
+    Route::any('/{lang}/cart/remove/{item}', '\App\Plugins\Orders\CartController@removeFromCart')->name('cart.removeItem');
+    Route::any('/cart/remove/{item}', '\App\Plugins\Orders\CartController@removeFromCart')->name('cart.removeItem.default');
 
 // Add to cart/Change item in cart
     Route::post("/{lang}/cart/save", "\App\Plugins\Orders\CartController@changeCartItem")->name('cartAdd');
@@ -120,15 +119,6 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
             'filters'   => request('filter'),
             'suppliers' => request('suppliers'),
         ]);
-
-        /*
-        $cache = (new \App\Http\Controllers\CacheController)->getCategoryCache();
-
-        $urlParams = [];
-        foreach($cache->getPath($category) as $pathItem) {
-            $urlParams[] = __("category.slug.$pathItem");
-        }
-        */
 
         return redirect(r('url', session()->get('lastCategory')));
     })->name('setFilter');

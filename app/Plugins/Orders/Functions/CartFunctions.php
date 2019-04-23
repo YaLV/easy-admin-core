@@ -19,7 +19,7 @@ trait CartFunctions
         $cart = session()->get('cart');
 
         // Check DB if it has a record
-        $cartObject = $cart?(session()->get('cartObject')??OrderHeader::find($cart)):null;
+        $cartObject = OrderHeader::find($cart);
 
         // If user logged in
         if ($changedUser && Auth::user() && $cart && $cartObject) {
@@ -36,14 +36,14 @@ trait CartFunctions
                     $cartObject = $anonCart;
                 } else {
                     session()->put('cart', $userCart->id);
-                    $anonCart->delete();
+                    $anonCart->forceDelete();
                     $cartObject = $userCart;
                 }
             } else {
                 $anonCart->update(['user_id' => Auth::user()->id]);
                 if($userCart) {
                     $userCart->items()->delete();
-                    $userCart->delete();
+                    $userCart->forceDelete();
                 }
                 $cartObject = $anonCart;
             }
@@ -90,11 +90,17 @@ trait CartFunctions
         foreach ($cart->items as $item) {
             $items['miniItems'] = view('Orders::frontend.partials.miniitem', ['item' => $item])->render();
             if ($bothCarts) {
-                $items['items'] = view('Orders::frontend.partials.item', ['item' => $item])->render();
+                $items['items'] = view('Orders::frontend.partials.item', ['item' => $item, 'cart' => $cart])->render();
             }
         }
 
         return $items;
     }
 
+    public function updateCartDay($md) {
+        $cart = $this->getCart();
+
+        $cart->update(['market_day_id' => $md->id, 'market_day_date' => $md->date]);
+        return true;
+    }
 }

@@ -131,6 +131,8 @@ class Product extends BaseModel
 
     public function createVariation()
     {
+        $this->variations()->delete();
+
         $unitSize = $this->unit->unit;
 
         return [

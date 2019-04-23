@@ -28,6 +28,13 @@ return [
     'defaultProductImage'  => '/assets/img/tmp/photo-5.jpg',
     'defaultCategoryImage' => '/assets/img/tmp/photo-15.jpg',
     'defaultSupplierImage' => '/assets/img/tmp/photo-9.jpg',
+
+    'paymentNames' => [
+        'money'   => 'With Cash',
+        'invoice' => 'With Invoice',
+        'card'    => 'With Payment Card',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

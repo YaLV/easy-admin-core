@@ -5,7 +5,12 @@
 @endphp
 
 @section('content')
-    <div class="ro">
+
+    @if($filters??false)
+        @include('admin.partials.filters')
+    @endif
+
+    <div class="row tableContent">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
@@ -13,7 +18,8 @@
                         <div class="col-md-6">{{ $header??"" }}</div>
                         <div class="col-md-6 text-right">
                             @if(Route::has($currentRoute.".add"))
-                                <a href="{{ route($currentRoute.".add", request()->route()->parameters) }}" class="btn btn-primary btn-xs"><i
+                                <a href="{{ route($currentRoute.".add", request()->route()->parameters) }}"
+                                   class="btn btn-primary btn-xs"><i
                                             class="fas fa-plus"></i></a>
                             @endif
                         </div>
@@ -28,7 +34,14 @@
                                 </td>
                             @endif
                             @foreach($tableHeaders as $headerItem)
-                                <th>{{ $headerItem['label'] }}</th>
+                                @if($headerItem['label']=='checkall')
+                                    <th class="checkall">
+                                        Select:<br />
+                                        <a href="javascript:void(0)">All</a>
+                                    </th>
+                                @else
+                                    <th style="vertical-align:top;">{{ $headerItem['label'] }}</th>
+                                @endif
                             @endforeach
                         </tr>
                         </thead>
@@ -72,9 +85,9 @@
                                             @endif
                                         @endif
                                     @elseif($headerItem['fn']??false)
-                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $headerItem['fn']($listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??null, $headerItem['results'])??"" }}</td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{!! $headerItem['fn']($listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??null, $headerItem['results'])??""  !!}</td>
                                     @else
-                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{{ $listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??"" }}</td>
+                                        <td {{ ($headerItem['class']??false)?"class=".$headerItem['class']:"" }}>{!! $listItem->{$headerItem['field']}??$listItem[$headerItem['field']]??""  !!}</td>
                                     @endif
 
                                 @endforeach
@@ -99,22 +112,22 @@
     @if($orderable)
         <script src="{{asset('js/Sortable.min.js')}}"></script>
         <script>
-            jQuery(document).ready(function() {
+            jQuery(document).ready(function () {
                 new Sortable($('[data-sortable]')[0], {
                     handle: "td:first-child",
                     ghostClass: 'blue-background-class',
-                    onEnd: function(evt) {
+                    onEnd: function (evt) {
                         let sequence = [];
-                        rows = $('[data-sortable]').find('tr').each(function(index, el, list) {
+                        rows = $('[data-sortable]').find('tr').each(function (index, el, list) {
                             sequence.push($(el).data('id'));
                         });
                         console.log(sequence);
-                        $.post("{{ route("$currentRoute.sort", request()->route()->parameters) }}", "sequence="+sequence.join(","), function(response) {
-                           if(response.status) {
-                               for(x in response.sequence) {
-                                   $('[data-id='+x+'] .seqTarget').text(response.sequence[x]);
-                               }
-                           }
+                        $.post("{{ route("$currentRoute.sort", request()->route()->parameters) }}", "sequence=" + sequence.join(","), function (response) {
+                            if (response.status) {
+                                for (x in response.sequence) {
+                                    $('[data-id=' + x + '] .seqTarget').text(response.sequence[x]);
+                                }
+                            }
                         });
                     }
 
@@ -122,4 +135,7 @@
             });
         </script>
     @endif
+    @foreach(($js??[]) as $script)
+        <script src="{{ asset($script) }}"></script>
+    @endforeach
 @endpush

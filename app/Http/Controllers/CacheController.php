@@ -8,6 +8,7 @@ use App\Plugins\Categories\Cache\CategoryCache;
 use App\Plugins\MarketDays\Functions\MarketDays;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Menu\Cache\MenuCache;
+use App\Plugins\Orders\CartController;
 use App\Plugins\Pages\Cache\PageCache;
 use App\Plugins\Products\Cache\ProductCache;
 use App\Plugins\Suppliers\Cache\SupplierCache;
@@ -96,7 +97,7 @@ class CacheController extends Controller
      *
      * @param $timestamp
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|false
      */
     public function selectMarketDay($timestamp) {
         $marketDay = $this->getClosestMarketDayList($timestamp);
@@ -104,10 +105,12 @@ class CacheController extends Controller
             session()->forget('marketDay');
             session()->put('marketDay', $marketDay);
             session()->forget('ca');
+            (new CartController)->updateCartDay($marketDay);
             return redirect()->back();
         } else {
             abort(404);
         }
+        return false;
     }
 
     /**

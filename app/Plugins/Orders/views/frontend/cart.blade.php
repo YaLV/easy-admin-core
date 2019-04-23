@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
-    @forelse($cart->items()->get() as $item)
+    @forelse($cart->items(true)->get() as $item)
         @push('items')
             @include("Orders::frontend.partials.item")
         @endpush
@@ -65,7 +64,7 @@
                             <div>
                                 {!! _t('translations.cartProducts') !!}
                             </div>
-                            <div>
+                            <div class="productSum">
                                 {{ $cartTotals->productSum }} €
                             </div>
                         </div>
@@ -74,7 +73,7 @@
                                 <div>
                                     {!! _t('translations.cartDelivery') !!}
                                 </div>
-                                <div>
+                                <div class="delivery">
                                     {{$cart->delivery_amount}} €
                                 </div>
                             </div>
@@ -85,7 +84,7 @@
                                     {!! _t('translations.cartDiscount') !!} (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
                                     <a href="#" class="remove"></a>
                                 </div>
-                                <div>
+                                <div class="discount">
                                     {{ $cartTotals->discount }} €
                                 </div>
                             </div>
@@ -97,7 +96,7 @@
                                 <div>
                                     {!! _t('translations.cartToPay') !!}
                                 </div>
-                                <div>
+                                <div class="toPay">
                                     {{ $cartTotals->toPay }} €
                                 </div>
                             </div>
@@ -113,3 +112,7 @@
         Your Cart is Empty!!
     @endif
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/cart.js') }}"></script>
+@endpush

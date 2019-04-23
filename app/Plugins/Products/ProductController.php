@@ -5,31 +5,58 @@ namespace App\Plugins\Products;
 use App\Functions\General;
 use App\Http\Controllers\CacheController;
 use App\Plugins\Admin\AdminController;
+use App\Plugins\Products\Functions\ProductImport;
 use App\Plugins\Products\Model\Product;
-use App\Plugins\Products\Model\ProductMeta;
 use App\Plugins\Products\Model\ProductVariation;
 use App\Plugins\Vat\Model\Vat;
-use Illuminate\Database\Query\Builder;
+use App\Schedules;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Psy\Util\Str;
 
 class ProductController extends AdminController
 {
     use Products;
     use General;
 
-    public function index()
+    public function index($search = false)
     {
-//        dd((new \App\Plugins\Products\Model\Product)->MetaLanguage());
+        $cr = explode(".", Route::currentRouteName());
+
+        if (!$search && ($cr[1] ?? false) == 'search') {
+            return redirect()->route($cr[0] . ".list");
+        }
+
 
         return view('admin.elements.table',
             [
                 'tableHeaders' => $this->getList(),
                 'header'       => 'Products',
-                'list'         => Product::withTrashed()->with('metaData')->paginate(20),
+                'list'         => $this->getProducts(),
                 'idField'      => 'name',
                 'destroyName'  => 'Product',
+                'operations'   => view("Products::partials.extraButtons")->render(),
+                'js'           => [
+                    'js/productIO.js',
+                ],
             ]);
+    }
+
+    public function getProducts()
+    {
+
+        /** @var Product $products */
+        $products = Product::withTrashed();
+
+        if ($search = request()->route('search')) {
+            $products = $products->whereHas('metaData', function (Builder $q) use ($search) {
+                $q->whereIn('meta_name', ['name', 'slug'])->where('meta_value', 'like', "%$search%");
+            });
+        }
+
+        return $products->with('metaData')->paginate(20);
     }
 
     public function add()
@@ -103,7 +130,7 @@ class ProductController extends AdminController
             ]);
             $this->handleMetas($product, $metas, 'name-id');
             $this->handleImages($product);
-            $res = $this->setVariations($product)??$product->createVariation();
+            $res = $this->setVariations($product) ?? $product->createVariation();
             $this->addCategories($product);
             $this->addMarketDays($product);
             $product->attributeValues()->sync(request('attributeValues'));
@@ -149,23 +176,31 @@ class ProductController extends AdminController
 
     public function getEditName($id)
     {
+        $r = explode(".", Route::currentRouteName());
+        if (($r[1] ?? "") == 'search') {
+            return request()->route('search');
+        }
+
         return Product::findOrFail($id)->name;
     }
 
     public function state($id)
     {
+        $state = [];
         /** @var Product $md */
         if ($md = Product::find($id)) {
             $md->delete();
 
-            return ['status' => true, 'newState' => true, "message" => 'Product set as Draft'];
+            $state = ['status' => true, 'newState' => true, "message" => 'Product set as Draft'];
         }
 
         if ($md = Product::onlyTrashed()->findOrFail($id)) {
             $md->restore();
 
-            return ['status' => true, 'newState' => true, "message" => 'Product set as Active'];
+            $state = ['status' => true, 'newState' => true, "message" => 'Product set as Active'];
         }
+
+        return $state;
     }
 
 
@@ -179,7 +214,7 @@ class ProductController extends AdminController
         ]);
 
         $vat = Vat::findOrFail(request('vat_id')) ?? (object)['amount' => 0];
-        $price = calcPrice(request('cost'), $vat->amount, request('mark_up')?:0, 0);
+        $price = calcPrice(request('cost'), $vat->amount, request('mark_up') ?: 0, 0);
 
         return ['status' => true, 'noMessage' => true, 'result' => $price];
     }
@@ -221,6 +256,33 @@ class ProductController extends AdminController
         $id = request('id');
 
         return ['status' => true, "noMessage" => true, "result" => ProductVariation::findOrFail($id)];
+    }
+
+    public function import()
+    {
+        request()->validate([
+            'importFile' => 'file|required',
+        ]);
+
+        $file = request()->file('importFile');
+        $filename = $file->storeAs('imports', str_random(40).".".$file->getClientOriginalExtension());
+
+        Schedules::create([
+            'filename' => basename($filename),
+            'type'     => 'productImport',
+        ]);
+
+        return ['status' => true, 'message' => "Product Import Scheduled"];
+    }
+
+    public function export()
+    {
+        app('debugbar')->disable();
+        /** @var ProductImport $export */
+        $export = new ProductImport();
+
+        return $export->exportdata();
+
     }
 
 }

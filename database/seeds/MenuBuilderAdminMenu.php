@@ -13,7 +13,7 @@ class MenuBuilderAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::orderBy('sequence', 'desc')->first();
 
-        $menu = \App\Model\Admin\Menu::firstOrCreate([
+        $menu = \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus',
             'slug'        => 'menu',
             ],[
@@ -26,7 +26,7 @@ class MenuBuilderAdminMenu extends Seeder
             'method'      => 'GET',
         ]);
 
-        \App\Model\Admin\Menu::firstOrCreate([
+        \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus.edit',
             'slug'        => 'edit/{id?}',
         ],[
@@ -39,7 +39,7 @@ class MenuBuilderAdminMenu extends Seeder
             'method'      => 'GET',
         ]);
 
-        \App\Model\Admin\Menu::firstOrCreate([
+        \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus.list',
             'slug'        => 'list',
         ],[
@@ -52,7 +52,7 @@ class MenuBuilderAdminMenu extends Seeder
             'method'      => 'GET',
         ]);
 
-        \App\Model\Admin\Menu::firstOrCreate([
+        \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus.add',
             'slug'        => 'add',
         ],[
@@ -65,7 +65,7 @@ class MenuBuilderAdminMenu extends Seeder
             'method'      => 'GET',
         ]);
 
-        \App\Model\Admin\Menu::firstOrCreate([
+        \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus.store',
             'slug'        => 'store/{id?}',
         ],[
@@ -78,7 +78,7 @@ class MenuBuilderAdminMenu extends Seeder
             'method'      => 'POST',
         ]);
 
-        \App\Model\Admin\Menu::firstOrCreate([
+        \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus.store.item',
             'slug'        => 'store/item/{id}',
         ],[
@@ -91,7 +91,7 @@ class MenuBuilderAdminMenu extends Seeder
             'method'      => 'POST',
         ]);
 
-        \App\Model\Admin\Menu::firstOrCreate([
+        \App\Model\Admin\Menu::updateOrCreate([
             'routeName'   => 'menus.destroy.item',
             'slug'        => 'destroy/item/{id}',
         ],[

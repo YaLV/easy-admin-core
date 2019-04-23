@@ -84,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('admin.*', function ($view) {
             $routeName = explode(".", Route::currentRouteName());
             $view->with('currentRoute', $routeName[0]);
+            $view->with('routeAction', $routeName[1]??"");
         });
     }
 

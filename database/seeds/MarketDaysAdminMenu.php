@@ -11,7 +11,7 @@ class MarketDaysAdminMenu extends Seeder
      */
     public function run()
     {
-        $menu = \App\Model\Admin\Menu::firstOrCreate(
+        $menu = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'config',
                 'routeName' => 'config',
@@ -32,7 +32,7 @@ class MarketDaysAdminMenu extends Seeder
 
         $main = 'marketdays';
 
-        $marketDays = \App\Model\Admin\Menu::firstOrCreate(
+        $marketDays = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => $main,
                 'routeName' => $main,
@@ -48,7 +48,7 @@ class MarketDaysAdminMenu extends Seeder
             ]);
 
         $lastSeq++;
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "edit/{id}",
                 'routeName' => "$main.edit",
@@ -64,7 +64,7 @@ class MarketDaysAdminMenu extends Seeder
             ]);
 
         $lastSeq++;
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "state/{id}",
                 'routeName' => "$main.state",
@@ -80,7 +80,7 @@ class MarketDaysAdminMenu extends Seeder
             ]);
 
         $lastSeq++;
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store/{id?}",
                 'routeName' => "$main.store",

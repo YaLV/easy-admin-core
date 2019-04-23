@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Plugins\Orders\Model\OrderHeader;
+use App\Plugins\UserGroups\Model\UserGroup;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
@@ -116,5 +117,9 @@ class User extends Authenticatable
 
         return User::updateOrCreate($userFind, $requestData);
 
+    }
+
+    public function group() {
+        return $this->belongsTo(UserGroup::class, 'user_group_id', 'id');
     }
 }

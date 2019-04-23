@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset("assets/css/custom.css") }}">
 </head>
 
-<body class="sv-lightbox-open_ sv-has-marketday-dropdown">
+<body class="sv-lightbox-open_ sv-has-marketday-dropdown{{ (Auth::user()??(New App\User))->registered?" is-auth":"" }}">
 
 {{--@include("frontend.elements.cookies")--}}
 @include("frontend.elements.loginpopup")
@@ -40,6 +40,9 @@
 @include("frontend.elements.copyright")
 
 @stack('preScript')
+<script>
+    window.token = "{{ csrf_token() }}";
+</script>
 <script src="{{ asset("assets/js/jquery-3.1.1.min.js") }}"></script>
 <script src="{{ asset("assets/js/bootstrap.min.js") }}"></script>
 <script src="{{ asset("assets/js/jquery-ui.min.js") }}"></script>
@@ -50,6 +53,7 @@
 <script src="{{ asset("assets/js/imagesloaded.pkgd.min.js") }}"></script>
 <script src="{{ asset("assets/js/svaigi.js") }}?ver={{ filemtime(public_path("assets/js/svaigi.js")) }}"></script>
 <script src="{{ asset("assets/js/custom.js") }}?ver={{ filemtime(public_path("assets/js/custom.js")) }}"></script>
+<script src="{{ asset("assets/js/ajaxSetup.js") }}?ver={{ filemtime(public_path("assets/js/ajaxSetup.js")) }}"></script>
 @if(Auth::user() && Auth::user()->isAdmin)
     <script src="{{ asset('js/trans.js') }}"></script>
 @endif

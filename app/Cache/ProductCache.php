@@ -21,6 +21,7 @@ class ProductCache
     private $mainCategory;
     private $metaFields = ['description', 'ingredients', 'expire_date', 'google_keywords', 'google_description'];
     private $metaData = [];
+    private $units;
 
     public $isBio;
     public $isLv;
@@ -38,6 +39,17 @@ class ProductCache
         $this->setDefaultData($product);
         $this->setProductVariations($product);
         $this->setupCategories($product);
+        $unitData = $product->unit;
+        $this->units = [
+            'unit' => $unitData->unit,
+        ];
+        if ($fractionData = $unitData->subUnit) {
+            $this->units['fraction'] = [
+                'unit'     => $fractionData->unit,
+                'multiply' => $fractionData->parent_amount,
+            ];
+        }
+
     }
 
     private function setProductVariations($product)
@@ -134,9 +146,11 @@ class ProductCache
                 'display_name' => $variation->display_name,
                 'price'        => number_format(round($priceVariation->wdiscount->price * $variation->amount, 2), 2),
                 'oldPrice'     => number_format(round($priceVariation->full->wvat * $variation->amount, 2), 2),
-                'vat'          => $priceVariation->wdiscount->pricevat,
+                'vat'          => $priceVariation->wdiscount->pricevat * $variation->amount,
                 'id'           => $variationid,
                 'size'         => $variation->amount,
+                'amountinpackage' => ($variation->amount<1 && ($this->units['fraction']??false)) ? $variation->amount*$this->units['fraction']['multiply'] : $variation->amount,
+                'amountUnit'    => ($variation->amount<1 && ($this->units['fraction']??false)) ? $this->units['fraction']['unit'] : $this->units['unit'],
             ];
         }
         if ($this->hasManyPrices()) {
@@ -148,9 +162,10 @@ class ProductCache
 
     public function getVariationPrice($vid)
     {
-        if($this->hasManyPrices()) {
+        if ($this->hasManyPrices()) {
             return $this->prices()[$vid] ?? [];
         }
+
         return $this->prices();
     }
 
@@ -173,22 +188,25 @@ class ProductCache
 
     public function image($size)
     {
-        $path = "/".implode("/", ["products", $size, $this->imageUrl]);
-        if(\Storage::exists("public/$path")) {
+        $path = "/" . implode("/", ["products", $size, $this->imageUrl]);
+        if (\Storage::exists("public/$path")) {
             return $path;
         }
 
         return config("app.defaultProductImage");
     }
 
-    public function getUrl()
+    public function getUrl($includeProduct = true, $fullUrl = true)
     {
         $categoryCache = (new CacheController)->getCategoryCache();
         $path = $this->createPath($categoryCache->getPath($this->mainCategory));
 
         if (count($path) == 0) return "#";
 
-        return r("url", array_merge($path, ['product' => __('product.slug.' . $this->id)]));
+        if ($includeProduct)
+            return r("url", array_merge($path, ['product' => __('product.slug.' . $this->id)]), $fullUrl);
+
+        return r("url", $path, $fullUrl);
     }
 
     public function createPath($catList)
@@ -233,15 +251,17 @@ class ProductCache
         return (new CacheController)->getSupplier($this->supplier_id);
     }
 
-    public function getData($param) {
+    public function getData($param)
+    {
         return $this->$param;
     }
 
-    public function getOtherProducts($exclude = false) {
+    public function getOtherProducts($exclude = false)
+    {
 
         $category = Category::find($this->mainCategory)->products();
 
-        if($exclude) {
+        if ($exclude) {
             $category = $category->where('products.id', '!=', $exclude);
         }
 
