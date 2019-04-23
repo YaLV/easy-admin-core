@@ -11,7 +11,7 @@ class VacationsAdminMenu extends Seeder
      */
     public function run()
     {
-        $menu = \App\Model\Admin\Menu::firstOrCreate(
+        $menu = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'config',
                 'routeName' => 'config',
@@ -32,7 +32,7 @@ class VacationsAdminMenu extends Seeder
 
         $main = 'vacations';
 
-        $vacations = \App\Model\Admin\Menu::firstOrCreate(
+        $vacations = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => $main,
                 'routeName' => $main,
@@ -47,7 +47,7 @@ class VacationsAdminMenu extends Seeder
                 'method'      => 'GET',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "add",
                 'routeName' => $main.".add",
@@ -61,7 +61,7 @@ class VacationsAdminMenu extends Seeder
                 'parent_id'   => $vacations->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "destroy/{id}",
                 'routeName' => $main.".destroy",
@@ -77,7 +77,7 @@ class VacationsAdminMenu extends Seeder
             ]);
 
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store",
                 'routeName' => $main.".store",

@@ -13,7 +13,7 @@ class ProductsAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::where('slug','!=','config')->orderBy('sequence', 'desc')->first();
 
-        $mainMenu = \App\Model\Admin\Menu::firstOrCreate(
+        $mainMenu = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'shop',
                 'routeName' => 'shop',
@@ -30,7 +30,7 @@ class ProductsAdminMenu extends Seeder
 
         $main = "products";
 
-        $mainCat = \App\Model\Admin\Menu::firstOrCreate(
+        $mainCat = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => $main,
                 'routeName' => $main,
@@ -45,7 +45,7 @@ class ProductsAdminMenu extends Seeder
                 'method'      => 'GET',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "list",
                 'routeName' => "$main.list",
@@ -59,7 +59,21 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => "search/{search?}",
+                'routeName' => "$main.search",
+            ],
+            [
+                'icon'        => 'fas fa-list',
+                'displayName' => 'Search',
+                'action'      => '\App\Plugins\Products\ProductController@index',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'GET',
+            ]);
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "add",
                 'routeName' => "$main.add",
@@ -73,7 +87,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "edit/{id}",
                 'routeName' => "$main.edit",
@@ -87,7 +101,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store/{id?}",
                 'routeName' => "$main.store",
@@ -101,7 +115,37 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => "export",
+                'routeName' => "$main.export",
+            ],
+            [
+                'icon'        => 'fas fa-download',
+                'displayName' => 'Export',
+                'action'      => '\App\Plugins\Products\ProductController@export',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'GET',
+            ]);
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => "import",
+                'routeName' => "$main.import",
+            ],
+            [
+                'icon'        => 'fas fa-upload',
+                'displayName' => 'Import',
+                'action'      => '\App\Plugins\Products\ProductController@import',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "state/{id}",
                 'routeName' => "$main.state",
@@ -115,7 +159,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "destroy/{id}",
                 'routeName' => "$main.destroy",
@@ -129,7 +173,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "calc",
                 'routeName' => "$main.calc",
@@ -143,7 +187,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "makeDisplay",
                 'routeName' => "$main.makedisplay",
@@ -158,7 +202,7 @@ class ProductsAdminMenu extends Seeder
                 'method'      => 'POST',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "variations/load",
                 'routeName' => "$main.variations.load",
@@ -172,7 +216,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "variations/store",
                 'routeName' => "$main.variations.store",
@@ -186,7 +230,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "attributes/load",
                 'routeName' => "$main.attributes.load",
@@ -200,7 +244,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "attributes/format",
                 'routeName' => "$main.attributes.format",

@@ -45,7 +45,7 @@
                                                         </a>
                             --}}
                             @if($user->is_legal)
-                                <a href="#" class="payWithMoney">
+                                <a href="#" class="pay" data-paymentType="invoice">
                                     <h4>{!! _t('translations.payWithInvoice') !!}</h4>
                                     <span>{!! _t('translations.payWithInvoiceDesc') !!}</span>
                                 </a>
@@ -155,6 +155,7 @@
 
     <form method="post" action="{{ r('payment.post') }}" class="hidden payForm">
         {{ csrf_field() }}
+        <input type="hidden" name="payment_type" id="payment_type" value="money" />
     </form>
 
 @endsection
@@ -162,8 +163,9 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $('.payWithMoney').click(function (e) {
+            $('.pay').click(function (e) {
                 e.preventDefault();
+                $('#payment_type').val($(this).data('paymenttype'));
                 $('.payForm').submit();
                 return false;
             });

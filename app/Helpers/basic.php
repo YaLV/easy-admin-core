@@ -79,6 +79,7 @@ function calcPrice($price, $vat, $markup, $discount, $amount = 1)
     return (object)$prices;
 }
 
+
 function r($name, $params = [], $absolute = true)
 {
 
@@ -101,8 +102,10 @@ function isDefaultLang()
     return language() == config('app.locale');
 }
 
-function getCartTotals($cart)
+function getCartTotals($cart, array $items = [], $original = false)
 {
+    /** @var \App\Plugins\Orders\Model\OrderHeader $cart */
+
     if (!$cart) {
         return (object)[
             'productSum' => 0,
@@ -112,9 +115,22 @@ function getCartTotals($cart)
         ];
     }
 
-    $sums = $cart->items()->selectRaw('sum(price*amount) as sum, sum(vat*amount) as vatsum ')->first();
-    $productSum = $sums->sum ?? 0;
-    $vatSum = $sums->vatsum ?? 0;
+
+    if(!$original) {
+        if (count($items) > 0) {
+            $sums = $cart->currentDayItems($items)->selectRaw('sum((price*amount)/total_amount*real_amount) as sum, sum((vat*amount)/total_amount*real_amount) as vatsum')->first();
+        } else {
+            $sums = $cart->currentDayItems()->selectRaw('sum((price*amount)/total_amount*real_amount) as sum, sum((vat*amount)/total_amount*real_amount) as vatsum')->first();
+        }
+    } else {
+        if (count($items) > 0) {
+            $sums = $cart->currentDayItems($items)->selectRaw('sum((price*amount)) as sum, sum((vat*amount)) as vatsum')->first();
+        } else {
+            $sums = $cart->currentDayItems()->selectRaw('sum((price*amount)) as sum, sum((vat*amount)) as vatsum')->first();
+        }
+    }
+    $productSum = number_format(round($sums->sum ?? 0,2),2);
+    $vatSum = number_format(ceil(($sums->vatsum ?? 0)*100)/100,2);
 
     switch ($cart->discount_target) {
         case "product":
@@ -140,6 +156,7 @@ function getCartTotals($cart)
         'productSum' => $productSum,
         'vatSum'     => $vatSum,
         'discount'   => $discount,
+        'delivery'   => $cart->delivery_amount,
         'toPay'      => number_format($productSum + ($cart->delivery_amount ?? 0) - ($discount ?? 0), 2),
     ];
 }
@@ -203,51 +220,58 @@ function getSupplierSlugs($language = false)
 {
 
 
-
-    if(pageTable()) {
+    if (pageTable()) {
         $slug = \App\Plugins\Pages\Model\Template::where('template', 'suppliers')->first();
         $slugs = [];
-        foreach (($slug?$slug->page:[]) as $page) {
+        foreach (($slug ? $slug->page : []) as $page) {
             $slugs[] = __("pages.slug.{$page->id}");
         }
-        if(count($slugs)==0) {
-            if($language) {
+        if (count($slugs) == 0) {
+            if ($language) {
                 return "#";
             }
             $slugs = ['401'];
         }
 
-        if($language) {
+        if ($language) {
             return current($slugs);
         }
 
         return implode("|", $slugs);
     }
+
     return str_random(20);
 }
 
-function pageTable() {
+function pageTable()
+{
     return \Illuminate\Support\Facades\Schema::hasTable("templates");
 }
 
-function getCurrentAttributes($catId) {
-    if($filters = session()->get('filters')) {
-        if($filters['category']==$catId) {
-            return $filters['filters']??[];
+function getCurrentAttributes($catId)
+{
+    if ($filters = session()->get('filters')) {
+        if ($filters['category'] == $catId) {
+            return $filters['filters'] ?? [];
         }
         session()->forget('filters');
+
         return [];
     }
+
     return [];
 }
 
-function getCurrentSuppliers($catId) {
-    if($filters = session()->get('filters')) {
-        if($filters['category']==$catId) {
-            return $filters['suppliers']??[];
+function getCurrentSuppliers($catId)
+{
+    if ($filters = session()->get('filters')) {
+        if ($filters['category'] == $catId) {
+            return $filters['suppliers'] ?? [];
         }
         session()->forget('filters');
+
         return [];
     }
+
     return [];
 }

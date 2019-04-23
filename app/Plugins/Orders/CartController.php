@@ -10,7 +10,9 @@ use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Products\Cache\ProductCache;
 use App\Plugins\Products\Model\Product;
+use App\Plugins\Products\Model\ProductVariation;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Antcern\Paysera\PayseraManager;
 use App\Paysera;
@@ -32,17 +34,20 @@ class CartController extends Controller
     public function index()
     {
         $cart = $this->getCart();
+        $this->checkFreeDelivery($cart->id);
 
         return view('Orders::frontend.cart', ['cart' => $cart, 'step' => 1, 'stepInclude' => 'freeDelivery', 'pageTitle' => _t('translations.cart')]);
     }
 
-    public function setDelivery($deliveryId) {
+    public function setDelivery($deliveryId)
+    {
         $cart = $this->getCart();
         /** @var OrderHeader $origCart */
         $origCart = OrderHeader::find($cart->id);
         $origCart->delivery()->associate(Delivery::findOrFail($deliveryId))->save();
         $this->checkFreeDelivery($cart->id);
         session()->forget('cartObject');
+
         return redirect(r('cart'));
     }
 
@@ -86,11 +91,20 @@ class CartController extends Controller
             }
         }
         if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
-            $item->increment('amount', (request()->get('amount') ?? 1));
+            $amount = request()->get('amount');
+            $origSize = $item->total_amount/$item->amount;
+            if (request()->get('line')) {
+                $item->update(['amount' => $amount]);
+            } else {
+                $item->increment('amount', $amount);
+            }
+            $item->update(['total_amount' => $origSize*$amount, 'real_amount' => $origSize*$amount]);
         } else {
             /** @var \App\Cache\ProductCache $product */
             $product = $this->cache()->getProduct(request('product_id'));
             $variation = $product->getVariationPrice(request('variation_id'));
+
+            $variationData =
 
             $itemData = [
                 'supplier_id'    => $product->supplier_id,
@@ -105,35 +119,43 @@ class CartController extends Controller
                 'variation_size' => $variation->size,
                 'discount'       => (Auth::user() ?? User::find(99))->discount(),
                 'variation_id'   => request('variation_id'),
+                'total_amount'   => $variation->amountinpackage,
+                'real_amount'    => $variation->amountinpackage,
+                'amount_unit'    => $variation->amountUnit,
             ];
             $cartItem = $cart->items()->updateOrCreate($lineData, $itemData);
         }
 
         $this->checkFreeDelivery($cart->id);
 
-        if(request()->ajax()) {
-            return $this->getCartContents($cart, (($item ?? false) ? true : false));
+        $cart = $this->getCart();
+
+        if (request()->ajax()) {
+            return ['status' => true, 'message' => 'Item Updated', 'contents' => $this->getCartContents($cart, true)];
         } else {
             return redirect(r('cart'));
         }
 
     }
 
-    private function checkFreeDelivery($cartId) {
+    private function checkFreeDelivery($cartId)
+    {
         $cart = OrderHeader::find($cartId);
-        $totalAmount = getCartTotals($cart)??0;
-        if($cart->delivery_id) {
+        $totalAmount = getCartTotals($cart) ?? 0;
+        if ($cart->delivery_id) {
             $delivery = $cart->delivery;
-            if($totalAmount->productSum>=($delivery->freeAbove??0)) {
+            if ($totalAmount->productSum >= ($delivery->freeAbove ?? 0)) {
                 $r = $cart->update(['delivery_amount' => "0"]);
+
                 return true;
             } else {
-                if($cart->discount_target=='all' || $cart->discount_target=='delivery') {
-                    $deliveryPrice = number_format(round($delivery->price/(1+($cart->discount_amount/100)), 2),2);
+                if ($cart->discount_target == 'all' || $cart->discount_target == 'delivery') {
+                    $deliveryPrice = number_format(round($delivery->price / (1 + ($cart->discount_amount / 100)), 2), 2);
                 } else {
                     $deliveryPrice = $delivery->price;
                 }
                 $cart->update(['delivery_amount' => $deliveryPrice]);
+
                 return true;
             }
         }
@@ -148,8 +170,22 @@ class CartController extends Controller
      */
     public function checkout($edit = null)
     {
+
+        $cart = $this->getCart();
+
+        if(!$cart->delivery_id) {
+            return redirect()->back()->withErorrs(['delivery' => 'Please select Delivery option']);
+        }
+
+        $cartItemCount = $cart->items()->count();
+
+        if ($cart->currentDayItems()->count() !== $cartItemCount || $cartItemCount == 0) {
+            return redirect()->back()->withErrors(["cartError" => "Cart Has undeliverable items"]);
+        }
+
+
         $step = 2;
-        if(Auth::user() && !Auth::user()->registered) {
+        if (Auth::user() && !Auth::user()->registered) {
             Auth::logout();
         }
 
@@ -157,7 +193,7 @@ class CartController extends Controller
             return redirect(r('payment'));
         }
 
-        return view('Orders::frontend.userinfo', ['cart' => $this->getCart(), 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.checkoutForm')]);
+        return view('Orders::frontend.userinfo', ['cart' => $cart, 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.checkoutForm')]);
     }
 
 	/**
@@ -171,7 +207,8 @@ class CartController extends Controller
 		session()->forget(['paymetMethod', 'order_header_id']);
 
         $step = 3;
-        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user()?? new User, 'pageTitle' => _t('translations.payments')]);
+
+        return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.payments')]);
     }
 
 	/**
@@ -242,13 +279,13 @@ class CartController extends Controller
 
         $user = Auth::user() ?? null;
 
-        if(!$user) {
+        if (!$user) {
             $user = User::where('email', request()->get('email'))->first() ?? new User;
         }
 
-        $user = $user->updateOrCreate(['id' => $user->id??null], request($user->getFillable()));
+        $user = $user->updateOrCreate(['id' => $user->id ?? null], request($user->getFillable()));
 
-        if(!Auth::user()) {
+        if (!Auth::user()) {
             /** @var OrderHeader $cart */
             $cart = $this->getCart();
             Auth::login($user);
@@ -267,18 +304,23 @@ class CartController extends Controller
         /** @var OrderHeader $cart */
         $cart = $this->getCart();
 
-        if($cart->items()->count()==0) {
+        if ($cart->items()->count() == 0) {
             return redirect()->route('cart');
         }
 
-        $user = Auth::user()??User::where('email', (session()->get('email')??"noemailSpecified"))->first();
+        $user = Auth::user() ?? User::where('email', (session()->get('email') ?? "noemailSpecified"))->first();
 
-        if(!$user) {
+        if (!$user) {
             return redirect()->route('checkout');
         }
 
         $cart->update([
-            'state'   => 'ordered',
+            'state'        => 'ordered',
+            'ordered_at'   => Carbon::now(),
+            'payment_type' => request()->get('payment_type'),
+            'city' => $user->city,
+            'address' => $user->address,
+            'postcode' => $user->postal_code
         ]);
 
         return redirect(r('thankyou'));
@@ -287,8 +329,10 @@ class CartController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function thankyou() {
-        if(Auth::user() && !Auth::user()->registered) {
+    public function thankyou()
+    {
+        session()->forget('cart');
+        if (Auth::user() && !Auth::user()->registered) {
             Auth::logout();
         }
 
@@ -298,4 +342,35 @@ class CartController extends Controller
         return view('Orders::frontend.thankyou', compact('paymentMethod'));
     }
 
+    public function removeFromCart($itemId)
+    {
+
+        $cart = $this->getCart();
+
+        $item = $cart->items()->where('id', $itemId)->first();
+
+        if (request()->ajax()) {
+            if ($item) {
+                $item->delete();
+                $this->checkFreeDelivery($cart->id);
+                $cart = $this->getCart();
+
+                return ['status' => true, 'message' => 'Item Removed', 'contents' => $this->getCartContents($cart, true)];
+            }
+
+            return ['status' => false, 'message' => 'Item Couldn\'t be foundRemoved'];
+        } else {
+            if (request('goTo') && $item) {
+                $item->delete();
+                $urlParts = explode("/", request('goTo'));
+                unset($urlParts[0]);
+                $this->checkFreeDelivery($cart->id);
+                $cart = $this->getCart();
+
+                return redirect(r('url', $urlParts));
+            }
+
+            return redirect()->back();
+        }
+    }
 }

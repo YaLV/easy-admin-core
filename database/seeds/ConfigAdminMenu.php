@@ -13,7 +13,7 @@ class ConfigAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::orderBy('sequence', 'desc')->first();
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'config',
                 'routeName' => 'config',

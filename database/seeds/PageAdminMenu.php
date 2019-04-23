@@ -13,7 +13,7 @@ class PageAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::where('slug', '!=', 'config')->orderBy('sequence', 'desc')->first();
 
-        $mainMenu = \App\Model\Admin\Menu::firstOrCreate(
+        $mainMenu = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'content',
                 'routeName' => 'content',
@@ -30,7 +30,7 @@ class PageAdminMenu extends Seeder
 
         $main = "pages";
 
-        $mainCat = \App\Model\Admin\Menu::firstOrCreate(
+        $mainCat = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => $main,
                 'routeName' => $main,
@@ -45,7 +45,7 @@ class PageAdminMenu extends Seeder
                 'method'      => 'GET',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "list",
                 'routeName' => "$main.list",
@@ -59,7 +59,7 @@ class PageAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "add",
                 'routeName' => "$main.add",
@@ -73,7 +73,7 @@ class PageAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "edit/{id}",
                 'routeName' => "$main.edit",
@@ -87,7 +87,7 @@ class PageAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store/{id?}",
                 'routeName' => "$main.store",
@@ -101,7 +101,7 @@ class PageAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "destroy/{id}",
                 'routeName' => "$main.destroy",
@@ -116,7 +116,7 @@ class PageAdminMenu extends Seeder
                 'method'      => 'POST',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "state/{id?}",
                 'routeName' => "$main.state",
@@ -132,7 +132,7 @@ class PageAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "view/{id?}",
                 'routeName' => "$main.view",
@@ -150,7 +150,7 @@ class PageAdminMenu extends Seeder
 
         $main = "components";
 
-        $mainCat = \App\Model\Admin\Menu::firstOrCreate(
+        $mainCat = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "components/{page}",
                 'routeName' => "$main",
@@ -166,7 +166,7 @@ class PageAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "edit/{id}",
                 'routeName' => "$main.edit",
@@ -182,7 +182,7 @@ class PageAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store/{id?}",
                 'routeName' => "$main.store",
@@ -198,7 +198,7 @@ class PageAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "sort",
                 'routeName' => "$main.sort",
@@ -214,7 +214,7 @@ class PageAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "add",
                 'routeName' => "$main.add",
@@ -230,7 +230,7 @@ class PageAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "destroy/{id}",
                 'routeName' => "$main.destroy",

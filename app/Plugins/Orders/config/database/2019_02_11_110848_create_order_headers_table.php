@@ -26,6 +26,14 @@ class CreateOrderHeadersTable extends Migration
             $table->integer('delivery_id')->nullable();
             $table->decimal('delivery_amount', 8, 2)->nullable();
             $table->string("comments")->nullable();
+            $table->decimal('paid', 8, 2)->nullable();
+            $table->string('invoice')->nullable();
+            $table->enum('payment_type', ['money', 'invoice', 'card']);
+            $table->string('address');
+            $table->string('city'),
+            $table->string('postcode');
+            $table->timestamp('ordered_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

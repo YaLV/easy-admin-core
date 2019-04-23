@@ -86,9 +86,21 @@ class AdminController extends Controller implements ControllerInterface
                 }
                 $returnData[] = $this->saveFileDB($saveFileName, $fileSavePath, current($imageSizes));
             }
+            return ["status" => true, 'message' => 'File Uploaded, please save form, to add file to current item', 'data' => $returnData];
+        } elseif($request->hasFile('importFile')) {
+            $plugin = request()->get('plugin');
+            $controller = request()->get('controller');
+            $method = request()->get('method')??'import';
+            $uploadTargetClassName = "\\App\\Plugins\\$plugin\\$controller";
+            $uploadTargetClass = new $uploadTargetClassName??null;
+
+            if($uploadTargetClass instanceOf $uploadTargetClassName && method_exists($uploadTargetClass, $method)) {
+                return $uploadTargetClass->$method();
+            }
+
         }
 
-        return ["status" => true, 'message' => 'File Uploaded, please save form, to add file to current item', 'data' => $returnData];
+        return ["status" => false, 'message' => 'Missing upload parameters'];
     }
 
     /**

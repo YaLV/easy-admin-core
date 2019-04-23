@@ -1,5 +1,9 @@
 jQuery(document).ready(function () {
-    jQuery('.stateButton').click(function (e) {
+    bindStuff();
+});
+
+function bindStuff(){
+    jQuery('.stateButton').unbind().click(function (e) {
         button = jQuery(this);
         jQuery.post(button.attr('href'), "", function (response) {
             if (response.status == true) {
@@ -11,7 +15,7 @@ jQuery(document).ready(function () {
         return false;
     });
 
-    jQuery('.submitButton').click(function (e) {
+    jQuery('.submitButton').unbind().click(function (e) {
         e.preventDefault();
         jQuery(this).closest('form').submit();
         return false;
@@ -25,7 +29,7 @@ jQuery(document).ready(function () {
         autoclose: true
     });
 
-    jQuery(".destroyButton").click(function (e) {
+    jQuery(".destroyButton").unbind().click(function (e) {
         e.preventDefault();
 
         button = $(this);
@@ -38,7 +42,12 @@ jQuery(document).ready(function () {
 
         jQuery.post(button.attr('href'), "", function (response) {
             if (response.status==true) {
-                button.parents('tr').remove();
+                if(response.hasOwnProperty("replaceTable")) {
+                    $('div.tableContent').replaceWith(response.replaceTable);
+                    bindStuff();
+                } else {
+                    button.parents('tr').remove();
+                }
             }
         });
         return false;
@@ -46,20 +55,19 @@ jQuery(document).ready(function () {
 
     $('select.multiselect').multiSelect();
 
-    $('.editTranslation').click(function(){
+    $('.editTranslation').unbind().click(function(){
         $.get(editUrl.replace("ID", $(this).data('id')), '', function(response) {
             showTranslation(response);
         });
     })
 
 
-    $('#custom-search input').keyup(function(e){
+    $('#custom-search input').unbind().keyup(function(e){
         if(e.keyCode==13) {
             document.location = searchUrl.replace('ID', $(this).val());
         }
     });
-
-});
+}
 
 
 var imageControlTemplate = "<div class='controls'>" +
@@ -70,7 +78,7 @@ var imageControlTemplate = "<div class='controls'>" +
 jQuery(document).ready(function () {
 
     tinymce.init({
-        selector:'textarea',
+        selector:'textarea:not(.noEditor)',
         plugins: "image imagetools colorpicker hr table link textcolor code paste lists autolink anchor contextmenu insertdatetime",
         force_br_newlines : true,
         force_p_newlines : false,
@@ -102,12 +110,23 @@ jQuery(document).ready(function () {
         fileId = jQuery(this).attr('id');
 
         files = jQuery(this)[0].files;
-        for (x in files) {
-            fileData.append(jQuery(this).attr('name') + "[]", files[x]);
+        if(files.length==1) {
+            fileData.append(jQuery(this).attr('name'), files[0]);
+        } else {
+            for (x in files) {
+                fileData.append(jQuery(this).attr('name') + "[]", files[x]);
+            }
         }
         fileData.append('path', jQuery('.preview[data-file=' + fileId + ']').attr('data-path'));
         fileData.append('owner', jQuery(this).attr('name'));
 
+        if (form = jQuery(this).parents('form')) {
+            fields = form.find('input:not([type=file])');
+            fields.each(function () {
+                fld= jQuery(this);
+                fileData.append(fld.attr('name'), fld.val());
+            });
+        }
 
         jQuery.ajax({
             url: "/admin/uploadFile",

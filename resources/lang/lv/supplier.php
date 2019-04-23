@@ -1,3 +1,3 @@
 <?php
 
-return (new \App\Plugins\Suppliers\Model\Supplier)->MetaLanguage(['slug', 'name', 'location']);
+return (new \App\Plugins\Suppliers\Model\Supplier)->MetaLanguage(['slug', 'name', 'location'])?:['slug' => ['emptysupplierslug']];

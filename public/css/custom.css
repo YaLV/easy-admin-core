@@ -138,3 +138,17 @@ ol#created_buttons_list { margin: 10px 0 10px 0;}
 #created_buttons li{margin-left: 25px; padding-left: 25px;}
 
 
+.paidinput {
+    border: 0px;
+    text-align:right;
+    padding: 0px 3px;
+}
+
+.viewRow {
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+.bootstrap-select.changeState {
+    margin-bottom: 5px;
+}
