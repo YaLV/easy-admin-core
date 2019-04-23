@@ -43,7 +43,7 @@ class CreateUsersTable extends Migration
         App\User::firstOrCreate([
             'username'    => 'admin',
             'name'        => 'Admin',
-            'password'    => \Illuminate\Support\Facades\Hash::make('admin'),
+            'password'    => 'admin',
             'email'       => 'admin@example.com',
             'registered'  => true,
             'isAdmin'     => true,

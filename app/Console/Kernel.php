@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ImportProducts;
 use App\Schedules;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,7 +17,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        ImportProducts::class
     ];
 
     /**
@@ -36,7 +37,7 @@ class Kernel extends ConsoleKernel
                     ->where('finished', 0);
             })->first();
 
-            return \File::exists(storage_path("app/imports/products.csv")) && $scheduled;
+            return $scheduled;
         })->runInBackground()
         ->withoutOverlapping()
         ->evenInMaintenanceMode();
