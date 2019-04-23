@@ -29,9 +29,9 @@ class CreateOrderHeadersTable extends Migration
             $table->decimal('paid', 8, 2)->nullable();
             $table->string('invoice')->nullable();
             $table->enum('payment_type', ['money', 'invoice', 'card']);
-            $table->string('address');
-            $table->string('city');
-            $table->string('postcode');
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postcode')->nullable();
             $table->timestamp('ordered_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
