@@ -16,7 +16,7 @@ class OrderHeader extends Model
     use OrdersAdmin;
     use SoftDeletes;
 
-    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target', 'delivery_amount', 'delivery_id', 'ordered_at', 'paid', 'invoice', 'payment_type'];
+    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target','discount_amount','discount_type', 'delivery_amount', 'delivery_id', 'ordered_at', 'paid', 'invoice', 'payment_type'];
 
     public function cartItems() {
         return $this->whereHas('items', function(Builder $q) {

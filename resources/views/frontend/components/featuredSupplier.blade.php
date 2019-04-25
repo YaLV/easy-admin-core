@@ -4,16 +4,15 @@
         <div class="container">
             <div class="sv-blank-spacer big"></div>
             <div class="row">
-
                 <div class="intro">
-                    <a href="#" class="farmer">
-                        <img src="{{asset('assets/img/tmp/photo-9.jpg')}}" />
-                        <h3>{{ __("supplier.name.{$supplier->id}") }}</h3>
-                        <h4>{{ __("supplier.location.{$supplier->id}") }}</h4>
+                    <a href="{{ r('supplierOpen', [getSupplierSlugs(language()), __('supplier.slug.'.$supplier->supplier_id)]) }}" class="farmer">
+                        <img src="{{ $supplier->supplier->getImageByKey('supplier_image', '260x260') }}" />
+                        <h3>{{ __("supplier.name.{$supplier->supplier_id}") }}</h3>
+                        <h4>{{ __("supplier.location.{$supplier->supplier_id}") }}</h4>
                     </a>
-                    <h3><a href="#">Svaigi gaļas izstrādājumi, audzēti pēc labākajām BIO tradīcijām</a></h3>
+                    <h3><a href="{{ r('supplierOpen', [getSupplierSlugs(language()), __('supplier.slug.'.$supplier->supplier_id)]) }}">{{ $supplier->meta['title'][language()]??"" }}</a></h3>
                     <p>
-                        {!! $cache->getSupplier($supplier->id)->getMeta('description') !!}
+                        {!! $supplier->meta['description'][language()]??"" !!}
                     </p>
                 </div>
 
@@ -21,7 +20,7 @@
 
                     <div class="sv-product-card-slider">
                         <div class="owl-carousel">
-                            @foreach($supplier->products()->pluck('id')->toArray() as $itemId)
+                            @foreach($supplier->supplier->products()->pluck('id')->toArray() as $itemId)
                                 @php
                                     $item = $cache->getProduct($itemId);
                                 @endphp
@@ -35,7 +34,7 @@
             <div class="sv-blank-spacer medium"></div>
         </div>
         <div class="bg-static">
-            <div class="image" style="background-image: url({{asset('assets/img/tmp/photo-8.jpg')}});"></div>
+            <div class="image" style="background-image: url({{$supplier->getImageByKey('featured_image')}});"></div>
         </div>
     </div>
 @endif

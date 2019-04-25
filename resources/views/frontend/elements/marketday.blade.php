@@ -1,7 +1,7 @@
 @php
 /** @var \App\Http\Controllers\CacheController $cache **/
 @endphp
-<div class="sv-marketday-dropdown">
+<div class="sv-marketday-dropdown {{ !session()->get('marketDay')?"is-open":"" }}">
     <a href="javascript:void(0)" class="title"><span>{{ $cache->getSelectedMarketDayFormatted() }}</span></a>
     <div class="content">
         <a href="javascript:void(0)" class="title"><span>{{ $cache->getSelectedMarketDayFormatted() }}</span></a>

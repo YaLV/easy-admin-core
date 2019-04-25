@@ -87,6 +87,8 @@ class MenuCache
 
     public function getUrl($item)
     {
+        if($item==0) { return r('url', 'search'); }
+
         $menuItem = $this->menuItems[$item];
         $menuItems = $this->getHierarchy($menuItem);
 

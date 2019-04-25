@@ -110,12 +110,12 @@ jQuery(document).ready(function () {
         fileId = jQuery(this).attr('id');
 
         files = jQuery(this)[0].files;
-        if(files.length==1) {
-            fileData.append(jQuery(this).attr('name'), files[0]);
-        } else {
+        if($(this).hasClass('defaultUpload')) {
             for (x in files) {
                 fileData.append(jQuery(this).attr('name') + "[]", files[x]);
             }
+        } else {
+            fileData.append(jQuery(this).attr('name'), files[0]);
         }
         fileData.append('path', jQuery('.preview[data-file=' + fileId + ']').attr('data-path'));
         fileData.append('owner', jQuery(this).attr('name'));

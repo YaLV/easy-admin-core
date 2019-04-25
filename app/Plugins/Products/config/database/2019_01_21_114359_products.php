@@ -28,6 +28,7 @@ class Products extends Migration
             $table->integer('unit_id');
             $table->decimal('cost');
             $table->decimal('mark_up');
+            $table->integer('sequence')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

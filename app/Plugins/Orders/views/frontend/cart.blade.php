@@ -50,10 +50,13 @@
                 @stack('items')
                 <div class="sv-blank-spacer small"></div>
                 <div class="coupon">
+                    <form method="post" action="{{ r('addDiscountCode') }}">
                     <div class="enter">
-                        <input type="text" class="nr" placeholder="{!! __('translations.cartDiscountCode') !!}" />
+                            {{ @csrf_field() }}
+                            <input type="text" name="code" class="nr enderDiscountCode" placeholder="{!! __('translations.cartDiscountCode') !!}" />
                     </div>
-                    <input type="button" class="sv-btn" value="OK" />
+                    <input type="submit" class="sv-btn" value="OK" />
+                    </form>
                 </div>
             </div>
             <div class="sidebar sticky">
@@ -82,7 +85,7 @@
                             <div class="item">
                                 <div>
                                     {!! _t('translations.cartDiscount') !!} (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
-                                    <a href="#" class="remove"></a>
+                                    <a href="{{ r('removeDiscountCode') }}" class="remove"></a>
                                 </div>
                                 <div class="discount">
                                     {{ $cartTotals->discount }} €

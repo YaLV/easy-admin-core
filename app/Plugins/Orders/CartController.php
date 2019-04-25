@@ -2,21 +2,20 @@
 
 namespace App\Plugins\Orders;
 
-use App\Http\Controllers\CacheController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile;
 use App\Plugins\Deliveries\Model\Delivery;
+use App\Plugins\DiscountCodes\Model\DiscountCode;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
-use App\Plugins\Products\Cache\ProductCache;
-use App\Plugins\Products\Model\Product;
-use App\Plugins\Products\Model\ProductVariation;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Antcern\Paysera\PayseraManager;
 use App\Paysera;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CartController
@@ -92,13 +91,13 @@ class CartController extends Controller
         }
         if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
             $amount = request()->get('amount');
-            $origSize = $item->total_amount/$item->amount;
+            $origSize = $item->total_amount / $item->amount;
             if (request()->get('line')) {
                 $item->update(['amount' => $amount]);
             } else {
                 $item->increment('amount', $amount);
             }
-            $item->update(['total_amount' => $origSize*$amount, 'real_amount' => $origSize*$amount]);
+            $item->update(['total_amount' => $origSize * $amount, 'real_amount' => $origSize * $amount]);
         } else {
             /** @var \App\Cache\ProductCache $product */
             $product = $this->cache()->getProduct(request('product_id'));
@@ -149,11 +148,11 @@ class CartController extends Controller
 
                 return true;
             } else {
-                if ($cart->discount_target == 'all' || $cart->discount_target == 'delivery') {
+/*                if ($cart->discount_target == 'all' || $cart->discount_target == 'delivery') {
                     $deliveryPrice = number_format(round($delivery->price / (1 + ($cart->discount_amount / 100)), 2), 2);
-                } else {
+                } else {*/
                     $deliveryPrice = $delivery->price;
-                }
+//                }
                 $cart->update(['delivery_amount' => $deliveryPrice]);
 
                 return true;
@@ -173,7 +172,7 @@ class CartController extends Controller
 
         $cart = $this->getCart();
 
-        if(!$cart->delivery_id) {
+        if (!$cart->delivery_id) {
             return redirect()->back()->withErorrs(['delivery' => 'Please select Delivery option']);
         }
 
@@ -196,76 +195,79 @@ class CartController extends Controller
         return view('Orders::frontend.userinfo', ['cart' => $cart, 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.checkoutForm')]);
     }
 
-	/**
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-	 */
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function payment()
     {
-    	// handle Paysera accepturl
-    	if( !is_null(request()->get('data')) ) return $this->saveOrder();
+        // handle Paysera accepturl
+        if (!is_null(request()->get('data'))) return $this->saveOrder();
 
-		session()->forget(['paymetMethod', 'order_header_id']);
+        session()->forget(['paymetMethod', 'order_header_id']);
 
         $step = 3;
 
         return view('Orders::frontend.payment', ['cart' => $this->getCart(), 'step' => $step, 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.payments')]);
     }
 
-	/**
-	 * Initiate Paysera payment
-	 *
-	 * @return void
-	 */
-	public function payseraMake() {
-		$cart = $this->getCart();
-		$cart_totals = getCartTotals($cart);
+    /**
+     * Initiate Paysera payment
+     *
+     * @return void
+     */
+    public function payseraMake()
+    {
+        $cart = $this->getCart();
+        $cart_totals = getCartTotals($cart);
 
-		Session::put('paymetMethod', 'paysera');
-		Session::put('order_header_id', $cart->id);
-		Session::save();
+        Session::put('paymetMethod', 'paysera');
+        Session::put('order_header_id', $cart->id);
+        Session::save();
 
-		PayseraManager::makePayment($cart->id, $cart_totals->toPay);
-	}
+        PayseraManager::makePayment($cart->id, $cart_totals->toPay);
+    }
 
-	/**
-	 * Validate Paysera response
-	 *
-	 * return void
-	 */
-	public function payseraValidate() {
-		$response = PayseraManager::parsePayment(request());
+    /**
+     * Validate Paysera response
+     *
+     * return void
+     */
+    public function payseraValidate()
+    {
+        $response = PayseraManager::parsePayment(request());
 
-		Paysera::create([
-			'status' => 'success',
-			'order_header_id' => $response['orderid'],
-			'amount' => number_format(round($response['amount'] / 100, 2), 2)
-		]);
+        Paysera::create([
+            'status'          => 'success',
+            'order_header_id' => $response['orderid'],
+            'amount'          => number_format(round($response['amount'] / 100, 2), 2),
+        ]);
 
-		echo 'OK';
-	}
+        echo 'OK';
+    }
 
-	/**
-	 * Check payment status
-	 *
-	 * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-	 */
-	public function payseraSuccess() {
-		if( request()->ajax() ) {
-			if(
-				session()->get('paymetMethod') == 'paysera' &&
-				is_int($order_header_id = session()->get('order_header_id')) &&
-				$paymentSuccess = !empty(Paysera::where(['order_header_id' => $order_header_id, 'status' => 'success'])->first())
-			) {
-				session()->forget(['paymetMethod', 'order_header_id']);
+    /**
+     * Check payment status
+     *
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function payseraSuccess()
+    {
+        if (request()->ajax()) {
+            if (
+                session()->get('paymetMethod') == 'paysera' &&
+                is_int($order_header_id = session()->get('order_header_id')) &&
+                $paymentSuccess = !empty(Paysera::where(['order_header_id' => $order_header_id, 'status' => 'success'])->first())
+            ) {
+                session()->forget(['paymetMethod', 'order_header_id']);
 
-				return response()->json(true);
-			} else {
-				return response()->json(false);
-			}
-		} else {
-			return redirect(r('checkout'));
-		}
-	}
+                return response()->json(true);
+            } else {
+                return response()->json(false);
+            }
+        } else {
+            return redirect(r('checkout'));
+        }
+    }
 
     /**
      * @param Profile $request
@@ -318,9 +320,9 @@ class CartController extends Controller
             'state'        => 'ordered',
             'ordered_at'   => Carbon::now(),
             'payment_type' => request()->get('payment_type'),
-            'city' => $user->city,
-            'address' => $user->address,
-            'postcode' => $user->postal_code
+            'city'         => $user->city,
+            'address'      => $user->address,
+            'postcode'     => $user->postal_code,
         ]);
 
         return redirect(r('thankyou'));
@@ -336,8 +338,8 @@ class CartController extends Controller
             Auth::logout();
         }
 
-		if( session()->get('paymetMethod') == 'paysera' ) $paymentMethod = 'paysera';
-		else $paymentMethod = null;
+        if (session()->get('paymetMethod') == 'paysera') $paymentMethod = 'paysera';
+        else $paymentMethod = null;
 
         return view('Orders::frontend.thankyou', compact('paymentMethod'));
     }
@@ -372,5 +374,54 @@ class CartController extends Controller
 
             return redirect()->back();
         }
+    }
+
+    public function discount_code()
+    {
+        request()->merge(['code' => strtoupper(request('code'))]);
+
+        request()->validate([
+            'code' => [
+                'required',
+                Rule::exists('discount_codes')->where(function (Builder $q) {
+                    $q->where('uses', '>', '0')
+                        ->orWhereNull('uses');
+                })
+                    ->where(function (Builder $q) {
+                        $q->where('valid_from', '<=', Carbon::now()->format('Y-m-d'))
+                            ->where(function($qq) { $qq->where('valid_to', '>=', Carbon::now()->format('Y-m-d'))->orWhereNull('valid_to'); });
+                    }),
+            ],
+        ]);
+
+        /** @var DiscountCode $discount_code */
+        $discount_code = DiscountCode::where('code', request('code'))->first();
+        $discount_code->increment('uses', -1);
+
+        $cart = $this->getCart();
+
+        $result = $cart->update([
+            'discount_code'   => request('code'),
+            'discount_amount' => $discount_code->amount,
+            'discount_target' => $discount_code->applied,
+            'discount_type'   => $discount_code->unit,
+        ]);
+
+        return redirect()->back()->with(['message' => 'Discount Code Added']);
+    }
+
+    public function discount_code_remove() {
+        $cart = $this->getCart();
+
+        $discount_code = DiscountCode::where('code', $cart->discount_code)->first();
+        $discount_code->increment('uses', 1);
+
+        $cart->update([
+            'discount_code'   => null,
+            'discount_amount' => null,
+            'discount_target' => null,
+            'discount_type'   => null,
+        ]);
+        return redirect()->back()->with(['message' => 'Discount Code Removed']);
     }
 }

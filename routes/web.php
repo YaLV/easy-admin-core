@@ -50,6 +50,13 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::get("/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.default');
 
 // Cart
+    Route::post('/{lang}/cart/addCode', '\App\Plugins\Orders\CartController@discount_code')->name('addDiscountCode');
+    Route::post('/cart/addCode', '\App\Plugins\Orders\CartController@discount_code')->name('addDiscountCode.default');
+
+    Route::get('/{lang}/cart/removeCode', '\App\Plugins\Orders\CartController@discount_code_remove')->name('removeDiscountCode');
+    Route::get('/cart/removeCode', '\App\Plugins\Orders\CartController@discount_code_remove')->name('removeDiscountCode.default');
+
+
     Route::get("/{lang}/cart", "\App\Plugins\Orders\CartController@index")->name('cart');
     Route::get("/cart", "\App\Plugins\Orders\CartController@index")->name('cart.default');
 

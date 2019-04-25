@@ -152,3 +152,11 @@ ol#created_buttons_list { margin: 10px 0 10px 0;}
 .bootstrap-select.changeState {
     margin-bottom: 5px;
 }
+
+.percent:after {
+    content: "%";
+}
+
+.money:after {
+    content: "€";
+}

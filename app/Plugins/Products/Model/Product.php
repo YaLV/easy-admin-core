@@ -42,6 +42,7 @@ class Product extends BaseModel
         'unit_id',
         'cost',
         'mark_up',
+        'sequence',
     ];
     public $metaClass = __NAMESPACE__ . '\ProductMeta';
     public $imageTypes;
@@ -144,6 +145,11 @@ class Product extends BaseModel
         ];
     }
 
+    public function metaName()
+    {
+        return $this->hasMany(ProductMeta::class, 'owner_id', 'id')->where('meta_name', 'name')->where('language', language());
+    }
+
     /***************** Frontend Functions ********************/
 
     public function isSale()
@@ -161,7 +167,8 @@ class Product extends BaseModel
         return $this->hasMany(File::class, 'owner_id');
     }
 
-    public function getProductImageAttribute() {
+    public function getProductImageAttribute()
+    {
         return $this->images()->where("owner", "product_image")->get();
     }
 
