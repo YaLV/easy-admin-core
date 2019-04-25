@@ -6,14 +6,17 @@ namespace App\Http\Controllers;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\Categories\Model\CategoryMeta;
 use App\Plugins\Deliveries\Model\Delivery;
+use App\Plugins\Featured\Model\FeaturedSupplier;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Orders\Model\OrderLines;
 use App\Plugins\Pages\Model\Page;
+use App\Plugins\Products\Model\Product;
 use App\Plugins\Suppliers\Model\Supplier;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -48,6 +51,11 @@ class FrontController extends Controller
         return $this->{$action['action']}($action['slug'], $action['id']);
     }
 
+    public function search()
+    {
+        $this->showCategory("search", 0);
+    }
+
     /**
      * Show Category products
      *
@@ -60,37 +68,88 @@ class FrontController extends Controller
     {
         session()->put('lastCategory', request()->route()->parameters);
 
-        /** @var \App\Plugins\Categories\Model\Category $category */
-        $category = Category::findOrFail($categoryId);
+        if ($categorySlug != 'search') {
+            /** @var \App\Plugins\Categories\Model\Category $category */
+            $category = Category::findOrFail($categoryId);
 
-        /** @var \App\Plugins\Products\Model\Product $products */
-        $products = $category->products()
-            ->whereHas('market_days', function (Builder $q) {
-                $md = (new CacheController)->getSelectedMarketDay();
+            /** @var \App\Plugins\Products\Model\Product $products */
+            $products = $category->products()
+                ->whereHas('market_days', function (Builder $q) {
+                    $md = (new CacheController)->getSelectedMarketDay();
 
-                return $q->where('market_day_id', $md->id);
-            });
+                    return $q->where('market_day_id', $md->id);
+                });
 
-        $filters = session()->get('filters');
+            $filters = session()->get('filters');
 
-        if (($filters['filters'] ?? false) && $filters['category']==$category->id) {
-            $products = $products->whereHas('attributeValues', function (Builder $q) use($filters) {
-                $q->whereIn('attribute_value_id', $filters['filters']);
-            });
+            if (($filters['filters'] ?? false) && $filters['category'] == $category->id) {
+                $products = $products->whereHas('attributeValues', function (Builder $q) use ($filters) {
+                    $q->whereIn('attribute_value_id', $filters['filters']);
+                });
+            }
+
+            if (($filters['suppliers'] ?? false) && $filters['category'] == $category->id) {
+                $products = $products->whereIn('supplier_id', $filters['suppliers']);
+            }
+
+        } else {
+            $products = new Product();
+
+            if ($searchString = request()->get('search')) {
+                $products = $products
+                    ->whereIn('supplier_id', array_keys(preg_grep('/' . $searchString . '/i', __('supplier.name'))))
+                    ->orWhereHas('metaData', function (Builder $q) use ($searchString) {
+                        $q->where('meta_value', 'like', "%$searchString%")->where('language', language())->whereIn('meta_name', ['name']);
+                    })
+                    ->orWhereHas('extra_categories', function(Builder $q) use($searchString) {
+                        $q->whereIn('category_id', array_keys(preg_grep("/$searchString/i", __('category.name'))));
+                    });
+            }
         }
 
-        if(($filters['suppliers']??false) && $filters['category']==$category->id) {
-            $products = $products->whereIn('supplier_id', $filters['suppliers']);
-        }
+        switch (request()->get('order')) {
 
-        if($searchString = request()->get('search')) {
-            $products = $products->whereHas('metaData', function (Builder $q) use($searchString) {
-               $q->where('meta_value', 'like', "%$searchString%")->where('language', language())->whereIn('meta_name', ['name']);
-            });
+            case "svaigi_order":
+            default:
+                $products = $products->orderBy('sequence', 'desc');
+                break;
+
+            case "name_asc":
+                $products = $products->addSelect(DB::raw('product_metas.meta_value as metaName'))->join('product_metas', function ($join) {
+                    $join->on('products.id', '=', 'product_metas.owner_id')
+                        ->where('meta_name', '=', 'name');
+                })->orderBy('metaName', 'asc');
+                break;
+
+            case "name_desc":
+                $products = $products->addSelect(DB::raw('product_metas.meta_value as metaName'))->join('product_metas', function ($join) {
+                    $join->on('products.id', '=', 'product_metas.owner_id')
+                        ->where('meta_name', '=', 'name');
+                })->orderBy('metaName', 'desc');
+                break;
+
+            case "price_asc":
+                $products = $products->addSelect(DB::raw('(cost*(1+mark_up/100))*(1+vats.amount/100) as price'))->join('vats', function ($join) {
+                    $join->on('products.vat_id', '=', 'vats.id');
+                })->orderBy('price', 'asc');
+                break;
+
+            case "price_desc":
+                $products = $products->addSelect(DB::raw('(cost*(1+mark_up/100))*(1+vats.amount/100) as price'))->join('vats', function ($join) {
+                    $join->on('products.vat_id', '=', 'vats.id');
+                })->orderBy('price', 'desc');
+                break;
+
+            case "popularity":
+                $products = $products->orderBy('times_bought', 'desc');
+                break;
+
         }
 
         $products = $products->paginate(20)
-            ->pluck('id');
+            ->pluck('id')->toArray();
+
+        $products = (object)array_unique($products);
 
         $suppliers = Supplier::all()->pluck('id');
 
@@ -158,11 +217,12 @@ class FrontController extends Controller
      */
     public function homepage()
     {
-        if(!pageTable()) {
+        if (!pageTable()) {
             abort(404);
         }
-        $homepageId = Page::where("homepage", 1)->first()->id??0;
+        $homepageId = Page::where("homepage", 1)->first()->id ?? 0;
         $slug = __("pages.slug.$homepageId");
+
         return (new PageController)->show($slug);
     }
 
@@ -219,8 +279,11 @@ class FrontController extends Controller
         return response()->file(storage_path("app/$path"));
     }
 
-    public function getFeaturedSupplier() {
-        return Supplier::inRandomOrder()->first();
+    public function getFeaturedSupplier()
+    {
+        return FeaturedSupplier::inRandomOrder()->first();
+
+            //Supplier::inRandomOrder()->first();
     }
 
 }

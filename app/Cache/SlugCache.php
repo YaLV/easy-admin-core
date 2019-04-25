@@ -21,6 +21,7 @@ class SlugCache
                 $this->slugs[$slug] = ['action' => $action, 'id' => $slugId];
             }
         }
+        $this->slugs[config('app.searchSlug', 'search')] = ["action" => 'showCategory', 'id' => 0];
     }
 
     public function findAction()

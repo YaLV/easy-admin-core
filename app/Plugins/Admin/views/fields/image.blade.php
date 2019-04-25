@@ -14,7 +14,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <input id="{{$id}}" type="file" name="{{ $name }}" multiple
-                   class="form-control {{ $class??"" }} {{ $errors->has($name)?"is-invalid":"" }}" {{ $data??"" }} {{ ($depends??false)?"data-depends=$depends":"" }} />
+                   class="form-control defaultUpload {{ $class??"" }} {{ $errors->has($name)?"is-invalid":"" }}" {{ $data??"" }} {{ ($depends??false)?"data-depends=$depends":"" }} />
             @if($errors->has($name))
                 <div class="invalid-feedback">
                     {{$errors->first($name)}}

@@ -4,6 +4,7 @@ namespace App\Plugins\Products\Functions;
 
 
 use App\Functions\General;
+use App\Http\Controllers\CacheController;
 use App\Plugins\Attributes\Model\Attribute;
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductVariation;
@@ -88,24 +89,15 @@ class ProductImport
 
             $sku = $this->getLineData($importLine, 'search');
 
-            if ($sku['sku'] != $previousProduct) {
-                if ($previousProduct !== false) {
-                    $productCollection = $this->saveProduct($product);
+            if($previousProduct==$sku['sku']) {
+                $product['metas'] = array_merge($product, $this->getLineData($importLine, 'metaData', $product['metas']));
+                if ($productCollection ?? false) {
                     $this->handleMetas($productCollection, array_merge($this->metas, ['slug']), 'name-id', $product['metas']);
                     Schedules::find($schedule['id'])->increment('stopped_at', 1);
-                    unset($product, $productCollection);
                 }
-                $previousProduct = $sku['sku'];
-            } else {
-                if($previousProduct==$sku['sku']) {
-                    $product['metas'] = array_merge($product, $this->getLineData($importLine, 'metaData', $product['metas']));
-                    if ($productCollection ?? false) {
-                        $this->handleMetas($productCollection, array_merge($this->metas, ['slug']), 'name-id', $product['metas']);
-                        Schedules::find($schedule['id'])->increment('stopped_at', 1);
-                    }
-                }
-
                 continue;
+            } else {
+                unset($product, $productCollection);
             }
 
             $product['search'] = $sku;
@@ -118,6 +110,15 @@ class ProductImport
             $product = array_merge($product, $this->getLineData($importLine, 'variations'));
             $product = array_merge($product, $this->getLineData($importLine, 'attributes'));
             $product = array_merge($product, $this->getLineData($importLine, 'categories'));
+
+            $productCollection = $this->saveProduct($product);
+            $this->handleMetas($productCollection, array_merge($this->metas, ['slug']), 'name-id', $product['metas']);
+            Schedules::find($schedule['id'])->increment('stopped_at', 1);
+            $previousProduct = $sku['sku'];
+
+            $productCollection->forgetMeta(['slug', 'name']);
+            (new CacheController)->createProductCache($productCollection->id, true);
+
         }
 
         $csv = null;
@@ -160,7 +161,7 @@ class ProductImport
         $unit = $product->unit;
         if ($unit->subUnit()->count() && $amount < 1) {
             $unit = $unit->subUnit;
-            $displayName = ($amount * $unit->parent_amount) . $unit->unit;
+            $displayName = ($amount * $unit->parent_amount);
         }
 
         return ($displayName ?? $amount) . $unit->unit;

@@ -2,30 +2,32 @@
 
 @section('content')
 
-    <div class="sv-products-menu-mobile">
-        <select tabindex="-1">
-            @include("frontend.partials.menu.mobile", ['menuSlug' => 'shop', 'menuId' => "auto"])
-        </select>
-    </div>
-    @if(!($hideHeader??false))
-        <div class="sv-category-title-banner">
-            <div class="title">
-                <h3>{{ __("category.name.$currentCategoryId") }}</h3>
-                <h4>{{ __("category.description.$currentCategoryId") }}</h4>
+    @if($category??false)
+        <div class="sv-products-menu-mobile">
+            <select tabindex="-1">
+                @include("frontend.partials.menu.mobile", ['menuSlug' => 'shop', 'menuId' => "auto"])
+            </select>
+        </div>
+        @if(!($hideHeader??false))
+            <div class="sv-category-title-banner">
+                <div class="title">
+                    <h3>{{ __("category.name.$currentCategoryId") }}</h3>
+                    <h4>{{ __("category.description.$currentCategoryId") }}</h4>
+                </div>
+                <div class="bg-parallax has-loaded">
+                    <div class="image"
+                         style="background-image: url({{ $cache->getCategoryCache()->image(config('app.imageSize.category_image.default'), $currentCategoryId) }});"></div>
+                </div>
             </div>
-            <div class="bg-parallax has-loaded">
-                <div class="image"
-                     style="background-image: url({{ $cache->getCategoryCache()->image(config('app.imageSize.category_image.default'), $currentCategoryId) }});"></div>
-            </div>
+        @endif
+        <div class="sv-category-title-mobile">
+            <h1>{{ __("category.name.$currentCategoryId") }}</h1>
+            <a href="#sv-mobile-filters" data-toggle="collapse" class="sv-icon-filter collapsed">
+                <s></s>
+                <s></s>
+            </a>
         </div>
     @endif
-    <div class="sv-category-title-mobile">
-        <h1>{{ __("category.name.$currentCategoryId") }}</h1>
-        <a href="#sv-mobile-filters" data-toggle="collapse" class="sv-icon-filter collapsed">
-            <s></s>
-            <s></s>
-        </a>
-    </div>
     <div id="sv-mobile-filters" class="sv-mobile-filters panel-collapse collapse">
         <div class="sv-sidebar-filters">
             <div class="item">
@@ -42,38 +44,6 @@
                     </div>
                 </div>
             </div>
-            {{--<div class="item">
-                <span data-toggle="collapse" data-target="#filter-2" class="title collapsed">Filtrs</span>
-                <div id="filter-2" class="collapse">
-                    <div class="content">
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-11">
-                            <label for="check-11">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-22">
-                            <label for="check-22">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-33">
-                            <label for="check-33">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-44">
-                            <label for="check-44">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-55">
-                            <label for="check-55">Filtra opcija</label>
-                        </div>
-                        <div class="input-wrapper checkbox">
-                            <input type="checkbox" id="check-66">
-                            <label for="check-66">Filtra opcija</label>
-                        </div>
-                    </div>
-                </div>
-            </div>--}}
-
         </div>
     </div>
     <form class="sv-sidebar-search is-mobile">
@@ -99,86 +69,94 @@
         <div class="container">
             <div class="row">
                 <div class="sv-sidebar-category">
-                    @if(request()->route('slug2'))
-                        <a href="{{ r('url', ['slug1' => request()->route('slug1')]) }}" class="sv-back-link">{{ __('category.name.'.$categoryPath[request()->route('slug1')]['id']??"") }}</a>
-                    @elseif(request()->route('slug3'))
-                        <a href="{{ r('url', ['slug1' => request()->route('slug1'),'slug2' => request()->route('slug2')]) }}" class="sv-back-link">{{__('category.name.'.$categoryPath[request()->route('slug2')]['id']??"")}}</a>
+                    @if($category??false)
+                        @if(request()->route('slug2'))
+                            <a href="{{ r('url', ['slug1' => request()->route('slug1')]) }}"
+                               class="sv-back-link">{{ __('category.name.'.$categoryPath[request()->route('slug1')]['id']??"") }}</a>
+                        @elseif(request()->route('slug3'))
+                            <a href="{{ r('url', ['slug1' => request()->route('slug1'),'slug2' => request()->route('slug2')]) }}"
+                               class="sv-back-link">{{__('category.name.'.$categoryPath[request()->route('slug2')]['id']??"")}}</a>
+                        @endif
+                        <ul class="menu">
+                            @include("frontend.partials.menu.main", ['menuSlug' => 'shop', 'menuId' => "auto"])
+                        </ul>
                     @endif
-                    <ul class="menu">
-                        @include("frontend.partials.menu.main", ['menuSlug' => 'shop', 'menuId' => "auto"])
-                    </ul>
-                    <form class="sv-sidebar-search" method="get">
+                    <form class="sv-sidebar-search" method="get" action="{{ r('url', ['search']) }}">
                         <input type="text" name="search" value="{{request()->get('search')}}" />
                         <input type="submit" value="{{ _t('translations.search') }}" />
                     </form>
-                    <form method="post" action="{{ route('setFilter', [$category->id]) }}">
-                        {{ csrf_field() }}
-                        @php
-                            $in="";
-                            $open="collapsed";
-                            $currentSuppliers = getCurrentSuppliers($category->id);
-                            if(count($currentSuppliers)>0) {
-                                $in = "in";
-                                $open = "";
-                            }
-                        @endphp
-                        <div class="sv-sidebar-filters">
-                            <div class="item">
+                    @if($category??false)
+                        <form method="post" action="{{ route('setFilter', [$category->id]) }}">
+                            {{ csrf_field() }}
+                            @php
+                                $in="";
+                                $open="collapsed";
+                                $currentSuppliers = getCurrentSuppliers($category->id);
+                                if(count($currentSuppliers)>0) {
+                                    $in = "in";
+                                    $open = "";
+                                }
+                            @endphp
+                            <div class="sv-sidebar-filters">
+                                <div class="item">
                             <span data-toggle="collapse" data-target="#filter-supp"
                                   class="title {{$open}}">Saimniecības</span>
-                                <div id="filter-supp" class="collapse {{$in}}">
-                                    <div class="content">
-                                        @foreach($suppliers as $supplier)
-                                            <div class="input-wrapper checkbox">
-                                                <input type="checkbox" id="check-{{$supplier}}-supp" name="suppliers[]"
-                                                       {{ in_array($supplier, $currentSuppliers)?"checked":"" }} value="{{$supplier}}">
-                                                <label for="check-{{$supplier}}-supp">{{ __('supplier.name.'.$supplier) }}</label>
-                                            </div>
-                                        @endforeach
+                                    <div id="filter-supp" class="collapse {{$in}}">
+                                        <div class="content">
+                                            @foreach($suppliers as $supplier)
+                                                <div class="input-wrapper checkbox">
+                                                    <input type="checkbox" id="check-{{$supplier}}-supp"
+                                                           name="suppliers[]"
+                                                           {{ in_array($supplier, $currentSuppliers)?"checked":"" }} value="{{$supplier}}">
+                                                    <label for="check-{{$supplier}}-supp">{{ __('supplier.name.'.$supplier) }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            @php
-                                $currentAttributes = getCurrentAttributes($category->id);
-                            @endphp
-                            @foreach($cache->getCategoryCache()->getFilters($category->id) as $attribute)
-                                @php
-                                    $open = false;
-                                    $attributeValues = $cache->getAttributeCache($attribute)->getValues();
-                                @endphp
-
-                                @push('filter-'.$attribute)
-                                    @foreach($attributeValues as $attributeValue)
+                                @if($category??false)
+                                    @php
+                                        $currentAttributes = getCurrentAttributes($category->id);
+                                    @endphp
+                                    @foreach($cache->getCategoryCache()->getFilters($category->id) as $attribute)
                                         @php
-                                            $checked = in_array($attributeValue,$currentAttributes)?"checked":"";
-
-                                            $open = ($checked||($open??null))?true:null;
+                                            $open = false;
+                                            $attributeValues = $cache->getAttributeCache($attribute)->getValues();
                                         @endphp
-                                        <div class="input-wrapper checkbox">
-                                            <input type="checkbox" id="check-{{$attributeValue}}"
-                                                   class="filterValue"
-                                                   name="filter[]"
-                                                   value="{{$attributeValue}}" {{ $checked }}/>
-                                            <label for="check-{{$attributeValue}}">{{ __('attributevalues.name.'.$attributeValue) }}</label>
-                                        </div>
-                                    @endforeach
-                                @endpush
 
-                                <div class="item">
+                                        @push('filter-'.$attribute)
+                                            @foreach($attributeValues as $attributeValue)
+                                                @php
+                                                    $checked = in_array($attributeValue,$currentAttributes)?"checked":"";
+
+                                                    $open = ($checked||($open??null))?true:null;
+                                                @endphp
+                                                <div class="input-wrapper checkbox">
+                                                    <input type="checkbox" id="check-{{$attributeValue}}"
+                                                           class="filterValue"
+                                                           name="filter[]"
+                                                           value="{{$attributeValue}}" {{ $checked }}/>
+                                                    <label for="check-{{$attributeValue}}">{{ __('attributevalues.name.'.$attributeValue) }}</label>
+                                                </div>
+                                            @endforeach
+                                        @endpush
+
+                                        <div class="item">
                                 <span data-toggle="collapse" data-target="#filter-{{ $attribute }}"
                                       class="title {{ ($open?"":"collapsed") }}">{{ __('attributes.name.'.$attribute) }}</span>
-                                    <div id="filter-{{ $attribute }}" class="collapse {{ $open?"in":"" }}">
-                                        <div class="content">
-                                            @stack('filter-'.$attribute)
+                                            <div id="filter-{{ $attribute }}" class="collapse {{ $open?"in":"" }}">
+                                                <div class="content">
+                                                    @stack('filter-'.$attribute)
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <button class="sv-filters-save">{!! _t('translations.setFilter') !!}</button>
-                        <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
-                    </form>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <button class="sv-filters-save">{!! _t('translations.setFilter') !!}</button>
+                            <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
+                        </form>
+                    @endif
                 </div>
                 <div class="sv-products">
                     @yield('leftSide')

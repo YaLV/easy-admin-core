@@ -10,6 +10,7 @@ return [
         'pageimage1'     => 'pages',
         'pageimage2'     => 'pages',
         'pageimage3'     => 'pages',
+        'featured_image' => 'featuredsuppliers',
     ],
 
     'imageSize' => [
@@ -194,7 +195,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-		Antcern\Paysera\PayseraServiceProvider::class,
+        Antcern\Paysera\PayseraServiceProvider::class,
 
         /*
          * Package Service Providers...

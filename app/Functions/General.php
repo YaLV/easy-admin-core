@@ -45,6 +45,7 @@ trait General
 
         $owner = $owner ?: array_search(str_plural(strtolower(class_basename($collection))), config('app.uploadFile'));
 
+
         if (!$owner) {
             return;
         }
