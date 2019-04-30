@@ -5,8 +5,6 @@
 @endphp
 
 
-{{--{{ dd($item->currentMarketDayProducts()) }}--}}
-
 @if($product->hasManyPrices())
     @push("variations-$random_id")
         <select name="variation_id" class="selectpicker">
@@ -26,8 +24,7 @@
         {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
     @endpush
 @endif
-
-@if(in_array($cart->market_day_id, $product->marketDays))
+@if(in_array($cart->market_day_id, $product->marketDays) && !empty($product->getVariationPrice($item->variation_id)))
     <form>
         <div class="item">
             <input type="hidden" name="product_id" value="{{ $product->id }}" />
@@ -78,7 +75,8 @@
             </div>
         </div>
         <div class="price">
-            @stack("variations-$random_id")
+            {{implode(" / ",[$item->price."€", $item->display_name])}}
+
         </div>
         <div class="controls">
             <a href="{{ r('cart.removeItem', [$item->id, 'goTo' => $product->getUrl(false, false)]) }}" class="change">

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Cache\PromoCache;
+use App\Http\Controllers\CacheController;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\UserGroups\Model\UserGroup;
 use Illuminate\Notifications\Notifiable;
@@ -60,9 +62,11 @@ class User extends Authenticatable
      *
      * @return int
      */
-    public function discount()
+    public function discount($product, $category)
     {
-        return 0;
+        $pc = (new CacheController)->getPromotions();
+
+        return current(max([$pc->getDiscount('product', $product), $pc->getDiscount('category', $category)]));
     }
 
     /**

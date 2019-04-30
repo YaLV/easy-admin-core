@@ -174,20 +174,6 @@ class Product extends BaseModel
 
     public function findDiscount()
     {
-        $discounts = [
-            $this->discount(),
-            (Auth::user() ? Auth::user()->discount() : 0),
-        ];
-
-        foreach ($this->extra_categories as $category) {
-            $discounts[] = $category->discount();
-        }
-
-        return min($discounts);
-    }
-
-    public function discount()
-    {
-        return "-20";
+        return Auth::user()->discount($this->id, $this->main_category);
     }
 }

@@ -69,8 +69,8 @@ class ProductImport
             ini_set("auto_detect_line_endings", '1');
         }
 
-        $filename = storage_path("app/imports/" . $schedule['filename']);
-        if(!\Storage::exists("imports/" . $schedule['filename'])) {
+        $filename = storage_path("app/imports/products/" . $schedule['filename']);
+        if(!\Storage::exists("imports/products/" . $schedule['filename'])) {
             return ['status' => false, 'message' => 'Import File not present'];
         }
         $csv = Reader::createFromPath($filename, 'r');

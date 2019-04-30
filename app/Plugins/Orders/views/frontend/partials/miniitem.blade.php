@@ -11,7 +11,7 @@
             @if($product->isSale())
                 <s>{{ $product->getVariationPrice($item->variation_id)->oldPrice }}€</s>
             @endif
-            {{ implode(" / ",[$product->getVariationPrice($item->variation_id)->price."€", $product->getVariationPrice($item->variation_id)->display_name]) }} x{{ $item->amount }}
+            {{ implode(" / ",[$item->price."€", $item->display_name]) }} x{{ $item->amount }}
         </h4>
     </span>
 </a>

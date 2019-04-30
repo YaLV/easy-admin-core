@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cache\PromoCache;
 use App\Plugins\Admin\Cache\SlugCache;
 use App\Plugins\Attributes\Cache\AttributeCache;
 use App\Plugins\Categories\Cache\CategoryCache;
@@ -123,6 +124,17 @@ class CacheController extends Controller
     public function isSelectedMarketDay($mDay) {
         $marketDay = $this->getSelectedMarketDay();
         return $mDay->date->timestamp==$marketDay->date->timestamp;
+    }
+
+    public function getPromotions() {
+        $cache = $this->getCache('promotions');
+
+        if(!$cache) {
+            $cache = new PromoCache();
+            $this->setCache('promotions', $cache);
+        }
+
+        return $cache;
     }
 
 }
