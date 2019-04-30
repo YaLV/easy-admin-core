@@ -40,7 +40,7 @@ trait General
         }
     }
 
-    public function handleImages($collection, $owner = false)
+    public function handleImages($collection, $owner = false, $files = [], $withoutDelete = false)
     {
 
         $owner = $owner ?: array_search(str_plural(strtolower(class_basename($collection))), config('app.uploadFile'));
@@ -58,11 +58,15 @@ trait General
         }
 
         $x = 0;
-        list($urls, $main, $id) = [request('image_url'), request('image_main'), request('image_id')];
-
+        if($files) {
+            list($urls, $main, $id) = $files;
+        } else {
+            list($urls, $main, $id) = [request('image_url'), request('image_main'), request('image_id')];
+        }
         $type = "image";
 
         $imagesInFiles = $collection->images()->whereIn('owner', $owner)->get()->pluck('id')->toArray();
+
 
         if (!is_array($id)) return;
 

@@ -106,6 +106,7 @@ jQuery(document).ready(function () {
     bindButtons();
 
     jQuery('input[type=file]').change(function () {
+        resetform = false;
         fileData = new FormData;
         fileId = jQuery(this).attr('id');
 
@@ -116,6 +117,7 @@ jQuery(document).ready(function () {
             }
         } else {
             fileData.append(jQuery(this).attr('name'), files[0]);
+            resetform = true;
         }
         fileData.append('path', jQuery('.preview[data-file=' + fileId + ']').attr('data-path'));
         fileData.append('owner', jQuery(this).attr('name'));
@@ -145,6 +147,9 @@ jQuery(document).ready(function () {
                     controls.find('[data-file]').attr('data-file', id);
                     container.append(controls);
                     jQuery('.preview[data-file=' + fileId + ']').append(container);
+                }
+                if(resetform) {
+                    form[0].reset();
                 }
                 bindButtons();
             }
@@ -201,3 +206,59 @@ function showTranslation(result) {
     });
     $('#modalWin'+modalID).modal("show");
 }
+
+
+/*
+    Searchable textfield
+ */
+$( function() {
+
+    function split( val ) {
+        return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+        return split( term ).pop();
+    }
+
+    $('.changeDT').on('changed.bs.select', function() {
+       $('.autocomplete.target').val("");
+    });
+
+    $( ".autocomplete" )
+    // don't navigate away from the field on tab when selecting an item
+        .on( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function( request, response ) {
+                $.getJSON( $('input.autocomplete:focus').data('searchurl').replace("discount_to", $('.changeDT').selectpicker('val')), {
+                    term: extractLast( request.term )
+                }, response );
+            },
+            search: function() {
+                // custom minLength
+                var term = extractLast( this.value );
+                if ( term.length < 2 ) {
+                    return false;
+                }
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                return false;
+            }
+        });
+} );

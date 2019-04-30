@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Psy\Util\Str;
 
 class ProductController extends AdminController
@@ -265,7 +266,7 @@ class ProductController extends AdminController
         ]);
 
         $file = request()->file('importFile');
-        $filename = $file->storeAs('imports', str_random(40).".".$file->getClientOriginalExtension());
+        $filename = $file->storeAs('imports/products', str_random(40) . "." . $file->getClientOriginalExtension());
 
         Schedules::create([
             'filename' => basename($filename),
@@ -282,6 +283,36 @@ class ProductController extends AdminController
         $export = new ProductImport();
 
         return $export->exportdata();
+
+    }
+
+    public function importImages()
+    {
+        request()->validate([
+            'importFile' => 'file|required',
+        ]);
+
+        $zip = new \ZipArchive();
+        $file = request()->file('importFile');
+        $zresult = $zip->open($file);
+
+        if ($zresult === true) {
+            $zip->extractTo(storage_path('app/imports/product_images'));
+            $zip->close();
+            $result = ['status' => true, 'message' => 'Images uploaded, task scheduled'];
+
+            Schedules::create([
+                'filename' => 'images',
+                'type'     => 'productImageImport',
+                'total_lines' => count(Storage::files('imports/product_images'))
+            ]);
+
+        } else {
+            $result = ['status' => false, 'message' => 'Uploaded file is not an archive'];
+        }
+
+
+        return $result;
 
     }
 

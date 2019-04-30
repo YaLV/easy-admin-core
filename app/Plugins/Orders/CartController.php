@@ -116,7 +116,7 @@ class CartController extends Controller
                 'price'          => $variation->price,
                 'display_name'   => $variation->display_name,
                 'variation_size' => $variation->size,
-                'discount'       => (Auth::user() ?? User::find(99))->discount(),
+                'discount'       => $product->discount(),
                 'variation_id'   => request('variation_id'),
                 'total_amount'   => $variation->amountinpackage,
                 'real_amount'    => $variation->amountinpackage,

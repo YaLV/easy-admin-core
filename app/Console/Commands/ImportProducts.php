@@ -66,7 +66,7 @@ class ImportProducts extends Command
         $msgType = "error";
 
         if($result['status']==true) {
-            \Storage::delete('imports/'.$schedule['filename']);
+            \Storage::delete('imports/products/'.$schedule['filename']);
             $msgType="info";
         }
 

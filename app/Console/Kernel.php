@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ImportProductImages;
 use App\Console\Commands\ImportProducts;
 use App\Schedules;
 use Carbon\Carbon;
@@ -17,7 +18,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        ImportProducts::class
+        ImportProducts::class,
+        ImportProductImages::class,
     ];
 
     /**
@@ -39,8 +41,21 @@ class Kernel extends ConsoleKernel
 
             return $scheduled;
         })->runInBackground()
-        ->withoutOverlapping()
-        ->evenInMaintenanceMode();
+            ->withoutOverlapping()
+            ->evenInMaintenanceMode();
+
+        $schedule->command("svaigi:importImages")->everyMinute()->when(function () {
+            $scheduled = Schedules::where(['running' => 0, 'type' => 'productImageImport', 'finished' => 0])->orWhere(function (Builder $q) {
+                $q->where('running', 1)
+                    ->where('updated_at', '>=', Carbon::now()->addMinutes(-5))
+                    ->where('type', 'productImageImport')
+                    ->where('finished', 0);
+            })->first();
+            return $scheduled;
+
+        })->runInBackground()
+            ->withoutOverlapping()
+            ->evenInMaintenanceMode();
 
         // $schedule->command('inspire')
         //          ->hourly();

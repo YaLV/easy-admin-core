@@ -43,6 +43,7 @@
     window.token = '{{ csrf_token() }}';
 </script>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('//code.jquery.com/ui/1.12.1/jquery-ui.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
 <script src="{{ asset('js/bootstrap-select.js') }}"></script>
 <script src="{{ asset('js/jquery.multi-select.js') }}"></script>

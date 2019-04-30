@@ -85,13 +85,13 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::post("/payment", "\App\Plugins\Orders\CartController@saveOrder")->name('payment.post.default');
 
 // Paysera
-	Route::get("/{lang}/payseramake", "\App\Plugins\Orders\CartController@payseraMake")->name('paysera.make');
-	Route::get("/payseramake", "\App\Plugins\Orders\CartController@payseraMake")->name('paysera.make.default');
+    Route::get("/{lang}/payseramake", "\App\Plugins\Orders\CartController@payseraMake")->name('paysera.make');
+    Route::get("/payseramake", "\App\Plugins\Orders\CartController@payseraMake")->name('paysera.make.default');
 
-	Route::post("/{lang}/payseravalidate", "\App\Plugins\Orders\CartController@payseraValidate")->name('paysera.validate');
-	Route::post("/payseravalidate", "\App\Plugins\Orders\CartController@payseraValidate")->name('paysera.validate.default');
+    Route::post("/{lang}/payseravalidate", "\App\Plugins\Orders\CartController@payseraValidate")->name('paysera.validate');
+    Route::post("/payseravalidate", "\App\Plugins\Orders\CartController@payseraValidate")->name('paysera.validate.default');
 
-	Route::get("/payserasuccess", "\App\Plugins\Orders\CartController@payseraSuccess")->name('paysera.success');
+    Route::get("/payserasuccess", "\App\Plugins\Orders\CartController@payseraSuccess")->name('paysera.success');
 
 // Checkout Thankyou
     Route::get("/{lang}/thankyou", "\App\Plugins\Orders\CartController@thankyou")->name('thankyou');

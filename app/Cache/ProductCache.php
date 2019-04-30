@@ -35,7 +35,11 @@ class ProductCache
 
     public function __construct($product)
     {
-        $this->discount = $product->findDiscount();
+        if(Auth::user()) {
+            $this->discount = Auth::user()->discount($product->id, $product->main_category);
+        } else {
+            $this->discount = 0;
+        }
         $this->setDefaultData($product);
         $this->setProductVariations($product);
         $this->setupCategories($product);
@@ -130,11 +134,11 @@ class ProductCache
         return $this->discount() ? true : false;
     }
 
-    private function discount()
+    public function discount()
     {
         $user = Auth::user() ?? session()->get('user') ?? User::find(99);
 
-        return $user->discount();
+        return $user->discount($this->id, $this->mainCategory);
     }
 
     public function prices($amount = 1)
@@ -162,6 +166,7 @@ class ProductCache
 
     public function getVariationPrice($vid)
     {
+
         if ($this->hasManyPrices()) {
             return $this->prices()[$vid] ?? [];
         }

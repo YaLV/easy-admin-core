@@ -275,3 +275,20 @@ function getCurrentSuppliers($catId)
 
     return [];
 }
+
+function discountTo($item) {
+    $texts = [
+        'all' => 'All Order',
+        'products' => 'Only Products',
+        'delivery' => 'Only Delivery'
+    ];
+
+    return $texts[$item];
+}
+
+function usesLeft($item) {
+    if(is_null($item)) {
+        return "∞";
+    }
+    return $item;
+}

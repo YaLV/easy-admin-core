@@ -37,9 +37,10 @@ class AdminController extends Controller implements ControllerInterface
      *
      * @return array
      */
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, $onlyData = false)
     {
-        $uploadPath = request('path');
+
+        $uploadPath = $request->get('path');
 
         $returnData = [];
         if ($request->hasFile($uploadPath)) {
@@ -48,7 +49,7 @@ class AdminController extends Controller implements ControllerInterface
                 $imageSizes = config("app.imageSize." . $uploadPath, null);
                 $fileSavePath = (config("app.uploadFile.$uploadPath") ?? 'temp');
                 if (!$imageSizes) {
-                    $filename = basename($uploadedFile->store("public/" . $fileSavePath."/original"));
+                    $filename = basename($uploadedFile->store("public/" . $fileSavePath . "/original"));
 
                     $returnData[] = $this->saveFileDB($filename, $fileSavePath);
 
@@ -67,8 +68,8 @@ class AdminController extends Controller implements ControllerInterface
                     $upImage->backup();
                     list($width, $height) = explode("x", $imageSize);
 
-                    if($origW!=$origH && $width && $height) {
-                        $upImage->resize(($origH>=$origW?$width:null), ($origW>=$origH?$height:null), function ($l) {
+                    if ($origW != $origH && $width && $height) {
+                        $upImage->resize(($origH >= $origW ? $width : null), ($origW >= $origH ? $height : null), function ($l) {
                             $l->aspectRatio();
                         });
                         $upImage->crop($width, $height);
@@ -84,17 +85,18 @@ class AdminController extends Controller implements ControllerInterface
                     $upImage->save(storage_path("app/public/$fileSavePath/$imageSize/$saveFileName"), 100);
                     $upImage->reset();
                 }
-                $returnData[] = $this->saveFileDB($saveFileName, $fileSavePath, current($imageSizes));
+                $returnData[] = $this->saveFileDB($saveFileName, $fileSavePath, current($imageSizes), $request->get('owner'), $onlyData);
             }
+
             return ["status" => true, 'message' => 'File Uploaded, please save form, to add file to current item', 'data' => $returnData];
-        } elseif($request->hasFile('importFile')) {
+        } elseif ($request->hasFile('importFile')) {
             $plugin = request()->get('plugin');
             $controller = request()->get('controller');
-            $method = request()->get('method')??'import';
+            $method = request()->get('method') ?? 'import';
             $uploadTargetClassName = "\\App\\Plugins\\$plugin\\$controller";
-            $uploadTargetClass = new $uploadTargetClassName??null;
+            $uploadTargetClass = new $uploadTargetClassName ?? null;
 
-            if($uploadTargetClass instanceOf $uploadTargetClassName && method_exists($uploadTargetClass, $method)) {
+            if ($uploadTargetClass instanceOf $uploadTargetClassName && method_exists($uploadTargetClass, $method)) {
                 return $uploadTargetClass->$method();
             }
 
@@ -108,15 +110,19 @@ class AdminController extends Controller implements ControllerInterface
      * @param      $path
      * @param null $size
      *
-     * @return View
+     * @return View|array
      */
-    private function saveFileDB($filename, $path, $size = null)
+    private function saveFileDB($filename, $path, $size = null, $owner = false, $onlyData = false)
     {
         $file = File::create([
             'main'     => false,
             'filePath' => $filename,
-            'owner'    => request('owner'),
+            'owner'    => $owner,
         ]);
+
+        if ($onlyData) {
+            return $file;
+        }
 
         return view('Admin::fields.imagePreview', ['image' => $file, "path" => $size, 'owner' => $path])->render();
     }
