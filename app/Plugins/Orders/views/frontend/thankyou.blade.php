@@ -50,7 +50,7 @@
                     $.get('{{ route('paysera.success') }}', function( data ) {
                         if(data) {
                             clearInterval(payseraInterval);
-                            $('sv-text-block p').html('{!! str_replace( array( "\n", "\r" ), array( "\\n", "\\r" ), _t("translations.orderCompleteThankYouText") ) !!}');
+                            $('.sv-text-block p').html('{!! str_replace( array( "\n", "\r" ), array( "\\n", "\\r" ), _t("translations.orderCompleteThankYouText") ) !!}');
                         }
                     });
                 }, 500);
