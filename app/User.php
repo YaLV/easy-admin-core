@@ -62,8 +62,11 @@ class User extends Authenticatable
      *
      * @return int
      */
-    public function discount($product, $category)
+    public function discount($product = false, $category = false)
     {
+
+        if(!$product || !$category) { return 0; }
+
         $pc = (new CacheController)->getPromotions();
 
         return current(max([$pc->getDiscount('product', $product), $pc->getDiscount('category', $category)]));

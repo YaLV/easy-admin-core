@@ -83,7 +83,8 @@ class AppServiceProvider extends ServiceProvider
         // Admin pages - send current Route Name
         View::composer('admin.*', function ($view) {
             $routeName = explode(".", Route::currentRouteName());
-            $view->with('currentRoute', $routeName[0]);
+            array_pop($routeName);
+            $view->with('currentRoute', implode(".", $routeName));
             $view->with('routeAction', $routeName[1]??"");
         });
     }

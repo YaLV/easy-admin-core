@@ -82,7 +82,7 @@ class ProductImport
 
         Schedules::find($schedule['id'])->update(['total_lines' => $csv->count()]);
 
-        $linereader = (new Statement())->offset(0);
+        $linereader = (new Statement())->offset($schedule['stopped_at']);
 
         $previousProduct = false;
         foreach ($linereader->process($csv) as $l => $importLine) {

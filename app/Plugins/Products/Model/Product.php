@@ -176,4 +176,13 @@ class Product extends BaseModel
     {
         return Auth::user()->discount($this->id, $this->main_category);
     }
+
+    public function getAmountAttribute() {
+        return "<input type='text' name='amount' class='form-control updateAmount small-width' />";
+    }
+
+    public function getInfoWindowAttribute() {
+        return "<input type='text' name='amount' class='form-control updateInfo small-width' />";
+    }
+
 }

@@ -178,7 +178,7 @@ class ProductController extends AdminController
     public function getEditName($id)
     {
         $r = explode(".", Route::currentRouteName());
-        if (($r[1] ?? "") == 'search') {
+        if ((array_pop($r) ?? "") == 'search') {
             return request()->route('search');
         }
 
@@ -302,9 +302,9 @@ class ProductController extends AdminController
             $result = ['status' => true, 'message' => 'Images uploaded, task scheduled'];
 
             Schedules::create([
-                'filename' => 'images',
-                'type'     => 'productImageImport',
-                'total_lines' => count(Storage::files('imports/product_images'))
+                'filename'    => 'images',
+                'type'        => 'productImageImport',
+                'total_lines' => count(Storage::files('imports/product_images')),
             ]);
 
         } else {
@@ -314,6 +314,57 @@ class ProductController extends AdminController
 
         return $result;
 
+    }
+
+
+    public function storage($search = false)
+    {
+
+        $cr = explode(".", Route::currentRouteName());
+
+        if (!$search && ($cr[2] ?? false) == 'search') {
+            return redirect()->route(implode(".", [$cr[0], $cr[1], "list"]));
+        }
+
+        return view('admin.elements.table',
+            [
+                'tableHeaders' => $this->storageList(),
+                'header'       => 'Storage',
+                'list'         => $this->getProducts(),
+                'idField'      => 'name',
+                'destroyName'  => 'Product',
+                'operations'   => view("Products::partials.extraButtonsStorage")->render(),
+                'js'           => [
+                    'js/productIOStorage.js',
+                ],
+            ]);
+    }
+
+    public function storeStorage()
+    {
+        $product = '';
+
+        request()->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            /** @var Product $product */
+            $product = Product::find(request()->get('amount'));
+            if(request('info')) {
+                $product->update(['info' => request('info')]);
+            } elseif(request('amount')>=0) {
+                $product->increment('storage_amount', request()->get('amount'));
+            } else {
+                $product->update(['storage_amount' => null]);
+            }
+            DB::commit();
+        } catch (\PDOException $e) {
+            DB::rollBack();
+        }
+
+        return ['status' => 'true', 'message' => 'Product Updated', 'data' => ['info' => $product->info, 'storage_amount' => $product->storage_amount]];
     }
 
 }

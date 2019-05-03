@@ -13,7 +13,8 @@
                     </script>
                     <li class="nav-item">
                         <div id="custom-search" class="top-search-bar">
-                            <input class="form-control" type="text" placeholder="Search.." value="{{ request()->route('search') }}">
+                            <input class="form-control" type="text" placeholder="Search.."
+                                   value="{{ request()->route('search') }}">
                         </div>
                     </li>
             @endif

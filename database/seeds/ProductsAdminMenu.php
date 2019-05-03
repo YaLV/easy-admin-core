@@ -258,5 +258,54 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
+
+
+
+
+
+        /* ---------------------- Storage ----------------------*/
+        $mainCat = \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => "storage",
+                'routeName' => "$main.storage.list",
+            ],
+            [
+                'icon'        => 'fas fa-list',
+                'displayName' => 'Storage',
+                'action'      => '\App\Plugins\Products\ProductController@storage',
+                'inMenu'      => '1',
+                'sequence'    => 99,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'GET',
+            ]);
+
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => "search/{search}",
+                'routeName' => "$main.storage.search",
+            ],
+            [
+                'icon'        => 'fas fa-glass',
+                'displayName' => 'Search',
+                'action'      => '\App\Plugins\Products\ProductController@storage',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'GET',
+            ]);
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => "store",
+                'routeName' => "$main.storage.store",
+            ],
+            [
+                'icon'        => 'fas fa-plus',
+                'displayName' => 'Store',
+                'action'      => '\App\Plugins\Products\ProductController@storeStorage',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
     }
 }

@@ -20,6 +20,19 @@ use App\Schedules;
  */
 trait Products
 {
+
+    public function storageList()
+    {
+        return [
+            ['field' => 'sku', 'label' => 'Product Code'],
+            ['field' => 'name', 'label' => 'Product Name', 'translate' => 'product.name', 'key' => 'id'],
+            ['field' => 'info_window', 'label' => 'Info'],
+            ['field' => 'storage_amount', 'label' => 'Current Amount'],
+            ['field' => 'amount', 'label' => 'Add Amount'],
+        ];
+    }
+
+
     /**
      * @return array
      */
