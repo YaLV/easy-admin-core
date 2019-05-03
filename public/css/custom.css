@@ -160,3 +160,11 @@ ol#created_buttons_list { margin: 10px 0 10px 0;}
 .money:after {
     content: "€";
 }
+
+.small-width {
+    width: 50px;
+}
+
+.updateInfo {
+    width:300px;
+}
