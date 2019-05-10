@@ -20,7 +20,7 @@
 
                     <div class="sv-product-card-slider">
                         <div class="owl-carousel">
-                            @foreach($supplier->supplier->products()->pluck('id')->toArray() as $itemId)
+                            @foreach($supplier->supplier->products()->pluck('storage_amount','id')->toArray() as $itemId => $itemAmount)
                                 @php
                                     $item = $cache->getProduct($itemId);
                                 @endphp
