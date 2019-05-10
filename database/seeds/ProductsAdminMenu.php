@@ -281,7 +281,7 @@ class ProductsAdminMenu extends Seeder
 
         \App\Model\Admin\Menu::updateOrCreate(
             [
-                'slug'      => "search/{search}",
+                'slug'      => "search/{search?}",
                 'routeName' => "$main.storage.search",
             ],
             [
