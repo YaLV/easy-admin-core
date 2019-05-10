@@ -348,8 +348,6 @@ class ProductController extends AdminController
             'product_id' => 'required|exists:products,id',
         ]);
 
-        dd(request()->has('amount'));
-
         try {
             DB::beginTransaction();
             /** @var Product $product */
