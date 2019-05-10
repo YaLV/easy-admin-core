@@ -69,6 +69,10 @@ class ProductCache
         $this->variations = $prices;
     }
 
+    public function lowestAmount() {
+        return min( array_column($this->variations, 'amount'));
+    }
+
     private function setDefaultData($product)
     {
 
@@ -157,7 +161,10 @@ class ProductCache
                 'amountUnit'    => ($variation->amount<1 && ($this->units['fraction']??false)) ? $this->units['fraction']['unit'] : $this->units['unit'],
             ];
         }
+
+
         if ($this->hasManyPrices()) {
+//            uasort(price, function($a, $b) { return $a>$b})
             return $price;
         } else {
             return current($price);
@@ -271,5 +278,9 @@ class ProductCache
         }
 
         return $category->limit(10)->pluck('products.id');
+    }
+
+    public function isAvailable($variation, $amount) {
+        return !is_null($amount)?$this->variations[$variation]->amount<=$amount:true;
     }
 }

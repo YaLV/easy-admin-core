@@ -1,3 +1,6 @@
+@php
+/** @var \App\Cache\ProductCache $item */
+@endphp
 <div class="sv-product-card {{ $item->isSale() }}">
     <form method="post" action="{{ r("cartAdd") }}">
         {{ @csrf_field() }}
@@ -24,7 +27,7 @@
             @if($item->hasManyPrices())
                 <select name="variation_id" class="selectpicker">
                     @foreach($item->prices() as $priceID => $price)
-                        <option data-wrap="true"
+                        <option data-wrap="true" {{ $item->isAvailable($priceID, $itemAmount)?"":"disabled" }}
                                 value="{{ $priceID }}" {{$loop->first?"selected":""}} {{ $item->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
                     @endforeach
                 </select>

@@ -146,10 +146,10 @@ class FrontController extends Controller
 
         }
 
-        $products = $products->paginate(20)
-            ->pluck('id')->toArray();
+        $products = $products->where(function($q) { $q->where('storage_amount', '>', 0)->orWhereNull('storage_amount'); })->paginate(20)
+            ->pluck('storage_amount', 'id')->toArray();
 
-        $products = (object)array_unique($products);
+//        $products = (object)array_unique($products);
 
         $suppliers = Supplier::all()->pluck('id');
 
@@ -173,8 +173,9 @@ class FrontController extends Controller
         $suppliers = Supplier::all()->pluck('id');
         $category = Category::findOrFail($product->getData('mainCategory'));
         $categoryPath = $this->slugPath;
+        $productAmount = Product::findOrFail($productId)->storage_amount;
 
-        return View("Products::frontend.product", compact(['product', 'suppliers', 'categoryPath', 'category']));
+        return View("Products::frontend.product", compact(['product', 'suppliers', 'categoryPath', 'category', 'productAmount']));
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\DiscountCodes\Model\DiscountCode;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
+use App\Plugins\Products\Model\Product;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -91,6 +92,12 @@ class CartController extends Controller
         }
         if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
             $amount = request()->get('amount');
+
+            if($item->products->storage_amount<($amount*$item->variation->amount)) {
+                return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
+            }
+
+
             $origSize = $item->total_amount / $item->amount;
             if (request()->get('line')) {
                 $item->update(['amount' => $amount]);
@@ -99,11 +106,20 @@ class CartController extends Controller
             }
             $item->update(['total_amount' => $origSize * $amount, 'real_amount' => $origSize * $amount]);
         } else {
+            $amount = request()->get('amount');
+
             /** @var \App\Cache\ProductCache $product */
             $product = $this->cache()->getProduct(request('product_id'));
             $variation = $product->getVariationPrice(request('variation_id'));
 
-            $variationData =
+            if(!$item) {
+                $productAmount = Product::find($product->id)->storage_amount;
+                if($productAmount<($amount*$variation->size)) {
+                    return redirect()->back()->with(['message' => 'Not Enough Item']);
+                }
+            } elseif($item->products->storage_amount<($amount*$variation->size)) {
+                return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
+            }
 
             $itemData = [
                 'supplier_id'    => $product->supplier_id,
@@ -122,6 +138,13 @@ class CartController extends Controller
                 'real_amount'    => $variation->amountinpackage,
                 'amount_unit'    => $variation->amountUnit,
             ];
+
+            if($item) {
+                if ($amount != $item->amount) {
+                    $itemData['amount'] = $amount;
+                }
+            }
+
             $cartItem = $cart->items()->updateOrCreate($lineData, $itemData);
         }
 
@@ -324,6 +347,13 @@ class CartController extends Controller
             'address'      => $user->address,
             'postcode'     => $user->postal_code,
         ]);
+
+        foreach($cart->items()->get() as $cartItem) {
+            $cartItem->products()->increment('storage_amount', -($cartItem->amount*$cartItem->variation_size));
+            if($cartItem->products->storage_amount<0) {
+                $cartItem->products()->update(['storage_amount' => 0]);
+            }
+        }
 
         return redirect(r('thankyou'));
     }

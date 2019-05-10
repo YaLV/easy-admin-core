@@ -43,6 +43,8 @@ class Product extends BaseModel
         'cost',
         'mark_up',
         'sequence',
+        'storage_amount',
+        'info'
     ];
     public $metaClass = __NAMESPACE__ . '\ProductMeta';
     public $imageTypes;
@@ -178,11 +180,15 @@ class Product extends BaseModel
     }
 
     public function getAmountAttribute() {
-        return "<input type='text' name='amount' class='form-control updateAmount small-width' />";
+        return "<input type='text' name='amount' class='form-control small-width ajaxUpdate' style='float:left;' /> <a href='".route('products.storage.store', [$this->id])."' class='btn btn-xs hidden ajaxUpdate' style='display:block;float:left;'><i class='fas fa-check'></i></a>";
     }
 
     public function getInfoWindowAttribute() {
-        return "<input type='text' name='amount' class='form-control updateInfo small-width' />";
+        return "<input type='text' name='info' class='form-control small-width ajaxUpdate updateInfo' style='float:left;' value='".$this->info."' /> <a href='".route('products.storage.store', [$this->id])."' class='btn btn-xs hidden ajaxUpdate' style='display:block;float:left;'><i class='fas fa-check'></i></a>";
+    }
+
+    public function getAvailableAttribute() {
+        return "<input type='text' readonly class='form-control small-width currentAmount' style='float:left;border:0px;background:transparent;padding-left:0px;padding-right:0px;' value='".$this->storage_amount."'> <input type='hidden' name='reset' value='1' /> <a href='".route('products.storage.store', [$this->id])."' class='btn btn-xs hidden ajaxUpdate' style='display:block;float:left;'><i class='fas fa-times'></i></a>";
     }
 
 }
