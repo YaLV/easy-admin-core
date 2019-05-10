@@ -1,15 +1,14 @@
-$(document).ready(function() {
+$(document).ready(function () {
     bindRemove();
     bindUpdate();
 });
 
 
-
 function bindRemove() {
-    $('.discard').unbind().click(function(e) {
+    $('.discard').unbind().click(function (e) {
         e.preventDefault();
-        $.post($(this).attr('href'), '', function(response) {
-            if(response.status===true) {
+        $.post($(this).attr('href'), '', function (response) {
+            if (response.status === true) {
                 redrawCart(response);
                 bindRemove();
                 bindUpdate();
@@ -20,13 +19,15 @@ function bindRemove() {
 
 
 function bindUpdate() {
-    $('.updateCartProduct').unbind().click(function(e) {
+    $('.updateCartProduct').unbind().click(function (e) {
+        el = $(this);
         e.preventDefault();
-        $.post($(this).attr('href'), $(this).closest('form').serialize(), function(response) {
-            if(response.status===true) {
-                redrawCart(response);
-                bindRemove();
-                bindUpdate();
+        $.post($(this).attr('href'), $(this).closest('form').serialize(), function (response) {
+            redrawCart(response);
+            bindRemove();
+            bindUpdate();
+            if (!response.status) {
+                alert(response.message);
             }
         });
     });
@@ -39,8 +40,8 @@ function redrawCart(response) {
     $(response.contents.items).insertAfter('.header');
     totals = $('.sv-cart>.sticky .totals');
     cartTotals = response.contents.cartTotals;
-    for(x in cartTotals) {
-        totals.find("."+x).html(cartTotals[x]+' €');
+    for (x in cartTotals) {
+        totals.find("." + x).html(cartTotals[x] + ' €');
     }
     $('.selectpicker').selectric();
     jQuery('#spinner, .spinner').spinner({

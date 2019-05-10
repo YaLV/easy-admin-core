@@ -4,12 +4,11 @@
     $random_id = str_random(20);
 @endphp
 
-
 @if($product->hasManyPrices())
     @push("variations-$random_id")
         <select name="variation_id" class="selectpicker">
             @foreach($product->prices() as $priceID => $price)
-                <option data-wrap="true"
+                <option data-wrap="true" {{ $product->isAvailable($priceID, $item->products->storage_amount)?"":"disabled" }}
                         value="{{ $priceID }}" {{$item->variation_id==$price->id?"selected":""}} {{ $product->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
             @endforeach
         </select>

@@ -27,7 +27,7 @@ trait Products
             ['field' => 'sku', 'label' => 'Product Code'],
             ['field' => 'name', 'label' => 'Product Name', 'translate' => 'product.name', 'key' => 'id'],
             ['field' => 'info_window', 'label' => 'Info'],
-            ['field' => 'storage_amount', 'label' => 'Current Amount'],
+            ['field' => 'available', 'label' => 'Current Amount'],
             ['field' => 'amount', 'label' => 'Add Amount'],
         ];
     }

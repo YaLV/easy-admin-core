@@ -351,20 +351,24 @@ class ProductController extends AdminController
         try {
             DB::beginTransaction();
             /** @var Product $product */
-            $product = Product::find(request()->get('amount'));
+            $product = Product::where('id', request()->get('product_id'));
             if(request('info')) {
                 $product->update(['info' => request('info')]);
-            } elseif(request('amount')>=0) {
-                $product->increment('storage_amount', request()->get('amount'));
-            } else {
+            } elseif(request('amount')) {
+                if(!is_null($product->firstOrFail()->storage_amount)) {
+                    $product->increment('storage_amount', request()->get('amount'));
+                } else {
+                    $product->update(['storage_amount' => request()->get('amount')]);
+                }
+            } elseif(request('reset')) {
                 $product->update(['storage_amount' => null]);
             }
             DB::commit();
         } catch (\PDOException $e) {
             DB::rollBack();
         }
-
-        return ['status' => 'true', 'message' => 'Product Updated', 'data' => ['info' => $product->info, 'storage_amount' => $product->storage_amount]];
+        $product = $product->first();
+        return ['status' => true, 'message' => 'Product Updated', 'data' => ['product_id' => $product->id,'info' => $product->info, 'storage_amount' => $product->storage_amount]];
     }
 
 }

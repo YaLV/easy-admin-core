@@ -52,7 +52,7 @@
                     @if($product->hasManyPrices())
                         <select name="variation_id" class="selectpicker" title="variation">
                             @foreach($product->prices() as $priceID => $price)
-                                <option value="{{ $priceID }}" {{$loop->first?"selected":""}} {{ $product->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
+                                <option value="{{ $priceID }}" {{ $product->isAvailable($priceID, $productAmount)?"":"disabled" }} {{$loop->first?"selected":""}} {{ $product->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
                             @endforeach
                         </select>
                     @else
