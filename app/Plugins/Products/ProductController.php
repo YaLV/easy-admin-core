@@ -348,19 +348,21 @@ class ProductController extends AdminController
             'product_id' => 'required|exists:products,id',
         ]);
 
+        dd(request()->has('amount'));
+
         try {
             DB::beginTransaction();
             /** @var Product $product */
             $product = Product::where('id', request()->get('product_id'));
-            if(request('info')) {
+            if(request()->has('info')) {
                 $product->update(['info' => request('info')]);
-            } elseif(request('amount')) {
+            } elseif(request()->has('amount')) {
                 if(!is_null($product->firstOrFail()->storage_amount)) {
                     $product->increment('storage_amount', request()->get('amount'));
                 } else {
                     $product->update(['storage_amount' => request()->get('amount')]);
                 }
-            } elseif(request('reset')) {
+            } elseif(request()->has('reset')) {
                 $product->update(['storage_amount' => null]);
             }
             DB::commit();
