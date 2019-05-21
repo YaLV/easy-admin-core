@@ -61,7 +61,7 @@ class SupplierCache
     }
 
     public function getCoords() {
-        return explode(",", $this->coords);
+        return array_pad(explode(",", $this->coords), 2, null);
     }
 
 
