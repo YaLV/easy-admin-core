@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="intro">
                     <a href="{{ r('supplierOpen', [getSupplierSlugs(language()), __('supplier.slug.'.$supplier->supplier_id)]) }}" class="farmer">
-                        <img src="{{ $supplier->supplier->getImageByKey('supplier_image', '260x260') }}" />
+                        <img src="{{ $supplier->supplier->getImageByKey('supplier_image', 'main') }}" />
                         <h3>{{ __("supplier.name.{$supplier->supplier_id}") }}</h3>
                         <h4>{{ __("supplier.location.{$supplier->supplier_id}") }}</h4>
                     </a>
