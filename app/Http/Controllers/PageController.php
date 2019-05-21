@@ -11,6 +11,7 @@ class PageController extends Controller
 
     public function show($pageSlug, $level2Slug = false, $level3Slug = false) {
 
+        $title = false;
         if(!pageTable()) {
             abort(404, "No Page Table!");
         }
@@ -28,7 +29,11 @@ class PageController extends Controller
             return $className::childView($level2Slug, $page);
         }
 
-        return view('frontend.pages.page', ['page' => $page, 'components' => $page->components, 'pageTitle' => _t('pages.name.'.$page->id)]);
+        if(!$page->pageData->homepage) {
+            $title = _t('pages.name.'.$page->id);
+        }
+
+        return view('frontend.pages.page', ['page' => $page, 'components' => $page->components, 'pageTitle' => $title]);
 
     }
 }
