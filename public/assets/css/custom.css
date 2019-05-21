@@ -39,3 +39,9 @@ select {
     padding-right: 25px;
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .sv-product-single-wrapper .sv-products {
+    width: 100%;
+  }
+}
