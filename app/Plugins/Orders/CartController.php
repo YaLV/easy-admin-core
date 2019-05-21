@@ -102,7 +102,7 @@ class CartController extends Controller
             if (request()->get('line')) {
                 $item->update(['amount' => $amount]);
             } else {
-                $item->increment('amount', $amount);
+                $item->increment('amount', ($amount??1));
             }
             $item->update(['total_amount' => $origSize * $amount, 'real_amount' => $origSize * $amount]);
         } else {
@@ -114,10 +114,10 @@ class CartController extends Controller
 
             if(!$item) {
                 $productAmount = Product::find($product->id)->storage_amount;
-                if($productAmount<($amount*$variation->size)) {
+                if($productAmount && $productAmount<($amount*$variation->size)) {
                     return redirect()->back()->with(['message' => 'Not Enough Item']);
                 }
-            } elseif($item->products->storage_amount<($amount*$variation->size)) {
+            } elseif($items->products->storage_amount && $item->products->storage_amount<($amount*$variation->size)) {
                 return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
             }
 
@@ -310,12 +310,13 @@ class CartController extends Controller
 
         $user = $user->updateOrCreate(['id' => $user->id ?? null], request($user->getFillable()));
 
+        /** @var OrderHeader $cart */
+        $cart = $this->getCart();
         if (!Auth::user()) {
-            /** @var OrderHeader $cart */
-            $cart = $this->getCart();
             Auth::login($user);
             $cart->update(['user_id' => $user->id]);
         }
+        $cart->update(['comments' => request('comments')]);
 
         return redirect(r('payment'));
 
