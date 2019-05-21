@@ -23,3 +23,19 @@ select {
 .add-to-cart {
   border: none !important;
 }
+
+.sv-farmer-about {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.sv-farmer-about p {
+  padding: 0;
+}
+
+@media only screen and (max-width: 767px) {
+  .sv-farmer-about {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
