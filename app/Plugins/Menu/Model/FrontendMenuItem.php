@@ -2,6 +2,7 @@
 
 namespace App\Plugins\Menu\Model;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class FrontendMenuItem extends Model
@@ -15,5 +16,14 @@ class FrontendMenuItem extends Model
 
     public function parent() {
         return $this->belongsTo(FrontendMenuItem::class);
+    }
+
+    public static function boot()
+    {
+        static::addGlobalScope('order', function(Builder $builder) {
+            $builder->orderBy('sequence', 'asc');
+        });
+
+        parent::boot();
     }
 }
