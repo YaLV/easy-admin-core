@@ -6,6 +6,7 @@ namespace App\Plugins\Admin;
 use App\Http\Controllers\Controller;
 use App\Plugins\Admin\Model\File;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Intervention\Image\Facades\Image;
 
@@ -51,7 +52,7 @@ class AdminController extends Controller implements ControllerInterface
                 if (!$imageSizes) {
                     $filename = basename($uploadedFile->store("public/" . $fileSavePath . "/original"));
 
-                    $returnData[] = $this->saveFileDB($filename, $fileSavePath);
+                    $returnData[] = $this->saveFileDB($filename, $fileSavePath, 'original', $request->get('owner'));
 
                     continue;
                 }
@@ -240,5 +241,24 @@ class AdminController extends Controller implements ControllerInterface
         }
 
         return $menuItems;
+    }
+
+    public function downloadFile($dir, $file)
+    {
+        /** @var \Illuminate\Support\Facades\File $fileManager */
+        $fileManager = new \Illuminate\Support\Facades\File();
+        $response = new Response();
+
+        if (\Illuminate\Support\Facades\File::isDirectory(storage_path($dir)) && \Illuminate\Support\Facades\File::exists(storage_path("$dir/$file"))) {
+            $response = new Response();
+            $response->header(    'Content-Type', \Illuminate\Support\Facades\File::mimeType(storage_path("$dir/$file")));
+            $response->header('Content-Disposition', "attachment; filename='$file'");
+            $response->header('Content-Length', \Illuminate\Support\Facades\File::size(storage_path("$dir/$file")));
+            $response->setContent(\Illuminate\Support\Facades\File::get(storage_path("$dir/$file")));
+        } else {
+            abort(404);
+        }
+
+        return $response;
     }
 }
