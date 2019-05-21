@@ -93,7 +93,7 @@ class CartController extends Controller
         if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
             $amount = request()->get('amount');
 
-            if($item->products->storage_amount<($amount*$item->variation->amount)) {
+            if(!is_null($items->products->storage_amount) && $item->products->storage_amount<($amount*$item->variation->amount)) {
                 return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
             }
 
@@ -114,10 +114,10 @@ class CartController extends Controller
 
             if(!$item) {
                 $productAmount = Product::find($product->id)->storage_amount;
-                if($productAmount && $productAmount<($amount*$variation->size)) {
+                if(!is_null($productAmount) && $productAmount<($amount*$variation->size)) {
                     return redirect()->back()->with(['message' => 'Not Enough Item']);
                 }
-            } elseif($items->products->storage_amount && $item->products->storage_amount<($amount*$variation->size)) {
+            } elseif(!is_null($items->products->storage_amount) && $item->products->storage_amount<($amount*$variation->size)) {
                 return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
             }
 
