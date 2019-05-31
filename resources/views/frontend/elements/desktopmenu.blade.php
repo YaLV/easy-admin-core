@@ -33,7 +33,7 @@
                         </li>
                     @endif
                     <li class="history">
-                        <a href="#"><span>{!! _t('translations.orderHistory') !!}</span></a>
+                        <a href="{{ r('orderhistory') }}"><span>{!! _t('translations.orderHistory') !!}</span></a>
                     </li>
                     <li class="docs">
                         <a href="{{ r('profile') }}"><span>{!! _t('translations.profile') !!}</span></a>

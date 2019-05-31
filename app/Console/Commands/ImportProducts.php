@@ -55,12 +55,18 @@ class ImportProducts extends Command
         } else {
             $this->info('Searching job with id: '.$this->getScheduleId());
             $schedule = Schedules::find($this->getScheduleId());
+            if($schedule->type!='orderExport') {
+                $this->error('Schedule is not Product Import');
+            }
         }
 
         if(!$schedule) {
             $this->error("Schedule not found");
             return;
+        } else {
+            $schedule->update(['running' => 1]);
         }
+
         $result = ProductImport::runImport($schedule->toArray());
 
         $msgType = "error";

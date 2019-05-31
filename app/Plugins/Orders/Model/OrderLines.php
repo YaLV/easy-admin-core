@@ -4,6 +4,7 @@ namespace App\Plugins\Orders\Model;
 
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Products\Model\ProductVariation;
+use App\Plugins\Suppliers\Model\Supplier;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,5 +30,13 @@ class OrderLines extends Model
 
     public function variation() {
         return $this->belongsTo(ProductVariation::class);
+    }
+
+    public function supplier() {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function order() {
+        return $this->belongsTo(OrderHeader::class, 'order_header_id', 'id');
     }
 }

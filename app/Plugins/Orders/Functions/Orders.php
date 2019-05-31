@@ -37,21 +37,19 @@ trait Orders
 
 
     /**
+     * Get Orders based on filters and search
+     *
      * @param      $search
      * @param bool $trashed
      *
      * @return mixed
      */
-    public function getFilteredResult($search, $trashed = false)
+    public function getFilteredResult($search, $trashed = false, $fullResults = false)
     {
         /** @var OrderHeader $orders */
         $orders = new OrderHeader;
 
-        if ($trashed) {
-            $orders = $orders->trashed();
-        }
-
-        $orders = $orders->where('state', '!=', 'draft');
+        $orders = $orders->where('state', '!=', 'draft')->filters();
 
         if ($search) {
             $orders = $orders->whereHas('buyer', function (Builder $q) use ($search) {
@@ -59,6 +57,10 @@ trait Orders
                     ->orWhere('last_name', 'like', "%$search%")
                     ->orWhere('email', 'like', "%$search%");
             })->orWhere('invoice', 'like', "%$search%");
+        }
+
+        if($fullResults) {
+            return $orders->get();
         }
 
         return $orders->paginate(20);
@@ -76,7 +78,7 @@ trait Orders
             return request()->route('search');
         }
 
-        return OrderHeader::find($id)->invoice;
+        return OrderHeader::find($id)->invoice??"";
     }
 
     public function getViewFields()
@@ -119,6 +121,7 @@ trait Orders
 
         return [
             ['type' => 'select', 'name' => 'market_day', 'label' => 'Market Day', 'options' => $market_days],
+            ['type' => 'select', 'name' => 'trashed', 'label' => 'State', 'options' => ['Active', 'Deleted']]
         ];
     }
 }

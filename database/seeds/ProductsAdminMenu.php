@@ -130,7 +130,7 @@ class ProductsAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::updateOrCreate(
+/*        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "import",
                 'routeName' => "$main.import",
@@ -143,7 +143,7 @@ class ProductsAdminMenu extends Seeder
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
-            ]);
+            ]);*/
 
         \App\Model\Admin\Menu::updateOrCreate(
             [

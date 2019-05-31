@@ -21,8 +21,8 @@ class CreateOrderLinesTable extends Migration
             $table->integer('product_id');
             $table->string('product_name');
             $table->integer('vat_id');
-            $table->decimal('full_vat', 8, 2);
-            $table->decimal('full_price', 8, 2);
+            /*$table->decimal('full_vat', 8, 2);
+            $table->decimal('full_price', 8, 2);*/
             $table->decimal('vat', 8, 2);
             $table->decimal('price', 8, 2);
             $table->decimal('vat_amount', 8, 2);

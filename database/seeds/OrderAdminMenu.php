@@ -47,7 +47,7 @@ class OrderAdminMenu extends Seeder
 
         \App\Model\Admin\Menu::updateOrCreate(
             [
-                'slug'      => 'search:{search}',
+                'slug'      => 'search/{search?}',
                 'routeName' => "$main.search",
             ],
             [
@@ -62,7 +62,7 @@ class OrderAdminMenu extends Seeder
 
         \App\Model\Admin\Menu::updateOrCreate(
             [
-                'slug'      => 'destroy',
+                'slug'      => 'destroy/{id}',
                 'routeName' => "$main.destroy",
             ],
             [
@@ -131,6 +131,64 @@ class OrderAdminMenu extends Seeder
                 'method'      => 'GET',
             ]);
 
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'setFilters',
+                'routeName' => "$main.setfilters",
+            ],
+            [
+                'icon'        => 'fas fa-',
+                'displayName' => 'Set Filters',
+                'action'      => '\App\Plugins\Orders\OrderController@setFilters',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'clearFilters',
+                'routeName' => "$main.clearfilters",
+            ],
+            [
+                'icon'        => 'fas fa-',
+                'displayName' => 'Clear Filters',
+                'action'      => '\App\Plugins\Orders\OrderController@clearFilters',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'export',
+                'routeName' => "$main.exportOrders",
+            ],
+            [
+                'icon'        => 'fas fa-',
+                'displayName' => 'Export Orders',
+                'action'      => '\App\Plugins\Orders\OrderController@exportOrders',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'send',
+                'routeName' => "$main.sendEmails",
+            ],
+            [
+                'icon'        => 'fas fa-envelope',
+                'displayName' => 'Send Emails to suppliers',
+                'action'      => '\App\Plugins\Orders\OrderController@doSendEmails',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
         /*
         $main = 'orderHistory';
         $mainCat = \App\Model\Admin\Menu::updateOrCreate(

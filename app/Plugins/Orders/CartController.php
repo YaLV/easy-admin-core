@@ -12,6 +12,7 @@ use App\Plugins\Products\Model\Product;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Antcern\Paysera\PayseraManager;
 use App\Paysera;
@@ -51,12 +52,29 @@ class CartController extends Controller
         return redirect(r('cart'));
     }
 
+    public function recreateCart($orderId)
+    {
+        if ($order = Auth::user()->orders($orderId)->first()) {
+            foreach ($order->items()->get() as $item) {
+
+                $req = new Request();
+                $req->setMethod('POST');
+                $req->request->add(['product_id' => $item->product_id, 'variation_id' => $item->variation_id, 'amount' => $item->amount]);
+
+                $this->changeCartItem($req);
+            }
+
+            return redirect(r('cart'));
+        }
+        abort(404);
+    }
+
     /**
      * @return array|\Illuminate\Http\RedirectResponse
      */
-    public function changeCartItem()
+    public function changeCartItem(Request $request)
     {
-        request()->validate([
+        $request->validate([
             'product_id'   => 'required|numeric',
             'variation_id' => 'required|numeric',
             'amount'       => 'numeric',
@@ -70,8 +88,8 @@ class CartController extends Controller
         /** @var OrderHeader $cart */
         $cart = $this->getCart();
 
-        if ($cartItemId = request()->get('line')) {
-            $item = $cart->items()->where(['id' => $cartItemId, 'product_id' => request()->get('product_id')])->first();
+        if ($cartItemId = $request->get('line')) {
+            $item = $cart->items()->where(['id' => $cartItemId, 'product_id' => $request->get('product_id')])->first();
             if (!$item) abort(404);
             $lineData = [
                 'id' => $item->id,
@@ -80,8 +98,8 @@ class CartController extends Controller
             $item = $cart->items()
                 ->where(
                     [
-                        'product_id'   => request()->get('product_id'),
-                        'variation_id' => request()->get('variation_id'),
+                        'product_id'   => $request->get('product_id'),
+                        'variation_id' => $request->get('variation_id'),
                     ]
                 )->first();
             if ($item) {
@@ -90,34 +108,34 @@ class CartController extends Controller
                 ];
             }
         }
-        if (($item ?? false) && $item->variation_id == request()->get('variation_id')) {
-            $amount = request()->get('amount');
+        if (($item ?? false) && $item->variation_id == $request->get('variation_id')) {
+            $amount = $request->get('amount');
 
-            if(!is_null($item->products->storage_amount) && $item->products->storage_amount<($amount*$item->variation->amount)) {
+            if (!is_null($item->products->storage_amount) && $item->products->storage_amount < ($amount * $item->variation->amount)) {
                 return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
             }
 
 
             $origSize = $item->total_amount / $item->amount;
-            if (request()->get('line')) {
+            if ($request->get('line')) {
                 $item->update(['amount' => $amount]);
             } else {
-                $item->increment('amount', ($amount??1));
+                $item->increment('amount', ($amount ?? 1));
             }
             $item->update(['total_amount' => $origSize * $amount, 'real_amount' => $origSize * $amount]);
         } else {
-            $amount = request()->get('amount');
+            $amount = $request->get('amount');
 
             /** @var \App\Cache\ProductCache $product */
-            $product = $this->cache()->getProduct(request('product_id'));
-            $variation = $product->getVariationPrice(request('variation_id'));
+            $product = $this->cache()->getProduct($request->get('product_id'));
+            $variation = $product->getVariationPrice($request->get('variation_id'));
 
-            if(!$item) {
+            if (!$item) {
                 $productAmount = Product::find($product->id)->storage_amount;
-                if(!is_null($productAmount) && $productAmount<($amount*$variation->size)) {
+                if (!is_null($productAmount) && $productAmount < ($amount * $variation->size)) {
                     return redirect()->back()->with(['message' => 'Not Enough Item']);
                 }
-            } elseif(!is_null($items->products->storage_amount) && $item->products->storage_amount<($amount*$variation->size)) {
+            } elseif (!is_null($items->products->storage_amount) && $item->products->storage_amount < ($amount * $variation->size)) {
                 return ['status' => false, 'message' => 'Not enough Item', 'contents' => $this->getCartContents($cart, true)];
             }
 
@@ -133,13 +151,14 @@ class CartController extends Controller
                 'display_name'   => $variation->display_name,
                 'variation_size' => $variation->size,
                 'discount'       => $product->discount(),
-                'variation_id'   => request('variation_id'),
+                'variation_id'   => $request->get('variation_id'),
                 'total_amount'   => $variation->amountinpackage,
                 'real_amount'    => $variation->amountinpackage,
                 'amount_unit'    => $variation->amountUnit,
+                'amount'         => $request->get('amount') ?? 1,
             ];
 
-            if($item) {
+            if ($item) {
                 if ($amount != $item->amount) {
                     $itemData['amount'] = $amount;
                 }
@@ -152,7 +171,7 @@ class CartController extends Controller
 
         $cart = $this->getCart();
 
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return ['status' => true, 'message' => 'Item Updated', 'contents' => $this->getCartContents($cart, true)];
         } else {
             return redirect(r('cart'));
@@ -171,10 +190,10 @@ class CartController extends Controller
 
                 return true;
             } else {
-/*                if ($cart->discount_target == 'all' || $cart->discount_target == 'delivery') {
-                    $deliveryPrice = number_format(round($delivery->price / (1 + ($cart->discount_amount / 100)), 2), 2);
-                } else {*/
-                    $deliveryPrice = $delivery->price;
+                /*                if ($cart->discount_target == 'all' || $cart->discount_target == 'delivery') {
+                                    $deliveryPrice = number_format(round($delivery->price / (1 + ($cart->discount_amount / 100)), 2), 2);
+                                } else {*/
+                $deliveryPrice = $delivery->price;
 //                }
                 $cart->update(['delivery_amount' => $deliveryPrice]);
 
@@ -349,9 +368,9 @@ class CartController extends Controller
             'postcode'     => $user->postal_code,
         ]);
 
-        foreach($cart->items()->get() as $cartItem) {
-            $cartItem->products()->increment('storage_amount', -($cartItem->amount*$cartItem->variation_size));
-            if($cartItem->products->storage_amount<0) {
+        foreach ($cart->items()->get() as $cartItem) {
+            $cartItem->products()->increment('storage_amount', -($cartItem->amount * $cartItem->variation_size));
+            if ($cartItem->products->storage_amount < 0) {
                 $cartItem->products()->update(['storage_amount' => 0]);
             }
         }
@@ -420,7 +439,7 @@ class CartController extends Controller
                 })
                     ->where(function (Builder $q) {
                         $q->where('valid_from', '<=', Carbon::now()->format('Y-m-d'))
-                            ->where(function($qq) { $qq->where('valid_to', '>=', Carbon::now()->format('Y-m-d'))->orWhereNull('valid_to'); });
+                            ->where(function ($qq) { $qq->where('valid_to', '>=', Carbon::now()->format('Y-m-d'))->orWhereNull('valid_to'); });
                     }),
             ],
         ]);
@@ -441,7 +460,8 @@ class CartController extends Controller
         return redirect()->back()->with(['message' => 'Discount Code Added']);
     }
 
-    public function discount_code_remove() {
+    public function discount_code_remove()
+    {
         $cart = $this->getCart();
 
         $discount_code = DiscountCode::where('code', $cart->discount_code)->first();
@@ -453,6 +473,7 @@ class CartController extends Controller
             'discount_target' => null,
             'discount_type'   => null,
         ]);
+
         return redirect()->back()->with(['message' => 'Discount Code Removed']);
     }
 }

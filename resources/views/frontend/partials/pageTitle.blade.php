@@ -1,7 +1,7 @@
 @if($pageTitle??false)
     <div class="sv-page-title">
         <h2>
-            <a href="#">{!! $pageTitle !!}</a>
+            {!! $pageTitle !!}
         </h2>
         @if(($step??false))
             <div class="sv-cart-steps">

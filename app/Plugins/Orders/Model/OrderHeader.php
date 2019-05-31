@@ -16,7 +16,7 @@ class OrderHeader extends Model
     use OrdersAdmin;
     use SoftDeletes;
 
-    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target','discount_amount','discount_type', 'delivery_amount', 'delivery_id', 'ordered_at', 'paid', 'invoice', 'payment_type'];
+    public $fillable = ['user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target','discount_amount','discount_type', 'delivery_amount', 'delivery_id', 'ordered_at', 'paid', 'invoice', 'payment_type', 'comments'];
 
     public function cartItems() {
         return $this->whereHas('items', function(Builder $q) {
@@ -57,5 +57,25 @@ class OrderHeader extends Model
 
     public function order_market_day() {
         return $this->belongsTo(MarketDay::class, 'market_day_id', 'id');
+    }
+
+    /*
+     * Scopes
+     */
+
+    /*
+     * Apply filters
+     */
+    public function scopeFilters(Builder $query) {
+        if($filters = session('order_filters')) {
+            if($filters['market_day']??false) {
+                $query = $query->where('market_day_id', $filters['market_day']);
+            }
+            if($filters['trashed']??false) {
+                $query = $query->onlyTrashed();
+            }
+        }
+
+        return $query;
     }
 }

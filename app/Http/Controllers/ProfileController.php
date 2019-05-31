@@ -7,7 +7,10 @@ use App\EmailChange;
 use App\Http\Requests\Profile;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProfileController extends Controller
 {
@@ -116,5 +119,43 @@ class ProfileController extends Controller
     public function verifyRegister()
     {
         dd(request()->all());
+    }
+
+    /**
+     * @param bool $id
+     * @param bool $page
+     *
+     * @throws NotFoundHttpException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function history($id = false, $page = false) {
+        if($id && $id!=__('translations.urlPage')) {
+            return $this->showHistoryItem($id);
+        }
+        if(!$page || (int)$page==$page) {
+            /** @var Builder $o */
+            $o = Auth::user()->orders();
+
+            /** @var LengthAwarePaginator $orders */
+            if($page) {
+                $orders = $o->paginate(1, ['*'], 'lapa', $page);
+            } else {
+                $orders = $o->paginate(1);
+            }
+            return view('frontend.pages.history', ['orders' => $orders, 'pageTitle' => _t('translations.orderhistory')]);
+        }
+        abort(404);
+    }
+
+    private function showHistoryItem($orderId) {
+
+        /** @var Builder $o */
+        $o = Auth::user()->orders($orderId);
+
+        /** @var OrderHeader $order */
+        $order = $o->first();
+
+        return view('frontend.pages.historyItem', ['order' => $order, 'pageTitle' => view('frontend.partials.orderHistoryTitle', ['data' => $order->toArray()])->render()]);
     }
 }

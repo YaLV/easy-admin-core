@@ -82,6 +82,15 @@ class User extends Authenticatable
         return $this->hasMany(OrderHeader::class);
     }
 
+    public function orders($id = null) {
+        $relation = $this->hasMany(OrderHeader::class)->where('state', '!=', 'draft');
+
+        if($id) {
+            return $relation->where('id', $id);
+        }
+        return $relation;
+    }
+
     /**
      * return if
      *

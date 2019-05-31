@@ -18,7 +18,7 @@
     @stack('css')
 </head>
 
-<body>
+<body class="loading">
 @if(!Auth::user()??false)
     @yield('content')
 @else
@@ -73,6 +73,7 @@
         });
     </script>
 @endif
+<div class="modalloading"></div>
 
 </body>
 

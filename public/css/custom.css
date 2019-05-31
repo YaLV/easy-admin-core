@@ -1,9 +1,13 @@
-body.loading div#app * {
+body.loading div.dashboard-main-wrapper .nav-left-sidebar *,body.loading div.dashboard-main-wrapper .dashboard-wrapper * {
     filter: blur(1px);
     pointer-events:none;
 }
 
-.modal.loading {
+body.loading div.dashboard-main-wrapper .dashboard-header * {
+    pointer-events: none;
+}
+
+.modalloading {
     display:    none;
     position:   fixed;
     z-index:    1000;
@@ -19,14 +23,18 @@ body.loading div#app * {
 
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
-body.loading .modal.loading {
+body.loading .modalloading {
     overflow: hidden;
 }
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
-body.loading .modal.loading {
+body.loading .modalloading {
     display: block;
+}
+
+body.loading {
+    overflow:none;
 }
 
 .text-muted {
@@ -167,4 +175,17 @@ ol#created_buttons_list { margin: 10px 0 10px 0;}
 
 .updateInfo {
     width:300px;
+}
+
+#logModal .modal-dialog {
+    width:80% !important;
+    max-width: none !important;
+}
+
+#logModal .modal-body {
+    background-color: #efeff6;
+}
+
+#logModal table td, #logModal table th, #logModal .card-header  {
+    text-align: left;
 }

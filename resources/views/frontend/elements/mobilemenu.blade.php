@@ -13,10 +13,10 @@
     </div>
     @auth
         <div class="controls signed-in">
-            <a href="javascript:void(0)" class="toggle-sv-signin"><img
+            <a href="{{ r('profile') }}" class="toggle-sv-signin"><img
                         src="{{ asset("assets/img/icon-user-2.svg") }}" /></a>
-            <a href="#"><img src="{{ asset("assets/img/icon-doc-1.svg") }}" /></a>
-            <a href="#"><img class="logout" src="{{ asset("assets/img/icon-cross-1.svg") }}" /></a>
+            <a href="{{ r('orderhistory') }}"><img src="{{ asset("assets/img/icon-doc-1.svg") }}" /></a>
+            <a href="{{ r('frontlogout') }}"><img class="logout" src="{{ asset("assets/img/icon-cross-1.svg") }}" /></a>
         </div>
     @endauth
 </div>
