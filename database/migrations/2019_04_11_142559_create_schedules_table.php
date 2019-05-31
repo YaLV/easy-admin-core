@@ -25,6 +25,8 @@ class CreateSchedulesTable extends Migration
             $table->string('result_message')->default('Task Scheduled');
             $table->timestamps();
         });
+
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'LogAdminMenu']);
     }
 
     /**
