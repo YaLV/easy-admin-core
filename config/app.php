@@ -36,6 +36,15 @@ return [
         'card'    => 'With Payment Card',
     ],
 
+
+    'schedulenames' => [
+        'productImport'      => 'Product Import',
+        'productImageImport' => 'Product Image Import',
+        'orderExport'        => 'Order Export',
+        'orderImport'        => 'Order Change Import',
+        'createPDF'          => 'Order PDF Generation',
+        'sendOrderEmails'    => 'Order Sending to Suppliers',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -196,6 +205,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Antcern\Paysera\PayseraServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -258,6 +268,7 @@ return [
         'URL'          => Illuminate\Support\Facades\URL::class,
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
+        'PDF'          => Barryvdh\DomPDF\Facade::class,
 
     ],
 

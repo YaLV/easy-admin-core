@@ -26,5 +26,6 @@
     </div>
     <div class="col-md-2 text-right">
         {!! $operations??"" !!}
+        {!! $logButton??"" !!}
     </div>
 </div>

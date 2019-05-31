@@ -16,7 +16,7 @@ class CreateSchedulesTable extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
-            $table->string('filename');
+            $table->text('filename');
             $table->integer('total_lines')->nullable();
             $table->integer('stopped_at')->default(0);
             $table->boolean('running')->default(0);

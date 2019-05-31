@@ -27,7 +27,6 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::get('/{lang}/{pageSlug?}', 'PageController@show')->name('page');
     Route::get('/{pageSlug?}', 'PageController@show')->name('page.default');
 
-
 // farmer Page
     Route::pattern('supplierSlug', implode('|', __('supplier.slug')));
     Route::pattern('suppliersSlug', getSupplierSlugs());
@@ -45,11 +44,18 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::post("/{lang}/profile", 'ProfileController@store')->name('profile.save');
     Route::post("/profile", 'ProfileController@store')->name('profile.save.default');
 
+    Route::get('/{lang}/orders/history/{orderId?}/{pageId?}', 'ProfileController@history')->name('orderhistory');
+    Route::get('/orders/history/{orderId?}/{pageId?}', 'ProfileController@history')->name('orderhistory.default');
+
+
 // Verify Changed Email
     Route::get("/{lang}/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.save');
     Route::get("/verify/{action}/{verifyString}", 'ProfileController@verify')->name('verifyChangedEmail.default');
 
 // Cart
+    Route::get('/{lang}/cart/recreate/{orderId}', '\App\Plugins\Orders\CartController@recreateCart')->name('recreateCart');
+    Route::get('/cart/recreate/{orderId}', '\App\Plugins\Orders\CartController@recreateCart')->name('recreateCart.default');
+
     Route::post('/{lang}/cart/addCode', '\App\Plugins\Orders\CartController@discount_code')->name('addDiscountCode');
     Route::post('/cart/addCode', '\App\Plugins\Orders\CartController@discount_code')->name('addDiscountCode.default');
 

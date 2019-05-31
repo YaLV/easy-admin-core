@@ -66,6 +66,7 @@ class ImportProductImages extends Command
         foreach(Storage::files('imports/product_images/') as $file) {
             list($sku,$extension) = explode(".", basename($file));
 
+            /** @var Product $product */
             $product = Product::withTrashed()->where('sku', $sku)->first();
 
             if($product) {

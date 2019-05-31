@@ -39,6 +39,7 @@ class ProductController extends AdminController
                 'idField'      => 'name',
                 'destroyName'  => 'Product',
                 'operations'   => view("Products::partials.extraButtons")->render(),
+                'logButton'    => view('admin.partials.log', ['logTypes' => 'productImport,productImageImport'])->render(),
                 'js'           => [
                     'js/productIO.js',
                 ],
@@ -352,15 +353,15 @@ class ProductController extends AdminController
             DB::beginTransaction();
             /** @var Product $product */
             $product = Product::where('id', request()->get('product_id'));
-            if(request()->has('info')) {
+            if (request()->has('info')) {
                 $product->update(['info' => request('info')]);
-            } elseif(request()->has('amount')) {
-                if(!is_null($product->firstOrFail()->storage_amount)) {
+            } elseif (request()->has('amount')) {
+                if (!is_null($product->firstOrFail()->storage_amount)) {
                     $product->increment('storage_amount', request()->get('amount'));
                 } else {
                     $product->update(['storage_amount' => request()->get('amount')]);
                 }
-            } elseif(request()->has('reset')) {
+            } elseif (request()->has('reset')) {
                 $product->update(['storage_amount' => null]);
             }
             DB::commit();
@@ -368,7 +369,8 @@ class ProductController extends AdminController
             DB::rollBack();
         }
         $product = $product->first();
-        return ['status' => true, 'message' => 'Product Updated', 'data' => ['product_id' => $product->id,'info' => $product->info, 'storage_amount' => $product->storage_amount]];
+
+        return ['status' => true, 'message' => 'Product Updated', 'data' => ['product_id' => $product->id, 'info' => $product->info, 'storage_amount' => $product->storage_amount]];
     }
 
 }

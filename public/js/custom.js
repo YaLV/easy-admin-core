@@ -1,8 +1,40 @@
 jQuery(document).ready(function () {
+    $('body').removeClass("loading");
     bindStuff();
 });
 
-function bindStuff(){
+function bindStuff() {
+
+    jQuery('.isAjax').click(function (e) {
+        el = jQuery(this);
+        e.preventDefault();
+        url = el.attr('href') || el.attr('data-href');
+
+        parameters = "";
+        if(el.attr('data-params')) {
+            paramFn = eval(el.attr('data-params'));
+            parameters = paramFn(el);
+        }
+
+        if (el.hasClass('post')) {
+            jQuery.post(url,parameters,function(response) {
+                if(el.attr('data-callback')) {
+                    fn = eval(el.attr('data-callback'))
+                    fn(response);
+                }
+            });
+        } else {
+            jQuery.get(url,parameters,function(response) {
+               if(el.attr('data-callback')) {
+                   fn = eval(el.attr('data-callback'))
+                   fn(response);
+               }
+            });
+        }
+        return false;
+    });
+
+
     jQuery('.stateButton').unbind().click(function (e) {
         button = jQuery(this);
         jQuery.post(button.attr('href'), "", function (response) {
@@ -41,8 +73,8 @@ function bindStuff(){
         }
 
         jQuery.post(button.attr('href'), "", function (response) {
-            if (response.status==true) {
-                if(response.hasOwnProperty("replaceTable")) {
+            if (response.status == true) {
+                if (response.hasOwnProperty("replaceTable")) {
                     $('div.tableContent').replaceWith(response.replaceTable);
                     bindStuff();
                 } else {
@@ -111,7 +143,7 @@ jQuery(document).ready(function () {
         fileId = jQuery(this).attr('id');
 
         files = jQuery(this)[0].files;
-        if($(this).hasClass('defaultUpload')) {
+        if ($(this).hasClass('defaultUpload')) {
             for (x in files) {
                 fileData.append(jQuery(this).attr('name') + "[]", files[x]);
             }
@@ -125,7 +157,7 @@ jQuery(document).ready(function () {
         if (form = jQuery(this).parents('form')) {
             fields = form.find('input:not([type=file])');
             fields.each(function () {
-                fld= jQuery(this);
+                fld = jQuery(this);
                 fileData.append(fld.attr('name'), fld.val());
             });
         }
@@ -148,7 +180,7 @@ jQuery(document).ready(function () {
                     container.append(controls);
                     jQuery('.preview[data-file=' + fileId + ']').append(container);
                 }
-                if(resetform) {
+                if (resetform) {
                     form[0].reset();
                 }
                 bindButtons();
@@ -159,9 +191,9 @@ jQuery(document).ready(function () {
         language = $(this).data('language');
         console.log(language);
 
-        $.post('/admin/slugify', 'slugify=' + $(this).val(),function(response) {
-            if(response.status) {
-                if(typeof language==="undefined") {
+        $.post('/admin/slugify', 'slugify=' + $(this).val(), function (response) {
+            if (response.status) {
+                if (typeof language === "undefined") {
                     $('input[type=text].slug').val(response.slug);
                 } else {
                     $('input[type=text].slug[data-language=' + language + ']').val(response.slug);
@@ -191,74 +223,109 @@ function bindButtons() {
 }
 
 function showTranslation(result) {
-    form = $('#post'+modalID);
+    form = $('#post' + modalID);
     form.find('input').val("");
-    for(y in result.translation.meta_data) {
-        form.find('input[data-transFor='+result.translation.meta_data[y].language+']').val(result.translation.meta_data[y].meta_value);
+    for (y in result.translation.meta_data) {
+        form.find('input[data-transFor=' + result.translation.meta_data[y].language + ']').val(result.translation.meta_data[y].meta_value);
     }
-    $('.saveTranslation').unbind().click(function(){
-       $.post(storeUrl.replace("ID", result.translation.id), form.serialize(), function(result) {
-          if(result.status) {
-              $("[data-id="+result.lineID+"] .transVal").text(result.edited);
-              $('#modalWin'+modalID).modal("hide");
-          }
-       });
+    $('.saveTranslation').unbind().click(function () {
+        $.post(storeUrl.replace("ID", result.translation.id), form.serialize(), function (result) {
+            if (result.status) {
+                $("[data-id=" + result.lineID + "] .transVal").text(result.edited);
+                $('#modalWin' + modalID).modal("hide");
+            }
+        });
     });
-    $('#modalWin'+modalID).modal("show");
+    $('#modalWin' + modalID).modal("show");
 }
 
 
 /*
     Searchable textfield
  */
-$( function() {
+$(function () {
 
-    function split( val ) {
-        return val.split( /,\s*/ );
-    }
-    function extractLast( term ) {
-        return split( term ).pop();
+    function split(val) {
+        return val.split(/,\s*/);
     }
 
-    $('.changeDT').on('changed.bs.select', function() {
-       $('.autocomplete.target').val("");
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $('.changeDT').on('changed.bs.select', function () {
+        $('.autocomplete.target').val("");
     });
 
-    $( ".autocomplete" )
+    $(".autocomplete")
     // don't navigate away from the field on tab when selecting an item
-        .on( "keydown", function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB &&
-                $( this ).autocomplete( "instance" ).menu.active ) {
+        .on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB &&
+                $(this).autocomplete("instance").menu.active) {
                 event.preventDefault();
             }
         })
         .autocomplete({
-            source: function( request, response ) {
-                $.getJSON( $('input.autocomplete:focus').data('searchurl').replace("discount_to", $('.changeDT').selectpicker('val')), {
-                    term: extractLast( request.term )
-                }, response );
+            source: function (request, response) {
+                $.getJSON($('input.autocomplete:focus').data('searchurl').replace("discount_to", $('.changeDT').selectpicker('val')), {
+                    term: extractLast(request.term)
+                }, response);
             },
-            search: function() {
+            search: function () {
                 // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 2 ) {
+                var term = extractLast(this.value);
+                if (term.length < 2) {
                     return false;
                 }
             },
-            focus: function() {
+            focus: function () {
                 // prevent value inserted on focus
                 return false;
             },
-            select: function( event, ui ) {
-                var terms = split( this.value );
+            select: function (event, ui) {
+                var terms = split(this.value);
                 // remove the current input
                 terms.pop();
                 // add the selected item
-                terms.push( ui.item.value );
+                terms.push(ui.item.value);
                 // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( ", " );
+                terms.push("");
+                this.value = terms.join(", ");
                 return false;
             }
         });
 });
+
+function reloadPage(response) {
+    if(response.status) {
+        document.location = document.location.pathname;
+    }
+}
+
+function getForm(el) {
+    form = el.attr('data-form');
+
+    return jQuery(form).serialize();
+}
+
+function showLogModal(data) {
+    jQuery('#logModal .modal-body').html(data.data);
+    jQuery('#logModal').modal();
+}
+
+
+$(document).on({
+    ajaxStart: function () {
+        if (!$('body').hasClass('noLoading')) {
+            $('body').addClass("loading");
+        }
+    },
+    ajaxStop: function () {
+        $('body').removeClass("loading");
+    }
+});
+
+window.onbeforeunload = function(event) {
+    $('body').addClass("loading");
+    setTimeout(function() { $('body').removeClass("loading"); }, 5000);
+};
