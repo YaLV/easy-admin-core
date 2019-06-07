@@ -86,13 +86,16 @@ trait CartFunctions
 
     private function renderCartItems($cart, $bothCarts)
     {
-        $items = [];
+        $items = ['miniItems' => [], 'items' => []];
         foreach ($cart->items as $item) {
-            $items['miniItems'] = view('Orders::frontend.partials.miniitem', ['item' => $item])->render();
+            $items['miniItems'][] = view('Orders::frontend.partials.miniitem', ['item' => $item])->render();
             if ($bothCarts) {
-                $items['items'] = view('Orders::frontend.partials.item', ['item' => $item, 'cart' => $cart])->render();
+                $items['items'][] = view('Orders::frontend.partials.item', ['item' => $item, 'cart' => $cart])->render();
             }
         }
+
+        $items['miniItems'] = implode("", $items['miniItems']);
+        $items['items'] = implode("", $items['items']);
 
         return $items;
     }

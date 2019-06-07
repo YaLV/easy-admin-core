@@ -8,6 +8,28 @@
 
     @if($filters??false)
         @include('admin.partials.filters')
+
+        @push('css')
+            <link rel="stylesheet" href="{{ asset('css/daterangepicker.min.css') }}">
+        @endpush
+
+        @push('scripts')
+            <script src="{{ asset('js/moment.js')}}"></script>
+            <script src="{{ asset('js/jquery.daterangepicker.min.js')}}"></script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.daterangepicker').dateRangePicker({
+                        startOfWeek: 'monday',
+                        separator: ' ~ ',
+                        format: 'DD.MM.YYYY HH:mm',
+                        autoClose: false,
+                        time: {
+                            enabled: true
+                        }
+                    })
+                })
+            </script>
+        @endpush
     @endif
 
     <div class="row tableContent">
@@ -21,6 +43,16 @@
                                 <a href="{{ route($currentRoute.".add", request()->route()->parameters) }}"
                                    class="btn btn-primary btn-xs"><i
                                             class="fas fa-plus"></i></a>
+                            @endif
+                            @if($massActions??false)
+                                <div class="btn-group massActionGroup">
+                                    @foreach($massActions as $action)
+                                        <a href="{{ $action->url }}" data-params="getCheckedRows"
+                                           class="btn btn-xs massAction {{ $action->class??"" }} isAjax post"
+                                           data-callback="{{ $action->callback??"" }}" title="{{ $action->label??"" }}"
+                                        ><i class="{{ $action->icon }}"></i></a>
+                                    @endforeach
+                                </div>
                             @endif
                         </div>
                     </div>

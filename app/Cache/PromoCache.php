@@ -4,6 +4,7 @@ namespace App\Cache;
 
 
 use App\Plugins\Sales\Model\Sale;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ class PromoCache
     public $category = [];
     public $product = [];
     public $promotions = [];
+    public $promotionNames = [];
 
     public function __construct()
     {
@@ -25,6 +27,7 @@ class PromoCache
             ->get();
 
         $this->promotions = $promo->pluck('amount', 'id')->toArray();
+        $this->promotionNames = $promo->pluck('name', 'id')->toArray();
 
         foreach ($promo as $promoItem) {
             if (is_array($promoItem->user_group)) {
@@ -50,14 +53,21 @@ class PromoCache
         }
     }
 
-    public function getDiscount($target, $id) {
-
-        $ugroup = Auth::user()?Auth::user()->user_group:0;
-
+    public function getDiscount($target, $id, $ugroup = false) {
+//        $ugroup = User::find($userId)->user_group_id;
         return array_only($this->promotions, $this->hasDiscount($target, $id, $ugroup));
     }
 
     public function hasDiscount($target, $id, $userGroup) {
         return array_intersect(($this->$target[$id]??[]), ($this->userGroups[$userGroup]??[]));
     }
+
+    public function getKeyValuePair($t, $d, $u) {
+        $disc = $this->getDiscount($t,$d,$u)?:[0 => 0];
+        $discMax = max($disc);
+        $discMaxKey = array_search($discMax, $disc);
+
+        return [$discMaxKey => $discMax];
+    }
+
 }

@@ -3,32 +3,46 @@ jQuery(document).ready(function () {
     bindStuff();
 });
 
-function bindStuff() {
+function replaceTable(response) {
+    if (response.hasOwnProperty("replaceTable")) {
+        $('div.tableContent').replaceWith(response.replaceTable);
+        bindStuff();
+    }
+}
 
-    jQuery('.isAjax').click(function (e) {
+function bindStuff() {
+    jQuery('.isAjax').unbind().click(function (e) {
         el = jQuery(this);
         e.preventDefault();
         url = el.attr('href') || el.attr('data-href');
 
         parameters = "";
-        if(el.attr('data-params')) {
+        if (el.attr('data-params')) {
             paramFn = eval(el.attr('data-params'));
             parameters = paramFn(el);
         }
 
         if (el.hasClass('post')) {
-            jQuery.post(url,parameters,function(response) {
-                if(el.attr('data-callback')) {
+            jQuery.post(url, parameters, function (response) {
+                if(el.hasClass('massAction')) {
+                    clearMassAction();
+                }
+
+                if (el.attr('data-callback')) {
                     fn = eval(el.attr('data-callback'))
                     fn(response);
                 }
             });
         } else {
-            jQuery.get(url,parameters,function(response) {
-               if(el.attr('data-callback')) {
-                   fn = eval(el.attr('data-callback'))
-                   fn(response);
-               }
+            jQuery.get(url, parameters, function (response) {
+                if(el.hasClass('massAction')) {
+                    clearMassAction();
+                }
+
+                if (el.attr('data-callback')) {
+                    fn = eval(el.attr('data-callback'))
+                    fn(response);
+                }
             });
         }
         return false;
@@ -87,37 +101,41 @@ function bindStuff() {
 
     $('select.multiselect').multiSelect();
 
-    $('.editTranslation').unbind().click(function(){
-        $.get(editUrl.replace("ID", $(this).data('id')), '', function(response) {
+    $('.editTranslation').unbind().click(function () {
+        $.get(editUrl.replace("ID", $(this).data('id')), '', function (response) {
             showTranslation(response);
         });
     })
 
 
-    $('#custom-search input').unbind().keyup(function(e){
-        if(e.keyCode==13) {
+    $('#custom-search input').unbind().keyup(function (e) {
+        if (e.keyCode == 13) {
             document.location = searchUrl.replace('ID', $(this).val());
         }
     });
 }
 
+function clearMassAction() {
+    $('input[type=checkbox].massAction').prop('checked', false);
+}
 
-var imageControlTemplate = "<div class='controls'>" +
-    "<a href='#' class='btn btn-xs btn-info setMainImage' data-file><i class='fas mainImage'></i></a>" +
-    "<a href='#' class='btn btn-xs btn-danger removeImage' data-file><i class='fas fa-trash-alt'></i></a>" +
-"</div>";
+
+var imageControlTemplate = '<div class="controls">' +
+    '<a href="#" class="btn btn-xs btn-info setMainImage" data-file><i class="fas mainImage"></i></a>' +
+    '<a href="#" class="btn btn-xs btn-danger removeImage" data-file><i class="fas fa-trash-alt"></i></a>' +
+    '</div>';
 
 jQuery(document).ready(function () {
 
     tinymce.init({
-        selector:'textarea:not(.noEditor)',
+        selector: 'textarea:not(.noEditor)',
         plugins: "image imagetools colorpicker hr table link textcolor code paste lists autolink anchor contextmenu insertdatetime",
-        force_br_newlines : true,
-        force_p_newlines : false,
-        forced_root_block : '',
+        force_br_newlines: true,
+        force_p_newlines: false,
+        forced_root_block: '',
         toolbar: [
             "code | undo redo | formats | bold italic | fontselect | fontsizeselect | hr alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor | anchor",
-            ],
+        ],
         insertdatetime_formats: [
             "%H:%M:%S",
             ""
@@ -297,7 +315,7 @@ $(function () {
 });
 
 function reloadPage(response) {
-    if(response.status) {
+    if (response.status) {
         document.location = document.location.pathname;
     }
 }
@@ -306,6 +324,15 @@ function getForm(el) {
     form = el.attr('data-form');
 
     return jQuery(form).serialize();
+}
+
+function getCheckedRows() {
+    var checkedRows = [];
+    $('input[type=checkbox].massAction:checked').each(function() {
+        checkedRows.push("massAction[]="+$(this).val());
+    });
+
+    return checkedRows.join('&');
 }
 
 function showLogModal(data) {
@@ -325,7 +352,9 @@ $(document).on({
     }
 });
 
-window.onbeforeunload = function(event) {
+window.onbeforeunload = function (event) {
     $('body').addClass("loading");
-    setTimeout(function() { $('body').removeClass("loading"); }, 5000);
+    setTimeout(function () {
+        $('body').removeClass("loading");
+    }, 5000);
 };

@@ -104,8 +104,8 @@ trait Orders
             'payment'                   => 'Payment',
             'market_day'                => 'Market Day',
             'market_day_date_formatted' => 'Market Day Date',
-            'user_comment_invoice'      => 'Klienta Komentārs rēķinam',
-            'user_comment_stats'        => 'Klienta Komentārs atskaitei',
+            'svaigi_comment_invoice'      => 'Svaigi Komentārs rēķinam',
+            'svaigi_comment_stats'        => 'Svaigi Komentārs atskaitei',
         ];
     }
 
@@ -121,7 +121,9 @@ trait Orders
 
         return [
             ['type' => 'select', 'name' => 'market_day', 'label' => 'Market Day', 'options' => $market_days],
-            ['type' => 'select', 'name' => 'trashed', 'label' => 'State', 'options' => ['Active', 'Deleted']]
+            ['type' => 'select', 'name' => 'trashed', 'label' => 'Trashed', 'options' => ['No', 'Yes']],
+            ['type' => 'select', 'name' => 'state', 'label' => 'Order State', 'options' => ['ordered' => 'New', 'finished' => 'Finished']],
+            ['type' => 'text', 'name' => 'ordered_at', 'label' => 'Ordered at range', 'class' => 'daterangepicker']
         ];
     }
 }

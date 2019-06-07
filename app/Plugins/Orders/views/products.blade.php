@@ -39,16 +39,22 @@
         <div class="col-md-1">{{ $item->vat }} ({{ $item->products->vat->amount }}%)</div>
 
         <div class="col-md-1">{{ $item->amount }} ({{$item->total_amount}} {{$item->amount_unit}})</div>
-        <div class="col-md-1"><input type="text" class="amountinput" data-origvalue="{{$item->real_amount}}" size="5"
-                                     name="real_amount" value="{{$item->real_amount}}" /> {{ $item->amount_unit }} <a
-                    href='{{route('orders.setAmount', [$order->id, $item->id])}}'
-                    class='setCorrectAmount btn btn-xs btn-success invisible'><i class='fas fa-check'></i></a></div>
+        <div class="col-md-1">
+            @if(!$original)
+                <input type="text" class="amountinput" data-origvalue="{{$item->real_amount}}" size="5"
+                       name="real_amount" value="{{$item->real_amount}}" /> {{ $item->amount_unit }} <a
+                        href='{{route('orders.setAmount', [$order->id, $item->id])}}'
+                        class='setCorrectAmount btn btn-xs btn-success invisible'><i class='fas fa-check'></i></a>
+            @else
+                {{$item->total_amount}} {{$item->amount_unit}}
+            @endif
+        </div>
         <div class="col-md-1 text-right">{{ number_format($sum,2) }} &euro;</div>
     </div>
 @endforeach
 
 @php
-    $totalPrices = getCartTotals($order);
+    $totalPrices = getCartTotals($order, [], $original);
 @endphp
 
 
@@ -66,7 +72,9 @@
 
 @if($order->discount_target)
     <div class="row viewRow">
-        <div class="col-md-9 text-right font-weight-bold">Discount ({{$order->discount_code}} - {{ $order->discount_amount }}{!! $order->discount_type=='percent'?"%":"&euro;" !!}):
+        <div class="col-md-9 text-right font-weight-bold">Discount ({{$order->discount_code}}
+                                                          - {{ $order->discount_amount }}{!! $order->discount_type=='percent'?"%":"&euro;" !!}
+                                                          ):
         </div>
         <div class="col-md-3 text-right">{{ number_format($totalPrices->discount,2) }} &euro;</div>
     </div>

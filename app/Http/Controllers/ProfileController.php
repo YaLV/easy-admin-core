@@ -146,6 +146,7 @@ class ProfileController extends Controller
             return view('frontend.pages.history', ['orders' => $orders, 'pageTitle' => _t('translations.orderhistory')]);
         }
         abort(404);
+        return null;
     }
 
     private function showHistoryItem($orderId) {
@@ -155,6 +156,10 @@ class ProfileController extends Controller
 
         /** @var OrderHeader $order */
         $order = $o->first();
+
+        if(!$order) {
+            abort(404);
+        }
 
         return view('frontend.pages.historyItem', ['order' => $order, 'pageTitle' => view('frontend.partials.orderHistoryTitle', ['data' => $order->toArray()])->render()]);
     }

@@ -4,7 +4,31 @@ $(document).ready(function () {
     bindOrderUpdates();
 });
 
+function showMassButtons() {
+    $('div.massActionGroup').show();
+}
+
+function hideMassButtons() {
+    $('div.massActionGroup').hide();
+}
+
 function bindOrderUpdates() {
+
+    $('div.massActionGroup').hide();
+
+    $('textarea.autosave').keyup(function () {
+
+        if(!$(this).data('event')) {
+            $(this).data('event', 1);
+            el = $(this);
+            $(this).blur(function () {
+                $.post(orderUpdateUrl, 'update=' + $(this).attr('name') + '&' + $(this).attr('name') + "=" + $(this).val(), function() {
+                    el.data('event', null);
+                    el.unbind('blur');
+                });
+            });
+        }
+    });
 
     $('.checkall a').unbind().click(function (e) {
         newState = true;
@@ -13,17 +37,28 @@ function bindOrderUpdates() {
         }
 
         checkboxes = $('input[type=checkbox].massAction');
-        console.log(checkboxes);
 
         checkboxes.prop('checked', newState);
+        if($('input[type=checkbox].massAction:checked').length) {
+            showMassButtons();
+        } else {
+            hideMassButtons();
+        }
         $(this).text(checkTexts[Number(newState)]);
     });
+
     $('input[type=checkbox].massAction').unbind().click(function () {
         if (isCheckedAll()) {
             $('.checkall a').text('None');
         } else {
             $('.checkall a').text('All');
         }
+        if($('input[type=checkbox].massAction:checked').length) {
+            showMassButtons();
+        } else {
+            hideMassButtons();
+        }
+
     });
 
     $('.paidinput, .amountinput').unbind().keyup(function (e) {
@@ -96,9 +131,6 @@ function bindOrderUpdates() {
 function isCheckedAll() {
     rowCount = $('.table.table-hover tbody tr').length||$('.prodrow').length;
     checkedCount = $('tbody tr input[type=checkbox]:checked').length||$('.prodrow input[type=checkbox]:checked').length;
-
-    console.log(rowCount);
-    console.log(checkedCount);
 
     return rowCount == checkedCount;
 }

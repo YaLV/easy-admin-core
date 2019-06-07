@@ -57,6 +57,16 @@
 @if(Auth::user() && Auth::user()->isAdmin)
     <script src="{{ asset('js/trans.js') }}"></script>
 @endif
+@if(session()->has('openLogin'))
+<script>
+    $(document).ready(function() {
+        if(!$('body').hasClass('sv-lightbox-open')) {
+            $('.user > .toggle-sv-signin').click();
+        }
+    })
+</script>
+@endif
+
 @stack('scripts')
 </body>
 

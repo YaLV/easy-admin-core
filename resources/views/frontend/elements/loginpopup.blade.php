@@ -7,6 +7,7 @@
                     <form method="post" action="{{ r('frontlogin') }}">
                         @csrf
                         <img class="logo" src="{{ asset("assets/img/logo-svaigilv-1.svg") }}" />
+                        <a href="/fblogin"><img src="{{asset('img/log in with facebook button.png')}}" /></a>
                         <div class="input-wrapper">
                             <input type="text" name='email' placeholder="{!! _t('translations.loginEmailField') !!}" />
                         </div>

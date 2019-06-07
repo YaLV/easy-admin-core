@@ -22,13 +22,13 @@
                             @switch($filter['type'])
                                 @case('text')
                                 <label for="{{$id}}">{{$filter['label']}}</label>
-                                <input type="text" name="filter[{{$filter['name']}}]" class="form-control" id="{{$id}}"
+                                <input type="text" name="filter[{{$filter['name']}}]" class="form-control {{ $filter['class']??"" }}" id="{{$id}}"
                                        value="{{($currentFilters[$filter['name']]??"")}}" />
                                 @break
 
                                 @case('select')
                                 <label for="{{$id}}">{{$filter['label']}}</label><br />
-                                <select name="filter[{{$filter['name']}}]" class="selectpicker" id="{{$id}}">
+                                <select name="filter[{{$filter['name']}}]" class="selectpicker {{ $filter['class']??"" }}" id="{{$id}}">
                                     <option></option>
                                     @foreach($filter['options'] as $optionId => $optionName)
                                         <option value="{{$optionId}}" {{($currentFilters[$filter['name']]??false)==$optionId?"selected":""}}>{{$optionName}}</option>

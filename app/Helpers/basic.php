@@ -1,11 +1,25 @@
 <?php
 
 
+/**
+ * returns current language code from url, or default if no language specified
+ *
+ * @return \Illuminate\Config\Repository|\Illuminate\Routing\Route|mixed|object|string
+ */
 function language()
 {
-    return request()->route('lang') ?? config('app.locale');
+    try {
+        return request()->route('lang') ?? config('app.locale');
+    } catch ( \Exception $e) {
+        return config('app.locale');
+    }
 }
 
+/**
+ * get available language list
+ *
+ * @return \Illuminate\Database\Eloquent\Collection|mixed|static[]
+ */
 function languages()
 {
     $languageCache = \Illuminate\Support\Facades\Cache::get('languagelist');
@@ -18,16 +32,39 @@ function languages()
 
 }
 
+/**
+ * @param $path
+ * @param $collections
+ *
+ * @return mixed
+ */
 function getTranslations($path, $collections)
 {
     return $collections::selectRaw('id, concat("category.name.", id) as name')->get();
 }
 
+/**
+ * @param $value
+ * @param $results
+ *
+ * @return mixed
+ */
 function nullOrDate($value, $results)
 {
     return ($value ?? false) ? $results[1] : $results[0];
 }
 
+/**
+ * Calculate price with all possible variations for product
+ *
+ * @param     $price
+ * @param     $vat
+ * @param     $markup
+ * @param     $discount
+ * @param int $amount
+ *
+ * @return object
+ */
 function calcPrice($price, $vat, $markup, $discount, $amount = 1)
 {
     $vat = 1 + ($vat / 100);
@@ -45,9 +82,10 @@ function calcPrice($price, $vat, $markup, $discount, $amount = 1)
     ];
 
     $prices['full'] = (object)[
-        'wovat' => number_format(round($wovat, 2), 2),
-        'wvat'  => number_format(round($wvat, 2), 2),
-        'vat'   => number_format(round($wvat - $wovat, 2), 2),
+        'wovat'  => number_format(round($wovat, 2), 2),
+        'wvat'   => number_format(round($wvat, 2), 2),
+        'vat'    => number_format(round($wvat - $wovat, 2), 2),
+        'markup' => number_format(round($wovat - $price, 2), 2),
     ];
 
     $discountwvat = $wvat - ($wvat * $discount);
@@ -79,7 +117,15 @@ function calcPrice($price, $vat, $markup, $discount, $amount = 1)
     return (object)$prices;
 }
 
-
+/**
+ * Frontend Route url maker - with language addition
+ *
+ * @param       $name
+ * @param array $params
+ * @param bool  $absolute
+ *
+ * @return string
+ */
 function r($name, $params = [], $absolute = true)
 {
 
@@ -92,20 +138,38 @@ function r($name, $params = [], $absolute = true)
     return route($name, $params, $absolute);
 }
 
+/**
+ * returns route name addition if selected language is default
+ *
+ * @return string
+ */
 function isDefaultLanguage()
 {
     return isDefaultLang() ? ".default" : "";
 }
 
+/**
+ * detects if current language is defined as default
+ *
+ * @return bool
+ */
 function isDefaultLang()
 {
     return language() == config('app.locale');
 }
 
-function getCartTotals($cart, array $items = [], $original = false)
+/**
+ * Calculates cart/order total amounts
+ *
+ * @param \App\Plugins\Orders\Model\OrderHeader $cart
+ * @param array                                 $items
+ * @param bool                                  $original
+ *
+ * @return object
+ */
+function getCartTotals(\App\Plugins\Orders\Model\OrderHeader $cart, array $items = [], $original = false)
 {
-    /** @var \App\Plugins\Orders\Model\OrderHeader $cart */
-
+    $woDiscount = (object)['sum' => 0, 'vatsum' => 0];
     if (!$cart) {
         return (object)[
             'productSum' => 0,
@@ -115,25 +179,72 @@ function getCartTotals($cart, array $items = [], $original = false)
         ];
     }
 
+    $discount_target = $cart->discount_target;
+    $discount_items = $cart->discount_items ?? [];
 
-    if(!$original) {
-        if (count($items) > 0) {
-            $sums = $cart->currentDayItems($items)->selectRaw('sum((price*amount)/total_amount*real_amount) as sum, sum((vat*amount)/total_amount*real_amount) as vatsum')->first();
-        } else {
-            $sums = $cart->currentDayItems()->selectRaw('sum((price*amount)/total_amount*real_amount) as sum, sum((vat*amount)/total_amount*real_amount) as vatsum')->first();
-        }
+    if ($original) {
+        $queryForCode = "sum((price_raw*amount)) as sum, sum((vat_raw*amount)) as vatsum";
+        $queryNoCode = "sum((price*amount)) as sum, sum((vat*amount)) as vatsum";
     } else {
-        if (count($items) > 0) {
-            $sums = $cart->currentDayItems($items)->selectRaw('sum((price*amount)) as sum, sum((vat*amount)) as vatsum')->first();
-        } else {
-            $sums = $cart->currentDayItems()->selectRaw('sum((price*amount)) as sum, sum((vat*amount)) as vatsum')->first();
-        }
+        $queryForCode = "sum((price_raw*amount)/total_amount*real_amount) as sum, sum((vat_raw*amount)/total_amount*real_amount) as vatsum";
+        $queryNoCode = "sum((price*amount)/total_amount*real_amount) as sum, sum((vat*amount)/total_amount*real_amount) as vatsum";
     }
-    $productSum = number_format(round($sums->sum ?? 0,2),2);
-    $vatSum = number_format(ceil(($sums->vatsum ?? 0)*100)/100,2);
+
+
+    switch ($discount_target) {
+
+        /**
+         * If discount is set to product(-s) - if no products specified applies to every product
+         */
+        case "product":
+            $sums = $cart->currentDayItems($discount_items)
+                ->discountUnder($cart->discount_amount, $cart->discount_type)
+                ->selectRaw($queryForCode)
+                ->first();
+            $woDiscount = $cart->currentDayItems()
+                ->whereNotIn('product_id', $discount_items)
+                ->discountOver($cart->discount_amount, $cart->discount_type, $discount_items)
+                ->selectRaw($queryNoCode)
+                ->first();
+            break;
+
+        /**
+         * If discount is set to category(-ies) applies to products in specified category(-ies) - if no category specified applies to every product
+         */
+        case "category":
+            $sums = $cart->inCategory($discount_items, 'whereHas', $discount_items ?? [])
+                ->discountUnder($cart->discount_amount, $cart->discount_type)
+                ->selectRaw($queryForCode)
+                ->first();
+            $woDiscount = $cart->inCategory($discount_items, 'whereDoesntHave', $items ?? null)
+                ->whereNotIn('product_id', $discount_items)
+                ->discountOver($cart->discount_amount, $cart->discount_type, $discount_items)
+                ->selectRaw($queryNoCode)
+                ->first();
+            break;
+
+        /**
+         * No discount code or discount code applies to delivery
+         */
+        default:
+            $sums = $cart->currentDayItems($items)->selectRaw($queryNoCode)->first();
+            break;
+    }
+
+
+    /** @var int $productSum */
+    $productSum = number_format(round($sums->sum ?? 0, 2), 2);
+    /** @var int $vatSum */
+    $vatSum = number_format(ceil(($sums->vatsum ?? 0) * 100) / 100, 2);
+
+    /** @var int $productSumWoDiscount */
+    $productSumWoDiscount = number_format(round($woDiscount->sum ?? 0, 2), 2);
+    /** @var int $productVatWoDiscount */
+    $productVatWoDiscount = number_format(ceil(($woDiscount->vatsum ?? 0) * 100) / 100, 2);
 
     switch ($cart->discount_target) {
         case "product":
+        case "cateogry";
             $discount = ($cart->discount_type == 'percent' ? ($productSum * ($cart->discount_amount / 100)) : $cart->discount_amount);
             break;
 
@@ -141,6 +252,9 @@ function getCartTotals($cart, array $items = [], $original = false)
             $discount = ($cart->discount_type == 'percent' ? (($cart->delivery_amount ?? 0) * ($cart->discount_amount / 100)) : $cart->discount_amount);
             break;
 
+        /**
+         * Unused (remved) - this is left in case it needs to return
+         */
         case "all":
             $totalSum = $productSum + $cart->delivery_amount;
             $discount = ($cart->discount_type == 'percent' ? ($totalSum * ($cart->discount_amount / 100)) : $cart->discount_amount);
@@ -153,14 +267,20 @@ function getCartTotals($cart, array $items = [], $original = false)
     $discount = number_format(($discount != abs($discount) ? ($totalSum ?? $productSum) : round(($discount ?? 0), 2)), 2);
 
     return (object)[
-        'productSum' => $productSum,
-        'vatSum'     => $vatSum,
+        'productSum' => number_format($productSum + $productSumWoDiscount, 2),
+        'vatSum'     => number_format($vatSum + $productVatWoDiscount, 2),
         'discount'   => $discount,
         'delivery'   => $cart->delivery_amount,
-        'toPay'      => number_format($productSum + ($cart->delivery_amount ?? 0) - ($discount ?? 0), 2),
+        'toPay'      => number_format(($productSum + $productSumWoDiscount) + ($cart->delivery_amount ?? 0) - ($discount ?? 0), 2),
     ];
 }
 
+
+/**
+ * @param bool $change
+ *
+ * @return \App\User|mixed|null
+ */
 function currentUser($change = false)
 {
     if (!$change) {
@@ -216,6 +336,13 @@ function transOrEmpty($key, $replace = [], $locale = null)
     return $translation == $key ? "" : $translation;
 }
 
+/**
+ * Supplier Slug list for routing purposes (with built in backup if there is no suppliers)
+ *
+ * @param bool $language
+ *
+ * @return mixed|string
+ */
 function getSupplierSlugs($language = false)
 {
 
@@ -243,11 +370,24 @@ function getSupplierSlugs($language = false)
     return str_random(20);
 }
 
+/**
+ * Checks if there's templates DB table for pages, to allow "pages"
+ *
+ * @return bool
+ */
 function pageTable()
 {
     return \Illuminate\Support\Facades\Schema::hasTable("templates");
 }
 
+
+/**
+ * get current category filters (reset on category change)
+ *
+ * @param $catId
+ *
+ * @return array
+ */
 function getCurrentAttributes($catId)
 {
     if ($filters = session()->get('filters')) {
@@ -262,6 +402,11 @@ function getCurrentAttributes($catId)
     return [];
 }
 
+/**
+ * @param $catId
+ *
+ * @return array
+ */
 function getCurrentSuppliers($catId)
 {
     if ($filters = session()->get('filters')) {
@@ -276,19 +421,36 @@ function getCurrentSuppliers($catId)
     return [];
 }
 
-function discountTo($item) {
+/**
+ * get text for discount codes
+ *
+ * @param $item
+ *
+ * @return mixed
+ */
+function discountTo($item)
+{
     $texts = [
-        'all' => 'All Order',
-        'products' => 'Only Products',
-        'delivery' => 'Only Delivery'
+        'category' => 'Only Category(-ies)',
+        'product'  => 'Only Product(-s)',
+        'delivery' => 'Only Delivery',
     ];
 
     return $texts[$item];
 }
 
-function usesLeft($item) {
-    if(is_null($item)) {
+/**
+ * Discount code unlimited symbol
+ *
+ * @param $item
+ *
+ * @return string
+ */
+function usesLeft($item)
+{
+    if (is_null($item)) {
         return "∞";
     }
+
     return $item;
 }

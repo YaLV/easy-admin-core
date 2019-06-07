@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontController;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -43,11 +45,36 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-       /* if (Auth::user()->isAdmin) {
+        if (Auth::user()->isAdmin) {
             return route('dashboard');
-        }*/
+        }
 
         return r('page');
+    }
+
+    public function loginFB()
+    {
+        $userData = Socialite::driver('facebook')->user();
+
+        $user = User::where(['email' => $userData->email])->first();
+
+        if (!$user || !$user->registered) {
+            list($name, $lastname) = explode(" ", $userData->name, 2);
+            $newUser = new User(['email' => $userData->email, 'name' => $name, 'last_name' => $lastname]);
+            $newUser = $newUser->toArray();
+            if ($user) {
+                $newUser = array_merge($user->toArray(), $newUser);
+            }
+
+            return redirect(r('register'))->with(['fbuser' => $newUser, 'existingUser' => ($user ?? false)]);
+        }
+        Auth::login($user);
+        return redirect(r('page'));
+    }
+
+    public function goToFB()
+    {
+        return Socialite::driver('facebook')->redirect();
     }
 
     public function username()
@@ -63,7 +90,8 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -97,9 +125,10 @@ class LoginController extends Controller
         $this->sendFailedLoginResponse($request);
 
         $cr = explode(".", Route::currentRouteName());
-        if($cr[0]=='frontlogin') {
+        if ($cr[0] == 'frontlogin') {
             return redirect(r('frontlogin'));
         }
+
         return redirect()->route('login');
 
     }
@@ -107,7 +136,8 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)

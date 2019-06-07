@@ -60,7 +60,13 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register', ['user' => new User, "pageTitle" => _t('translations.registerForm')]);
+//        $exist = true;
+
+        $newUser = session()->get('fbuser');
+
+        $user = new User($newUser??[]);
+
+        return view('auth.register', ['user' => $user, "pageTitle" => _t('translations.registerForm')]);
     }
 
     public function register(Profile $request)

@@ -39,5 +39,9 @@ return [
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
     ],
-
+    'facebook' => [
+        'client_id' => '168448303906822',
+        'client_secret' => '932475ea4cf6a94b77e6d2d91388ad58',
+        'redirect' => env('APP_URL')."/".language()."/loginFB",
+    ],
 ];

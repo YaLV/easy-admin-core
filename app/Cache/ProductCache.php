@@ -35,7 +35,7 @@ class ProductCache
 
     public function __construct($product)
     {
-        if(Auth::user()) {
+        if (Auth::user()) {
             $this->discount = Auth::user()->discount($product->id, $product->main_category);
         } else {
             $this->discount = 0;
@@ -69,8 +69,9 @@ class ProductCache
         $this->variations = $prices;
     }
 
-    public function lowestAmount() {
-        return min( array_column($this->variations, 'amount'));
+    public function lowestAmount()
+    {
+        return min(array_column($this->variations, 'amount'));
     }
 
     private function setDefaultData($product)
@@ -145,20 +146,32 @@ class ProductCache
         return $user->discount($this->id, $this->mainCategory);
     }
 
+    public function getDiscountName() {
+        $user = Auth::user() ?? session()->get('user') ?? User::find(99);
+
+        return $user->discount($this->id, $this->mainCategory, true);
+    }
+
+
     public function prices($amount = 1)
     {
         $price = [];
         foreach ($this->variations as $variationid => $variation) {
             $priceVariation = calcPrice($this->price->cost, $this->price->vat, $this->price->mark_up, $this->discount() ?? 0);
             $price[$variationid] = (object)[
-                'display_name' => $variation->display_name,
-                'price'        => number_format(round($priceVariation->wdiscount->price * $variation->amount, 2), 2),
-                'oldPrice'     => number_format(round($priceVariation->full->wvat * $variation->amount, 2), 2),
-                'vat'          => $priceVariation->wdiscount->pricevat * $variation->amount,
-                'id'           => $variationid,
-                'size'         => $variation->amount,
-                'amountinpackage' => ($variation->amount<1 && ($this->units['fraction']??false)) ? $variation->amount*$this->units['fraction']['multiply'] : $variation->amount,
-                'amountUnit'    => ($variation->amount<1 && ($this->units['fraction']??false)) ? $this->units['fraction']['unit'] : $this->units['unit'],
+                'display_name'    => $variation->display_name,
+                'price'           => number_format(round($priceVariation->wdiscount->price * $variation->amount, 2), 2),
+                'oldPrice'        => number_format(round($priceVariation->full->wvat * $variation->amount, 2), 2),
+                'vat'             => $priceVariation->wdiscount->pricevat * $variation->amount,
+                'id'              => $variationid,
+                'size'            => $variation->amount,
+                'amountinpackage' => ($variation->amount < 1 && ($this->units['fraction'] ?? false)) ? $variation->amount * $this->units['fraction']['multiply'] : $variation->amount,
+                'amountUnit'      => ($variation->amount < 1 && ($this->units['fraction'] ?? false)) ? $this->units['fraction']['unit'] : $this->units['unit'],
+                'price_raw'       => number_format(round($priceVariation->full->wvat * $variation->amount, 2), 2),
+                'vat_raw'         => number_format(round($priceVariation->full->vat * $variation->amount, 2), 2),
+                'cost'            => number_format(round($this->price->cost * $variation->amount, 2), 2),
+                'markup'          => $this->price->mark_up,
+                'markup_amount'   => $priceVariation->full->markup,
             ];
         }
 
@@ -280,7 +293,8 @@ class ProductCache
         return $category->limit(10)->pluck('products.id');
     }
 
-    public function isAvailable($variation, $amount) {
-        return !is_null($amount)?$this->variations[$variation]->amount<=$amount:true;
+    public function isAvailable($variation, $amount)
+    {
+        return !is_null($amount) ? $this->variations[$variation]->amount <= $amount : true;
     }
 }
