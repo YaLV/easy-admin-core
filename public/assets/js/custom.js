@@ -7,4 +7,11 @@ $(document).ready(function () {
       }
       $('#legalform').addClass('hidden');
    });
+
+    jQuery(document).keyup(function(e) {
+        if(e.keyCode===27 && jQuery('body').hasClass('sv-lightbox-open')) {
+            jQuery('div.sv-lightbox-open .sv-close').click();
+        }
+    });
+
 });

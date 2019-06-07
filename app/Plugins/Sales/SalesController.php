@@ -3,6 +3,7 @@
 namespace App\Plugins\Sales;
 
 
+use App\Http\Controllers\CacheController;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Sales\Functions\Sales;
 use App\Plugins\Sales\Model\Sale;
@@ -83,6 +84,9 @@ class SalesController extends AdminController
             DB::beginTransaction();
 
             Sale::updateOrCreate(['id' => $id], request(['name', 'amount', 'discount_to', 'discount_target', 'user_group', 'valid_from', 'valid_to']));
+
+            (new CacheController)->getPromotions(true);
+
             DB::commit();
 
 

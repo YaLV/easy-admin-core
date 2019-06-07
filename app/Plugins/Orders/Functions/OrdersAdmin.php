@@ -5,39 +5,45 @@ namespace App\Plugins\Orders\Functions;
 use App\Plugins\Orders\Model\OrderHeader;
 use Carbon\Carbon;
 
-
+/**
+ * Trait OrdersAdmin
+ *
+ * @used-by OrderHeader
+ * @package App\Plugins\Orders\Functions
+ */
 trait OrdersAdmin
 {
     public $buyerData;
     public $states = ['ordered' => 'New', 'cancelled' => 'Canceled', 'finished' => 'Finished', 'draft' => 'Cart'];
-
+    public $isOriginal = false;
 
     public function getCheckAttribute() {
+        /** @var OrderHeader $this */
         return "<input type='checkbox' name='massAction' class='massAction' value='{$this->id}' />";
     }
 
     public function getUserFullNameAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return $this->buyer->full_name;
     }
 
     public function getUserEmailAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return $this->buyer->email;
     }
 
     public function getUserPhoneAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return $this->buyer->phone;
     }
 
     public function getUserGroupAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return $this->buyergroup()->name;
     }
 
     public function getUserCommentAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return $this->buyer->comment;
     }
 
@@ -47,7 +53,10 @@ trait OrdersAdmin
     }
 
     public function stateSelect($classes = "") {
-        /** @var $this OrderHeader */
+        if($this->isOriginal) {
+            return $this->states[$this->state];
+        }
+        /** @var  OrderHeader $this  */
         $opts = [];
         foreach($this->states as $opt => $optName) {
             $opts[] = "<option value='$opt' ".($this->state==$opt?"selected":"").">$optName</option>";
@@ -66,12 +75,15 @@ trait OrdersAdmin
     }
 
     public function getPaidAmountAttribute() {
-        /** @var $this OrderHeader */
+        if($this->isOriginal) {
+            return $this->paid." &euro;";
+        }
+        /** @var  OrderHeader $this  */
         return "<input type='text' value='{$this->paid}' size='4' class='paidinput' id='paid{$this->id}' data-origvalue='{$this->paid}' />&euro; <a href='".route('orders.setpaid', [$this->id])."' class='setPaid btn btn-xs btn-success invisible'><i class='fas fa-check'></i></a>";
     }
 
     public function getPaidAmountTextAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return ($this->paid??0);
     }
 
@@ -80,25 +92,38 @@ trait OrdersAdmin
     }
 
     public function getMarketDayAttribute() {
-        /** @var $this OrderHeader */
+        /** @var  OrderHeader $this  */
         return $this->order_market_day->marketDay[language()];
     }
 
     public function getMarketDayDateFormattedAttribute($value){
+        /** @var  OrderHeader $this  */
         return Carbon::createFromTimeString($this->market_day_date)->format('d.m.Y');
     }
 
     public function getOrderedAtFormattedAttribute(){
+        /** @var  OrderHeader $this  */
         return Carbon::createFromTimeString($this->ordered_at)->format('d.m.Y H:i:s');
     }
 
     public function getSelectedDeliveryAttribute()
     {
-        /** @var $this OrderHeader */
+        /** @var OrderHeader $this */
         $marketDayDeliveries = $this->order_market_day->deliveries()->get();
         $md = Carbon::createFromFormat("d.m.Y", $this->market_day_date_formatted);
         $mdopt = [];
         $deliveryTypes = ['local' => 'Collect at warehouse', 'delivery' => 'Delivery to address'];
+
+        if($this->isOriginal) {
+            $delivery = $this->delivery;
+            $dt = $md->copy();
+            $modifiedMD = $dt->addDays($delivery->deliveryTime ?? 0);
+            $mdDate = $modifiedMD->format('j');
+            $month = __("translations." . $modifiedMD->format('F'));
+            $dayName = __("translations." . $modifiedMD->format('l'));
+
+            return __('translations.marketDayDeliveryText', ["dayname" => $dayName, 'date' => $mdDate, 'month' => $month]);
+        }
 
 
         foreach ($marketDayDeliveries as $delivery) {
@@ -117,14 +142,36 @@ trait OrdersAdmin
     }
 
     public function getOrderIdAttribute() {
+        /** @var OrderHeader $this */
         return implode("-",[$this->id, implode("#", [Carbon::createFromTimeString($this->ordered_at)->timestamp, $this->market_day_id])]);
     }
 
     public function getInvoiceUrlAttribute() {
+        /** @var OrderHeader $this */
         return "<a href='#'>{$this->invoice}</a>";
     }
 
     public function getCommentsAttribute($value) {
-        return "<textarea name='comments' class='noEditor' style='width:100%;height:100px;'>$value</textarea>";
+        /** @var OrderHeader $this */
+        if($this->isOriginal) {
+            return $value;
+        }
+        return "<textarea name='comments' class='noEditor autosave' style='width:100%;height:100px;' data-id='".$this->id."'>$value</textarea>";
+    }
+
+    public function getSvaigiCommentInvoiceAttribute($value) {
+        /** @var OrderHeader $this */
+        if($this->isOriginal) {
+            return $value;
+        }
+        return "<textarea name='svaigi_comment_invoice' class='noEditor autosave' data-id='".$this->id."' style='width:100%;height:100px;'>$value</textarea>";
+    }
+
+    public function getSvaigiCommentStatsAttribute($value) {
+        /** @var OrderHeader $this */
+        if($this->isOriginal) {
+            return $value;
+        }
+        return "<textarea name='svaigi_comment_stats' class='noEditor autosave' data-id='".$this->id."' style='width:100%;height:100px;'>$value</textarea>";
     }
 }

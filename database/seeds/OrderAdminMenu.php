@@ -62,7 +62,7 @@ class OrderAdminMenu extends Seeder
 
         \App\Model\Admin\Menu::updateOrCreate(
             [
-                'slug'      => 'destroy/{id}',
+                'slug'      => 'destroy/{id?}',
                 'routeName' => "$main.destroy",
             ],
             [
@@ -102,29 +102,15 @@ class OrderAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::updateOrCreate(
+        $viewCat = \App\Model\Admin\Menu::updateOrCreate(
             [
-                'slug'      => 'view/{id}',
+                'slug'      => 'view/{id}/{original?}',
                 'routeName' => "$main.view",
             ],
             [
                 'icon'        => 'fas fa-fa-folder-open',
                 'displayName' => 'View',
                 'action'      => '\App\Plugins\Orders\OrderController@showOrder',
-                'inMenu'      => '0',
-                'sequence'    => 0,
-                'parent_id'   => $mainCat->id,
-                'method'      => 'GET',
-            ]);
-        \App\Model\Admin\Menu::updateOrCreate(
-            [
-                'slug'      => 'viewOriginal/{id}',
-                'routeName' => "$main.viewOriginal",
-            ],
-            [
-                'icon'        => 'fas fa-fa-folder-open',
-                'displayName' => 'View',
-                'action'      => '\App\Plugins\Orders\OrderController@showOriginal',
                 'inMenu'      => '0',
                 'sequence'    => 0,
                 'parent_id'   => $mainCat->id,
@@ -189,6 +175,37 @@ class OrderAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
+
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'updateOrderField',
+                'routeName' => "$main.updateOrderField",
+            ],
+            [
+                'icon'        => 'fas fa-envelope',
+                'displayName' => 'Update text fields',
+                'action'      => '\App\Plugins\Orders\OrderController@updateField',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $viewCat->id,
+                'method'      => 'POST',
+            ]);
+
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'summaryExport',
+                'routeName' => "$main.summary",
+            ],
+            [
+                'icon'        => 'fas fa-book',
+                'displayName' => 'Create order summary',
+                'action'      => '\App\Plugins\Orders\OrderController@createSummary',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+
         /*
         $main = 'orderHistory';
         $mainCat = \App\Model\Admin\Menu::updateOrCreate(

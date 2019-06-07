@@ -126,8 +126,8 @@ class CacheController extends Controller
         return $mDay->date->timestamp==$marketDay->date->timestamp;
     }
 
-    public function getPromotions() {
-        $cache = $this->getCache('promotions');
+    public function getPromotions($forget = false) {
+        $cache = $forget?null:$this->getCache('promotions');
 
         if(!$cache) {
             $cache = new PromoCache();

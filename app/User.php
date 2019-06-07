@@ -62,14 +62,21 @@ class User extends Authenticatable
      *
      * @return int
      */
-    public function discount($product = false, $category = false)
+    public function discount($product = false, $category = false, $getName = false)
     {
 
         if(!$product || !$category) { return 0; }
 
         $pc = (new CacheController)->getPromotions();
 
-        return current(max([$pc->getDiscount('product', $product), $pc->getDiscount('category', $category)]));
+        $discSeperated = [$pc->getKeyValuePair('product', $product, $this->user_group_id), $pc->getKeyValuePair('category', $category, $this->user_group_id)];
+        $disc = max($discSeperated);
+
+        if($getName) {
+            return $pc->promotionNames[key($disc)] ?? "Unknown Name";
+        }
+
+        return current($disc);
     }
 
     /**
@@ -127,7 +134,7 @@ class User extends Authenticatable
             $userFind['id'] = $requestData['id'];
         } else {
             $isInUsers = User::where(['email' => request('email'), 'registered' => 0])->first();
-            $userFind['id'] = $isInUsers?$isInUsers->pluck('id')->toArray():null;
+            $userFind['id'] = $isInUsers?$isInUsers->id:null;
         }
         $requestData['registered'] = 1;
 

@@ -21,6 +21,12 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 
 // --------------- PUBLIC ROUTES ------------------- //
 
+    Route::get("/{lang}/loginFB",'Auth\LoginController@loginFB')->name('loginFB');
+    Route::get("/loginFB",'Auth\LoginController@loginFB')->name('loginFB.default');
+
+    Route::get('/{lang}/fblogin', 'Auth\LoginController@GoToFB')->name('doFBLogin');
+    Route::get('/fblogin', 'Auth\LoginController@GoToFB')->name('doFBLogin.default');
+
     Route::pattern('lang', implode("|", languages()->pluck("code")->toArray()));
     Route::pattern('pageSlug', implode('|', __('pages.slug')));
 

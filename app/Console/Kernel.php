@@ -171,6 +171,20 @@ class Kernel extends ConsoleKernel
         })->runInBackground()
             ->withoutOverlapping()
             ->evenInMaintenanceMode();
+
+        // create order Summary
+        $schedule->command("svaigi:createSummary")->everyMinute()->when(function () {
+            $scheduled = Schedules::where(['running' => 0, 'type' => 'orderSummary', 'finished' => 0])->orWhere(function (Builder $q) {
+                $q->where('running', 1)
+                    ->where('updated_at', '>=', Carbon::now()->addMinutes(-5))
+                    ->where('type', 'orderSummary')
+                    ->where('finished', 0);
+            })->first();
+
+            return $scheduled;
+        })->runInBackground()
+            ->withoutOverlapping()
+            ->evenInMaintenanceMode();
     }
 
 }

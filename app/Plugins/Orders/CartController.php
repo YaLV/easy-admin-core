@@ -8,6 +8,7 @@ use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\DiscountCodes\Model\DiscountCode;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
+use App\Plugins\Orders\Model\OriginalOrder;
 use App\Plugins\Products\Model\Product;
 use App\User;
 use Carbon\Carbon;
@@ -156,6 +157,12 @@ class CartController extends Controller
                 'real_amount'    => $variation->amountinpackage,
                 'amount_unit'    => $variation->amountUnit,
                 'amount'         => $request->get('amount') ?? 1,
+                'price_raw'      => $variation->price_raw,
+                'vat_raw'        => $variation->vat_raw,
+                'cost'           => $variation->cost,
+                'markup'         => $variation->markup,
+                'markup_amount'  => $variation->markup_amount,
+                'discount_name'  => $product->getDiscountName()
             ];
 
             if ($item) {
@@ -190,11 +197,7 @@ class CartController extends Controller
 
                 return true;
             } else {
-                /*                if ($cart->discount_target == 'all' || $cart->discount_target == 'delivery') {
-                                    $deliveryPrice = number_format(round($delivery->price / (1 + ($cart->discount_amount / 100)), 2), 2);
-                                } else {*/
                 $deliveryPrice = $delivery->price;
-//                }
                 $cart->update(['delivery_amount' => $deliveryPrice]);
 
                 return true;
@@ -375,6 +378,12 @@ class CartController extends Controller
             }
         }
 
+        OriginalOrder::create([
+            'id' => $cart->id,
+            'headers' => $cart->getOriginal(),
+            'items' => $cart->items->toArray()
+        ]);
+
         return redirect(r('thankyou'));
     }
 
@@ -428,6 +437,7 @@ class CartController extends Controller
 
     public function discount_code()
     {
+
         request()->merge(['code' => strtoupper(request('code'))]);
 
         request()->validate([
@@ -446,15 +456,16 @@ class CartController extends Controller
 
         /** @var DiscountCode $discount_code */
         $discount_code = DiscountCode::where('code', request('code'))->first();
-        $discount_code->increment('uses', -1);
-
+        if (!is_null($discount_code->uses)) {
+            $discount_code->increment('uses', -1);
+        }
         $cart = $this->getCart();
-
         $result = $cart->update([
             'discount_code'   => request('code'),
             'discount_amount' => $discount_code->amount,
             'discount_target' => $discount_code->applied,
             'discount_type'   => $discount_code->unit,
+            'discount_items'  => json_decode($discount_code->getOriginal('items')),
         ]);
 
         return redirect()->back()->with(['message' => 'Discount Code Added']);

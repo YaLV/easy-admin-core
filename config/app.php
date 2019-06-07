@@ -44,6 +44,7 @@ return [
         'orderImport'        => 'Order Change Import',
         'createPDF'          => 'Order PDF Generation',
         'sendOrderEmails'    => 'Order Sending to Suppliers',
+        'orderSummary'       => 'Order Summary',
     ],
     /*
     |--------------------------------------------------------------------------
@@ -219,7 +220,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -269,7 +270,7 @@ return [
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
         'PDF'          => Barryvdh\DomPDF\Facade::class,
-
+        'Socialite'    => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

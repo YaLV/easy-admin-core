@@ -17,5 +17,6 @@
 
     <a href="{{ route('orders.sendEmails') }}" class="btn btn-success btn-xs isAjax post ask" data-question="{{ __('translations.SureToSend') }}"><i class="fas fa-envelope"></i></a>
     <a href="{{ route('orders.exportOrders') }}" class="btn btn-warning btn-xs isAjax post" title="Export"><i class="fas fa-download"></i></a>
+    <a href="{{ route('orders.summary') }}" class="btn btn-info btn-xs isAjax post" title="Order Summary"><i class="fas fa-book"></i></a>
 
 </div>

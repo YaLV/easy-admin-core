@@ -24,6 +24,10 @@
                         <!-- general tabl -->
                         <div class="tab-pane fade show active" id="general" role="tabpanel"
                              aria-labelledby="general-tab">
+                            <div class="row viewRow">
+                                <div class="col-md-10"></div>
+                                <div class="col-md-2"><a href="{{ route('orders.view', $order->isOriginal?[$order->id]:[$order->id,"original"]) }}" class="btn btn-info btn-mini">{{ $order->isOriginal?"Show Current":"Show Original" }}</a></div>
+                            </div>
                             @foreach($fields as $fieldName => $label)
                                 @if($label=='hr')
                                     <div class="row viewRow">
@@ -55,4 +59,7 @@
 
 @push('scripts')
     <script src="{{ asset('js/orderlist.js') }}"></script>
+    <script>
+        var orderUpdateUrl = "{{ route('orders.updateOrderField', [$order->id, 'ori']) }}";
+    </script>
 @endpush

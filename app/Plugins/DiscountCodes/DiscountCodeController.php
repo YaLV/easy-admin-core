@@ -74,12 +74,19 @@ class DiscountCodeController extends AdminController
             'code'    => $rules,
         ]);
 
+        $plugin = ucfirst(str_plural(request('applied')));
+        $pluginSingle = str_singular($plugin);
+        $class = "\\App\\Plugins\\$plugin\\Model\\$pluginSingle" . "Meta";
+
+        $target_names = array_map(function ($val) {
+            return trim($val);
+        }, explode(",", request('items')));
+
         try {
             DB::beginTransaction();
-            $from = request('valid_from')?Carbon::createFromFormat('m/d/Y',request('valid_from')):null;
-            $to = request('valid_to')?Carbon::createFromFormat('m/d/Y',request('valid_to')):null;
-
-                DiscountCode::updateOrCreate(['id' => $id], array_merge(request(['unit', 'applied','amount', 'code', 'uses']), ['valid_from' => $from, 'valid_to' => $to]));
+            $from = request('valid_from') ? Carbon::createFromFormat('m/d/Y', request('valid_from')) : null;
+            $to = request('valid_to') ? Carbon::createFromFormat('m/d/Y', request('valid_to')) : null;
+            DiscountCode::updateOrCreate(['id' => $id], array_merge(request(['unit', 'applied', 'amount', 'code', 'uses']), ['valid_from' => $from, 'valid_to' => $to, 'items' => $class::where('meta_name', 'name')->whereIn('meta_value', $target_names??[])->get()->pluck('owner_id')->toArray()]));
             DB::commit();
         } catch (\PDOException $e) {
             DB::rollBack();
