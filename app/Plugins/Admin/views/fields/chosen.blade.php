@@ -11,7 +11,7 @@
                 @foreach($options as $option)
                     <option value="{{ ($option->id??$option['id']) }}"
                             {{ in_array($option->id??$option['id'], (array)$selectedItems)?"selected=selected":"" }}>
-                        {{($option->name??$options['name']??"")}}
+                        {{($option->name??$option['name']??"")}}
                     </option>
                 @endforeach
             </select>

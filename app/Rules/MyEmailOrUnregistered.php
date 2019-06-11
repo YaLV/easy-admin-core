@@ -27,7 +27,9 @@ class MyEmailOrUnregistered implements Rule
      */
     public function passes($attribute, $value)
     {
-        return User::where(['email' => $value, 'registered' => 1])->where('id', '!=', Auth::user()->id)->count()==0;
+        $user = Auth::user()??(object)['id' => 0];
+
+        return User::where(['email' => $value, 'registered' => 1])->where('id', '!=', $user->id)->count()==0;
     }
 
     /**
