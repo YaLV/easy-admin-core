@@ -34,7 +34,7 @@
                                 <span><img src="{{ asset('img/icon-visa.png')}}" class="visa"></span>
                             </a>
 
-                            <a href="#" class="pay" data-paymentType="money">
+                            <a href="#" class="pay" data-paymenttype="money">
                                 <h4>{!! _t('translations.payWithCash') !!}</h4>
                                 <span>{!! _t('translations.payWithCashDesc') !!}</span>
                             </a>
@@ -45,7 +45,7 @@
                                                         </a>
                             --}}
                             @if($user->is_legal)
-                                <a href="#" class="pay" data-paymentType="invoice">
+                                <a href="#" class="pay" data-paymenttype="invoice">
                                     <h4>{!! _t('translations.payWithInvoice') !!}</h4>
                                     <span>{!! _t('translations.payWithInvoiceDesc') !!}</span>
                                 </a>
@@ -165,7 +165,7 @@
         $(document).ready(function () {
             $('.pay').click(function (e) {
                 e.preventDefault();
-                $('#payment_type').val($(this).data('paymentType'));
+                $('#payment_type').val($(this).data('paymenttype'));
                 $('.payForm').submit();
                 return false;
             });
