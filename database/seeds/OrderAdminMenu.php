@@ -220,6 +220,29 @@ class OrderAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'setAmount/{oid}/{id}',
+                'routeName' => "$main.setAmount",
+            ],
+            [
+                'icon'        => 'fas fa-',
+                'displayName' => 'Set Amount for product',
+                'action'      => '\App\Plugins\Orders\OrderController@setAmount',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
+
+
+
+
+
+
+
+
+
         /*
         $main = 'orderHistory';
         $mainCat = \App\Model\Admin\Menu::updateOrCreate(
