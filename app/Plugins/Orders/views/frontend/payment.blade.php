@@ -31,10 +31,10 @@
                         <div class="payment-cards">
                            <a href="{{ r('paysera.make') }}">
                                 <h4>{!! _t('translations.payWithCard') !!}</h4>
-                                <span><img src="img/icon-visa.png" class="visa"></span>
+                                <span><img src="{{ asset('img/icon-visa.png')}}" class="visa"></span>
                             </a>
 
-                            <a href="#" class="payWithMoney">
+                            <a href="#" class="pay">
                                 <h4>{!! _t('translations.payWithCash') !!}</h4>
                                 <span>{!! _t('translations.payWithCashDesc') !!}</span>
                             </a>
