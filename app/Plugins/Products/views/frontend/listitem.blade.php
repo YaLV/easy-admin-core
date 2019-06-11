@@ -27,7 +27,7 @@
             @if($item->hasManyPrices())
                 <select name="variation_id" class="selectpicker">
                     @foreach($item->prices() as $priceID => $price)
-                        <option data-wrap="true" {{ $item->isAvailable($priceID, $itemAmount)?"":"disabled" }}
+                        <option data-wrap="true" {{ $item->isAvailable($priceID, ($itemAmount??null))?"":"disabled" }}
                                 value="{{ $priceID }}" {{$loop->first?"selected":""}} {{ $item->isSale()?"data-origprice={$price->oldPrice}€":"" }}>{{ implode(" / ",[$price->price."€", $price->display_name]) }}</option>
                     @endforeach
                 </select>
