@@ -206,6 +206,20 @@ class OrderAdminMenu extends Seeder
                 'method'      => 'POST',
             ]);
 
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'changeDelivery/{id}',
+                'routeName' => "$main.changeDelivery",
+            ],
+            [
+                'icon'        => 'fas fa-',
+                'displayName' => 'Change Order Delivery',
+                'action'      => '\App\Plugins\Orders\OrderController@changeDelivery',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => $mainCat->id,
+                'method'      => 'POST',
+            ]);
         /*
         $main = 'orderHistory';
         $mainCat = \App\Model\Admin\Menu::updateOrCreate(
