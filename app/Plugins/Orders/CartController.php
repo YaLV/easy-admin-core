@@ -123,7 +123,7 @@ class CartController extends Controller
             } else {
                 $item->increment('amount', ($amount ?? 1));
             }
-            $item->update(['total_amount' => $origSize * $amount, 'real_amount' => $origSize * $amount]);
+            $item->update(['total_amount' => $origSize * ($amount ?? 1), 'real_amount' => $origSize * ($amount ?? 1)]);
         } else {
             $amount = $request->get('amount');
 
@@ -153,8 +153,8 @@ class CartController extends Controller
                 'variation_size' => $variation->size,
                 'discount'       => $product->discount(),
                 'variation_id'   => $request->get('variation_id'),
-                'total_amount'   => $variation->amountinpackage,
-                'real_amount'    => $variation->amountinpackage,
+                'total_amount'   => $variation->amountinpackage*($request->get('amount') ?? 1),
+                'real_amount'    => $variation->amountinpackage*($request->get('amount') ?? 1),
                 'amount_unit'    => $variation->amountUnit,
                 'amount'         => $request->get('amount') ?? 1,
                 'price_raw'      => $variation->price_raw,

@@ -105,5 +105,7 @@ class UserGroupAdminMenu extends Seeder
                 'parent_id'   => $vacations->id,
                 'method'      => 'POST',
             ]);
+
+        \App\Plugins\UserGroups\Model\UserGroup::create(['id' => 1,'name' => 'Ungrouped', 'min_orders' => 0]);
     }
 }
