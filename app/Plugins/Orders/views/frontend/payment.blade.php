@@ -34,7 +34,7 @@
                                 <span><img src="{{ asset('img/icon-visa.png')}}" class="visa"></span>
                             </a>
 
-                            <a href="#" class="pay">
+                            <a href="#" class="pay" data-paymentType="money">
                                 <h4>{!! _t('translations.payWithCash') !!}</h4>
                                 <span>{!! _t('translations.payWithCashDesc') !!}</span>
                             </a>
@@ -165,7 +165,7 @@
         $(document).ready(function () {
             $('.pay').click(function (e) {
                 e.preventDefault();
-                $('#payment_type').val($(this).data('paymenttype'));
+                $('#payment_type').val($(this).data('paymentType'));
                 $('.payForm').submit();
                 return false;
             });
