@@ -18,7 +18,10 @@ class OrderHeader extends Model
     use OrdersAdmin;
     use SoftDeletes;
 
-    public $fillable = ['id', 'user_id', 'market_day_id', 'market_day_date', 'state', 'discount_code', 'discount_target', 'discount_amount', 'discount_type', 'delivery_amount', 'delivery_id', 'ordered_at', 'paid', 'invoice', 'payment_type', 'comments', 'discount_items', 'svaigi_comment_stats', 'svaigi_comment_invoice'];
+    public $fillable = ['id', 'user_id', 'market_day_id', 'market_day_date', 'state',
+        'discount_code', 'discount_target', 'discount_amount', 'discount_type', 'delivery_amount', 'delivery_id',
+        'ordered_at', 'paid', 'invoice', 'payment_type', 'comments', 'discount_items', 'svaigi_comment_stats',
+        'svaigi_comment_invoice','address','city','postcode'];
     public $casts = [
         'discount_items' => 'array',
     ];

@@ -40,7 +40,8 @@
                             <a href="{{$crumb['url']}}">{{$crumb['name']}}</a>
                         @endforeach
                     </div>
-                    <a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">
+                    <a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$product->supplier_id}")]) }}"
+                       class="farmer">
                         <img src="{{ $product->supplier()->image(config('app.imageSize.supplier_image.main')) }}">
                         <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                     </a>
@@ -104,7 +105,8 @@
         <div class="sv-blank-spacer medium"></div>
 
         <div class="sv-farmer-about">
-            <a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$product->supplier_id}")]) }}" class="farmer">
+            <a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$product->supplier_id}")]) }}"
+               class="farmer">
                 <img src="{{ $product->supplier()->image(config('app.imageSize.supplier_image.main')) }}">
                 <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                 <h4>{{ __("supplier.location.".$product->supplier_id) }}</h4>
@@ -129,6 +131,28 @@
                 @endforeach
             </div>
         </div>
+
+        @if($blogPosts = \App\Plugins\Products\Model\Product::find($product->id)->blogPosts)
+            <div class="sv-blank-spacer medium"></div>
+            <div class="sv-title">
+                <h3>{{ _t('translations.linked blogposts') }}</h3>
+            </div>
+            <div class="sv-blank-spacer medium"></div>
+            <div class="sv-blog-list-slider">
+                <div class="owl-carousel">
+                    @foreach($blogPosts as $post)
+                        <div class="item">
+                            <a href="{{ r('blog', [__('postcategory.slug.'.$post->main_category), __('posts.slug.'.$post->id)]) }}" class="link"></a>
+                            <div class="title">
+                                <h2>{{ __('posts.name.'.$post->id) }}</h2>
+                            </div>
+                            <div class="image" style="background-image: url({{ $post->getImageByKey('blog_picture') }});"></div>
+                            <div class="sizing"></div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 
 @endsection

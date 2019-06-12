@@ -8,6 +8,7 @@ use App\Functions\General;
 use App\Plugins\Admin\Model\File;
 use App\Plugins\Attributes\Model\Attribute;
 use App\Plugins\Attributes\Model\AttributeValue;
+use App\Plugins\Blog\Model\Blog;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\MarketDays\Model\MarketDay;
 use App\Plugins\Suppliers\Model\Supplier;
@@ -189,6 +190,10 @@ class Product extends BaseModel
 
     public function getAvailableAttribute() {
         return "<input type='text' readonly class='form-control small-width currentAmount' style='float:left;border:0px;background:transparent;padding-left:0px;padding-right:0px;' value='".$this->storage_amount."'> <input type='hidden' name='reset' value='1' /> <a href='".route('products.storage.store', [$this->id])."' class='btn btn-xs hidden ajaxUpdate' style='display:block;float:left;'><i class='fas fa-times'></i></a>";
+    }
+
+    public function blogPosts() {
+        return $this->belongsToMany(Blog::class);
     }
 
 }

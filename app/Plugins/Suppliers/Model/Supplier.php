@@ -4,6 +4,7 @@ namespace App\Plugins\Suppliers\Model;
 
 use App\BaseModel;
 use App\Plugins\Admin\Model\File;
+use App\Plugins\Blog\Model\Blog;
 use App\Plugins\Products\Model\Product;
 
 class Supplier extends BaseModel
@@ -36,5 +37,9 @@ class Supplier extends BaseModel
 
     public function getCoordsArrayAttribute() {
         return explode(",",$this->coords);
+    }
+
+    public function blogPosts() {
+        return $this->belongsToMany(Blog::class);
     }
 }
