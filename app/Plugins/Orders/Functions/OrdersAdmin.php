@@ -13,10 +13,15 @@ use Carbon\Carbon;
  */
 trait OrdersAdmin
 {
+
     public $buyerData;
     public $states = ['ordered' => 'New', 'cancelled' => 'Canceled', 'finished' => 'Finished', 'draft' => 'Cart'];
     public $isOriginal = false;
 
+
+    /**
+     * @return string
+     */
     public function getCheckAttribute() {
         /** @var OrderHeader $this */
         return "<input type='checkbox' name='massAction' class='massAction' value='{$this->id}' />";
@@ -52,10 +57,10 @@ trait OrdersAdmin
     }
 
     public function stateSelect($classes = "") {
+        /** @var  OrderHeader $this  */
         if($this->isOriginal) {
             return $this->states[$this->state];
         }
-        /** @var  OrderHeader $this  */
         $opts = [];
         foreach($this->states as $opt => $optName) {
             $opts[] = "<option value='$opt' ".($this->state==$opt?"selected":"").">$optName</option>";
@@ -69,15 +74,16 @@ trait OrdersAdmin
     }
 
     public function getOrderSumAttribute() {
+        /** @var  OrderHeader $this  */
         $sum = getCartTotals($this);
         return $sum->toPay." &euro;";
     }
 
     public function getPaidAmountAttribute() {
+        /** @var  OrderHeader $this  */
         if($this->isOriginal) {
             return $this->paid." &euro;";
         }
-        /** @var  OrderHeader $this  */
         return "<input type='text' value='{$this->paid}' size='4' class='paidinput' id='paid{$this->id}' data-origvalue='{$this->paid}' />&euro; <a href='".route('orders.setpaid', [$this->id])."' class='setPaid btn btn-xs btn-success invisible'><i class='fas fa-check'></i></a>";
     }
 
@@ -87,6 +93,7 @@ trait OrdersAdmin
     }
 
     public function getPaymentAttribute() {
+        /** @var  OrderHeader $this  */
         return config('app.paymentNames.'.$this->payment_type);
     }
 
@@ -95,7 +102,7 @@ trait OrdersAdmin
         return $this->order_market_day->marketDay[language()];
     }
 
-    public function getMarketDayDateFormattedAttribute($value){
+    public function getMarketDayDateFormattedAttribute(){
         /** @var  OrderHeader $this  */
         return Carbon::createFromTimeString($this->market_day_date)->format('d.m.Y');
     }
