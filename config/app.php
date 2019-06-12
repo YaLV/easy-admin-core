@@ -11,6 +11,7 @@ return [
         'pageimage2'     => 'pages',
         'pageimage3'     => 'pages',
         'featured_image' => 'featuredsuppliers',
+        'blog_picture'   => 'blogs',
     ],
 
     'imageSize' => [
@@ -24,6 +25,9 @@ return [
         'supplier_image' => [
             'main' => '260x260',
         ],
+        'blog_picture' => [
+            'main' => '369x369'
+        ]
     ],
 
     'defaultProductImage'  => '/assets/img/tmp/photo-5.jpg',

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Plugins\Blog\Model\Blog;
+use App\Plugins\Blog\Model\BlogCategories;
 use App\Plugins\Categories\Model\Category;
 use App\Plugins\Categories\Model\CategoryMeta;
-use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\Featured\Model\FeaturedSupplier;
 use App\Plugins\Orders\Functions\CartFunctions;
 use App\Plugins\Orders\Model\OrderHeader;
@@ -283,8 +284,29 @@ class FrontController extends Controller
     public function getFeaturedSupplier()
     {
         return FeaturedSupplier::inRandomOrder()->first();
-
-            //Supplier::inRandomOrder()->first();
     }
 
+    public function showBlog($blogCategory = null, $blogItem = null)
+    {
+        $blogId = array_search($blogItem, __('posts.slug'));
+        $categoryId = array_search($blogCategory, __('postcategory.slug'));
+
+        $blogCategories = new BlogCategories();
+        $blog = new Blog();
+
+        if($blogCategory) {
+            $blog = $blog->where('main_category', $categoryId);
+        }
+
+        if($blogId && $categoryId) {
+            $blogItem = Blog::where(['id' => $blogId, 'main_category' => $categoryId])->first();
+            return view('frontend.pages.blog_item', ['item' => $blogItem, 'categories' => $blogCategories->get()]);
+        }
+
+        return view('frontend.pages.blog', ['categories' => $blogCategories->get(), 'items' => $blog->get(), 'currentCategory' => $categoryId?:false]);
+    }
+
+    public function getHighlightedPosts() {
+        return Blog::inRandomOrder()->where('is_highlighted', 1)->limit(3)->get();
+    }
 }

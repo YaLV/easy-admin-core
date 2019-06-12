@@ -148,8 +148,12 @@ class BaseModel extends Model
         if(method_exists($this, 'images')) {
             $image = $this->images()->where('owner', $imageType)->first();
             $path = config("app.uploadFile.$imageType","temp");
-            $size = config("app.imageSize.$imageType.$size", 'original');
 
+            if(!$size) {
+                $size = current(config("app.imageSize.$imageType", ['original']));
+            } else {
+                $size = config("app.imageSize.$imageType.$size", 'original');
+            }
             if(!$image) {
                 return null;
             }

@@ -76,10 +76,6 @@
                                         <span>Apmaksātais ar dāvanu karti <a href="#" class="remove"></a></span>
                                         <span>0.99 €</span>
                                     </div>--}}
-                                    {{--<div>
-                                        <span>Apmaksātais ar dāvanu karti <a href="#" class="remove"></a></span>
-                                        <span>0.99 €</span>
-                                    </div>--}}
                                     @if($cart->discount_target??false)
                                         <div>
                                             <span>{!! _t('translations.cartDiscount') !!}</span>

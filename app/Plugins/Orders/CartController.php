@@ -338,7 +338,9 @@ class CartController extends Controller
             Auth::login($user);
             $cart->update(['user_id' => $user->id]);
         }
-        $cart->update(['comments' => request('comments')]);
+
+
+        $cart->update(array_merge(['comments' => request('comments')], request(['address', 'city', 'postcode'])));
 
         return redirect(r('payment'));
 

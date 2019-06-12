@@ -21,6 +21,9 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 
 // --------------- PUBLIC ROUTES ------------------- //
 
+    Route::get('/{lang}/'.__('translations.slug.blog').'/{blogCategory?}/{blogItem?}', 'FrontController@showBlog')->name('blog');
+    Route::get('/'.__('translations.slug.blog').'/{blogCategory?}/{blogItem?}', 'FrontController@showBlog')->name('blog.default');
+
     Route::get("/{lang}/loginFB",'Auth\LoginController@loginFB')->name('loginFB');
     Route::get("/loginFB",'Auth\LoginController@loginFB')->name('loginFB.default');
 

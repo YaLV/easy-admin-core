@@ -44,9 +44,8 @@ trait OrdersAdmin
 
     public function getUserCommentAttribute() {
         /** @var  OrderHeader $this  */
-        return $this->buyer->comment;
+        return $this->buyer->comments;
     }
-
 
     public function getStateSelectorAttribute() {
         return $this->stateSelect();

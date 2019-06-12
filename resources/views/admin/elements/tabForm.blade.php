@@ -104,7 +104,7 @@
 
 @section('content')
 
-    <form action="{{ route($currentRoute.".store",request()->route()->parameters) }}" method="post">
+    <form action="{{ Route::has($currentRoute.".store")?route($currentRoute.".store",request()->route()->parameters):"" }}" method="post">
         {{ @csrf_field() }}
         <div class="tab-vertical">
             <div class="row">
