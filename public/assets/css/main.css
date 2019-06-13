@@ -82,6 +82,14 @@ body.sv-lightbox-open {
 		overflow: hidden;
 }
 
+body.is-auth .sv-dock .user a .icon {
+		margin: 0 20px 0 0;
+}
+
+body.is-auth .sv-dock .user a .icon:after {
+		display: block;
+}
+
 hr {
 		margin: 25px 0;
 		border-top: 1px solid #e0e0e0;
@@ -389,7 +397,7 @@ ul, li {
 
 .sv-dock .user a .icon {
 		width: 24px;
-		margin: 0 20px 0 0;
+		margin: 0 0 0 0;
 		display: flex;
 		align-items: center;
 }
@@ -408,6 +416,7 @@ ul, li {
 		position: absolute;
 		right: -20px;
 		transition: all 150ms ease;
+		display: none;
 }
 
 .sv-dock .sv-user-dropdown {
@@ -1461,6 +1470,7 @@ ul, li {
 		align-items: center;
 		justify-content: center;
 		background: #1f9363;
+		border: none;
 }
 
 .sv-product-card .add-to-cart .icon {
@@ -2141,6 +2151,16 @@ ul, li {
 		opacity: 1;
 }
 
+.sv-copyright .visa {
+		width: 122px;
+}
+
+@media only screen and (max-width: 767px) {
+		.sv-copyright .visa {
+				margin-top: 15px;
+		}
+}
+
 .sv-menu-mobile {
 		top: 0;
 		width: 390px;
@@ -2148,7 +2168,7 @@ ul, li {
 		background: #1f9363;
 		color: #ffffff;
 		position: fixed;
-		z-index: 200;
+		z-index: 2000;
 		transform: translateX(-40%);
 		transition: all 350ms ease;
 		display: flex;
@@ -2183,6 +2203,11 @@ ul, li {
 		top: 54px;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
+}
+
+.sv-menu-mobile ul {
+		margin: 0 auto !important;
+		padding: 0 !important;
 }
 
 .sv-menu-mobile ul li a {
@@ -2894,10 +2919,6 @@ ul, li {
 		display: flex;
 }
 
-.sv-product-single-wrapper .owl-carousel {
-		width: 930px !important;
-}
-
 @media only screen and (max-width: 1470px) {
 		.sv-product-single-wrapper .sv-sidebar-category {
 				display: none;
@@ -2995,11 +3016,23 @@ ul, li {
 		display: none;
 }
 
+@media only screen and (max-width: 767px) {
+		.sv-product-title .title .breadcrumbs:last-of-type {
+				margin-bottom: 0 !important;
+		}
+}
+
 .sv-product-title .title .farmer {
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
 		flex-flow: column;
+}
+
+@media only screen and (max-width: 767px) {
+		.sv-product-title .title .farmer {
+				display: none;
+		}
 }
 
 .sv-product-title .title .farmer img {
@@ -3035,6 +3068,13 @@ ul, li {
 		line-height: 60px;
 		height: 60px;
 		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+}
+
+.sv-product-title .selectric .label h3 {
+		font-size: 22px;
 }
 
 .sv-product-title .selectric .button {
@@ -3268,6 +3308,13 @@ ul, li {
 		background: #ffffff;
 }
 
+.sv-sidebar-filters .sv-btn {
+		width: 100%;
+		font-size: 16px;
+		line-height: 50px;
+		height: 50px;
+}
+
 .sv-sidebar-search {
 		margin-bottom: 30px;
 		position: relative;
@@ -3361,6 +3408,7 @@ ul, li {
 .sv-marketday-access {
 		border-top: #eaeaea 1px solid;
 		padding-top: 50px;
+		flex-grow: 1;
 }
 
 .sv-marketday-access h3 {
@@ -4855,6 +4903,18 @@ body.farmers-open #farmersmap-canvas {
 		justify-content: flex-end;
 }
 
+.sv-cart .sidebar .clear {
+		padding-top: 15px;
+		display: flex;
+		justify-content: flex-end;
+}
+
+@media only screen and (max-width: 767px) {
+		.sv-cart .sidebar .clear {
+				justify-content: center;
+		}
+}
+
 .sv-out-of-stock {
 		color: #ff0000;
 }
@@ -5223,7 +5283,7 @@ body.farmers-open #farmersmap-canvas {
 .sv-payment .col-wrapper .row {
 		display: flex;
 		margin: 0 -15px;
-		flex-grow:1;
+		flex-grow: 1;
 }
 
 .sv-payment .col-wrapper .col {
@@ -5240,10 +5300,7 @@ body.farmers-open #farmersmap-canvas {
 .sv-payment .payment-cards a {
 		transition: all 150ms ease;
 		padding: 40px;
-		box-shadow: #e2e2e2 1px 0 0 inset,
- #e2e2e2 -1px 0 0 inset,
- #e2e2e2 0 1px 0 inset,
- #e2e2e2 0 -1px 0 inset;
+		box-shadow: #e2e2e2 1px 0 0 inset, #e2e2e2 -1px 0 0 inset, #e2e2e2 0 1px 0 inset, #e2e2e2 0 -1px 0 inset;
 		margin-bottom: -1px;
 		display: flex;
 		flex-flow: column;
@@ -6231,7 +6288,7 @@ input[type="radio"]:checked + label:after {
 				width: 930px;
 		}
 		.sv-linked-products-slider .owl-carousel, .sv-blog-list-slider .owl-carousel {
-				width: 690px !important;
+				width: 100% !important;
 		}
 		.sv-product-single-content .sv-product-description {
 				width: 50%;
