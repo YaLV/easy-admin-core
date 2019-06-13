@@ -5425,7 +5425,7 @@ body.farmers-open #farmersmap-canvas {
 }
 
 .sv-thankyou-image {
-		height: 500px;
+		height: 550px;
 		margin-bottom: -60px;
 }
 
@@ -7313,6 +7313,7 @@ input[type="radio"]:checked + label:after {
 				display: block;
 		}
 		.sv-thankyou-image {
+				height: 250px;
 				margin-bottom: -30px;
 		}
 }
