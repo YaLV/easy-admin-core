@@ -5424,6 +5424,11 @@ body.farmers-open #farmersmap-canvas {
 		padding-top: 25px;
 }
 
+.sv-thankyou-image {
+		height: 500px;
+		margin-bottom: -60px;
+}
+
 .selectric-wrapper {
 		position: relative;
 		cursor: pointer;
@@ -7306,6 +7311,9 @@ input[type="radio"]:checked + label:after {
 		}
 		.sv-category-title-mobile {
 				display: block;
+		}
+		.sv-thankyou-image {
+				margin-bottom: -30px;
 		}
 }
 

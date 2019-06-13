@@ -28,7 +28,7 @@
 
     <div class="sv-blank-spacer medium"></div>
 
-    <div class="vc_row wpb_row vc_row-fluid" style="height: 500px;">
+    <div class="vc_row wpb_row vc_row-fluid sv-thankyou-image">
         <div class="wpb_column vc_column_container">
             <div class="vc_column-inner">
                 <div class="wpb_wrapper">
