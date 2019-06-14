@@ -59,7 +59,9 @@ class Banner extends BaseModel
     {
         $return = [];
         foreach ($this->categories as $category) {
-            $return[] = $category->meta['name'][language()];
+            if($category->meta['name'][language()]??false) {
+                $return[] = $category->meta['name'][language()];
+            }
         }
 
         return count($return) ? implode(", ", $return) : "All Categories";
@@ -82,11 +84,11 @@ class Banner extends BaseModel
                 }
             }
         }
-        return $this->imageList[$this->language];
+        return $this->imageList[$this->language]??null;
     }
 
     public function getTargetAttribute() {
-        return $this->meta['target'][$this->language];
+        return $this->meta['target'][$this->language]??null;
     }
 
 }
