@@ -267,7 +267,7 @@
     top: 0;
     position: fixed;
     width: 100%;
-    z-index: 200;
+    z-index: 2000;
     .right {
       z-index: 200;
       @include transition-medium;
@@ -288,9 +288,6 @@
     @include transition-medium;
     a {
       padding: 15px 0;
-    }
-    .sv-btn-menu {
-      display: none;
     }
   }
 
@@ -829,6 +826,11 @@
 
   .sv-category-title-mobile {
     display: block;
+  }
+
+  .sv-thankyou-image {
+    height: 250px;
+    margin-bottom: -30px;
   }
 
 }
