@@ -162,4 +162,25 @@ class BaseModel extends Model
         return null;
 
     }
+
+    public function getImageById($id, $size = false) {
+        if(method_exists($this, 'images')) {
+            $image = $this->images()->where('id', $id)->first();
+            $imageType = $image->owner;
+
+            $path = config("app.uploadFile.$imageType","temp");
+
+            if(!$size) {
+                $size = current(config("app.imageSize.$imageType", ['original']));
+            } else {
+                $size = config("app.imageSize.$imageType.$size", 'original');
+            }
+            if(!$image) {
+                return null;
+            }
+            return "/$path/$size/{$image->filePath}";
+        }
+        return null;
+
+    }
 }

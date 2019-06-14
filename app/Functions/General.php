@@ -45,7 +45,7 @@ trait General
 
         $owner = $owner ?: array_search(str_plural(strtolower(class_basename($collection))), config('app.uploadFile'));
 
-
+        $return = [];
         if (!$owner) {
             return;
         }
@@ -93,7 +93,12 @@ trait General
             $file->owner_id = $collection->id;
             $file->fileType = $type;
             $file->save();
+            if((request('image_lang')??false)) {
+                $return[request('image_lang')[$x]] = $id[$x];
+            }
             $x++;
         } while ($urls[$x] ?? false);
+
+        return $return;
     }
 }

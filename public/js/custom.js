@@ -171,6 +171,9 @@ jQuery(document).ready(function () {
         }
         fileData.append('path', jQuery('.preview[data-file=' + fileId + ']').attr('data-path'));
         fileData.append('owner', jQuery(this).attr('name'));
+        if($(this).data('lang')) {
+            fileData.append('language', jQuery(this).data('lang'));
+        }
 
         if (form = jQuery(this).parents('form')) {
             fields = form.find('input:not([type=file])');

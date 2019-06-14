@@ -14,4 +14,16 @@ $(document).ready(function () {
         }
     });
 
+    jQuery('.reportClose').click(function(e) {
+        e.preventDefault();
+        jQuery.post($(this).data('url'));
+        el = $(this).parents('.sv-message');
+        if(el) {
+            el.hide('blind', {}, 500, function () {
+                el.remove();
+            });
+        }
+        return false;
+    })
+
 });

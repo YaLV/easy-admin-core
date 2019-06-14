@@ -125,7 +125,7 @@ class AdminController extends Controller implements ControllerInterface
             return $file;
         }
 
-        return view('Admin::fields.imagePreview', ['image' => $file, "path" => $size, 'owner' => $path])->render();
+        return view('Admin::fields.imagePreview', ['image' => $file, "path" => $size, 'owner' => $path, 'language' => request('language')])->render();
     }
 
     /**
