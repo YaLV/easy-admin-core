@@ -837,3 +837,19 @@ function mobilemenuscroll() {
   }
 
 }
+
+jQuery('#sv-product-mobile-menu').slinky({
+
+  // auto resize height
+  resize: true,
+
+  // animation speed
+  speed: 300,
+
+  // theme CSS
+  theme: 'slinky-theme-default',
+
+  // shows title of sub menu
+  title: true
+
+});
