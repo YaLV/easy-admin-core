@@ -7,7 +7,25 @@
       opacity: 1;
       visibility: visible;
     }
+    .logo {
+      img {
+        width: 150px;
+      }
+    }
     .menu {
+      // display: none;
+      font-size: 17px;
+      ul {
+        margin-left: -70px;
+        transition: none;
+      }
+      li {
+        a {
+          padding: 0 10px !important;
+        }
+      }
+    }
+    .sv-btn-menu {
       display: none;
     }
   }
@@ -64,6 +82,13 @@
           }
         }
       }
+    }
+  }
+
+  .sv-products-menu.has-large-dropdown > div > ul li {
+    padding-right: 0;
+    &:last-child {
+      padding-right: 0;
     }
   }
 

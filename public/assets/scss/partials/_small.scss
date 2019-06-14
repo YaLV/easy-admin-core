@@ -3,6 +3,12 @@
 @media only screen and (max-width : 992px) {
 
   .sv-dock {
+    background: $accent;
+    &:after {
+      @include transition-fast;
+      background: $white;
+      transform: translateX(-100%);
+    }
     .container {
       width: 100%;
     }
@@ -16,24 +22,40 @@
       margin-left: 15px;
     }
     .user {
-      display: none;
+      // display: none;
+      position: absolute;
+      right: 50px;
+      left: auto;
+      .icon {
+        margin: 0 !important;
+        &:after {
+          display: none !important;
+        }
+      }
     }
     .right {
-      padding-right: 50px;
+      padding-right: 0;
     }
     .cart {
+      position: absolute;
+      right: 0;
       & > a {
         padding: 0 15px;
         font-size: 22px;
         .icon {
-          margin-right: 15px;
+          margin-right: 0;
         }
+      }
+      span:not(.icon) {
+        display: none;
       }
     }
     .sv-btn-menu {
+      display: flex;
       // left: 120px;
-      left: auto;
-      right: 15px;
+      right: auto;
+      left: 120px;
+      background: none !important;
     }
   }
 
@@ -426,6 +448,14 @@
           }
         }
       }
+    }
+  }
+
+  .sv-menu-mobile {
+    .content {
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+      padding: 0;
     }
   }
 
