@@ -589,6 +589,10 @@ ul, li {
 		position: relative;
 }
 
+.sv-default-dropdown > ul li a span {
+		align-items: flex-start;
+}
+
 .sv-default-dropdown > ul li a:hover {
 		color: #1f9363;
 }
