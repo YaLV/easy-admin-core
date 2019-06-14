@@ -82,7 +82,7 @@
                             @php
                                 $hasSoftDeletes = method_exists($listItem, "trashed");
                             @endphp
-                            <tr class="{{ ($hasSoftDeletes && $listItem->trashed())??false?"text-muted":"text-dark" }} {{$listItem->rowClass??false}}"
+                            <tr class="{{ (($hasSoftDeletes && $listItem->trashed()) || ($listItem->show_as_inactive??false))??false?"text-muted":"text-dark" }} {{$listItem->rowClass??false}}"
                                 data-id="{{ $listItem->id??"" }}">
                                 @if($orderable)
                                     <td>
@@ -141,6 +141,17 @@
 @endsection
 
 @push('scripts')
+    @foreach(($js??[]) as $script)
+        <script src="{{ asset($script) }}"></script>
+    @endforeach
+@endpush
+@push('css')
+    @foreach(($css??[]) as $style)
+        <link type="text/css" href="{{ asset($style) }}" />
+    @endforeach
+@endpush
+
+@push('scripts')
     @if($orderable)
         <script src="{{asset('js/Sortable.min.js')}}"></script>
         <script>
@@ -167,7 +178,6 @@
             });
         </script>
     @endif
-    @foreach(($js??[]) as $script)
-        <script src="{{ asset($script) }}"></script>
-    @endforeach
 @endpush
+
+

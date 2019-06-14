@@ -21,6 +21,8 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 
 // --------------- PUBLIC ROUTES ------------------- //
 
+    Route::post('/closeBanner/{banner}', 'FrontController@hideBanner')->name('closeBanner');
+
     Route::get('/{lang}/'.__('translations.slug.blog').'/{blogCategory?}/{blogItem?}', 'FrontController@showBlog')->name('blog');
     Route::get('/'.__('translations.slug.blog').'/{blogCategory?}/{blogItem?}', 'FrontController@showBlog')->name('blog.default');
 

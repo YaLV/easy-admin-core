@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Plugins\Banners\Model\Banner;
 use App\Plugins\Blog\Model\Blog;
 use App\Plugins\Blog\Model\BlogCategories;
 use App\Plugins\Categories\Model\Category;
@@ -15,8 +16,10 @@ use App\Plugins\Pages\Model\Page;
 use App\Plugins\Products\Model\Product;
 use App\Plugins\Suppliers\Model\Supplier;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -92,7 +95,8 @@ class FrontController extends Controller
             if (($filters['suppliers'] ?? false) && $filters['category'] == $category->id) {
                 $products = $products->whereIn('supplier_id', $filters['suppliers']);
             }
-
+            $banners = $category->banners()->whereRaw("'".Carbon::now()."' between dateFrom and DateTo")->get();
+            $banners = $banners->merge(Banner::whereDoesntHave('categories')->whereRaw("'".Carbon::now()."' between dateFrom and DateTo")->get());
         } else {
             $products = new Product();
 
@@ -156,7 +160,7 @@ class FrontController extends Controller
 
         $categoryPath = $this->slugPath;
 
-        return view("Products::frontend.listitems", compact(['category', 'products', 'suppliers', 'categoryPath']));
+        return view("Products::frontend.listitems", compact(['category', 'products', 'suppliers', 'categoryPath', 'banners']));
     }
 
     /**
@@ -308,5 +312,30 @@ class FrontController extends Controller
 
     public function getHighlightedPosts() {
         return Blog::inRandomOrder()->where('is_highlighted', 1)->limit(3)->get();
+    }
+
+    /**
+     * hides banner when clicked Close (based on frequency)
+     *
+     * @param Banner $banner
+     *
+     * @return mixed
+     */
+    public function hideBanner(Banner $banner) {
+        switch($banner->frequency) {
+            case "once_a_week":
+                Cookie::queue('banner'.$banner->id, "1", 10080);
+                return response('Done');
+            break;
+
+            case "once_per_session":
+                session()->put('banner'.$banner->id, '1');
+                session()->save();
+                return response('Done');
+                break;
+            default:
+                return response('Done');
+                break;
+        }
     }
 }

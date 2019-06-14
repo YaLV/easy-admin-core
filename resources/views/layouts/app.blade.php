@@ -15,11 +15,12 @@
     <link rel="stylesheet" href="{{ asset("assets/css/animate.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/main.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/custom.css") }}">
+    @stack('css')
 </head>
 
 <body class="sv-lightbox-open_ sv-has-marketday-dropdown{{ (Auth::user()??(New App\User))->registered?" is-auth":"" }}">
-
 {{--@include("frontend.elements.cookies")--}}
+@include("frontend.elements.banner")
 @include("frontend.elements.loginpopup")
 @include("frontend.elements.mobilemenu")
 @include("frontend.elements.marketday")

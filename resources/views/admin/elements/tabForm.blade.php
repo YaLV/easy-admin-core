@@ -123,3 +123,49 @@
         @include('admin.partials.formFooter')
     </form>
 @endsection
+
+@push('css')
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.min.css') }}">
+@endpush
+
+@push('scripts')
+    @foreach(($js??[]) as $script)
+        <script src="{{ asset($script) }}"></script>
+    @endforeach
+@endpush
+@push('css')
+    @foreach(($css??[]) as $style)
+        <link rel="stylesheet" href="{{ asset($style) }}" />
+    @endforeach
+@endpush
+
+@push('scripts')
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if($.fn.dateRangePicker) {
+                $('.daterangepicker').dateRangePicker({
+                    startOfWeek: 'monday',
+                    separator: ' ~ ',
+                    format: 'DD.MM.YYYY HH:mm',
+                    autoClose: false,
+                    time: {
+                        enabled: true
+                    }
+                })
+            }
+
+            if($.fn.ColorPicker) {
+                $('.colorSelector').ColorPicker({
+                    flat:true,
+                    onChange: function(hsb, hex, rgb) {
+                        if(typeof updatePreview !== "undefined") {
+                            updatePreview();
+                        }
+                    }
+                });
+            }
+        });
+
+    </script>
+@endpush
