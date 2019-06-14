@@ -77,7 +77,9 @@ class Banner extends BaseModel
     public function getBannerImageAttribute() {
         if(!$this->imageList) {
             foreach(languages() as $lng) {
-                $this->imageList[$lng->code] = $this->images()->where('id', $this->meta['image'][$lng->code])->get();
+                if($this->meta['image'][language()]??false) {
+                    $this->imageList[$lng->code] = $this->images()->where('id', $this->meta['image'][$lng->code])->get();
+                }
             }
         }
         return $this->imageList[$this->language];
