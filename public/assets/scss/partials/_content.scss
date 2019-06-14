@@ -592,6 +592,9 @@ ul, li {
         //   opacity: 0;
         //   @include transition-fast;
         // }
+        span {
+          align-items: flex-start;
+        }
         &:hover {
           color: $accent;
           // background: darken($accent, 2%);
