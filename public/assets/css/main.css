@@ -6401,6 +6401,9 @@ input[type="radio"]:checked + label:after {
 		.sv-dock .row {
 				height: 54px;
 		}
+		.sv-dock .menu {
+				display: none;
+		}
 		.sv-dock .logo {
 				margin-left: 15px;
 		}
