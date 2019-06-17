@@ -1483,6 +1483,7 @@ ul, li {
 		justify-content: center;
 		background: #1f9363;
 		border: none;
+		outline: none !important;
 }
 
 .sv-product-card .add-to-cart .icon {
