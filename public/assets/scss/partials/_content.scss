@@ -953,7 +953,7 @@ ul, li {
     }
   }
   &.affix {
-    z-index: 100;
+    z-index: 10000;
     position: relative;
     & > div {
       position: fixed;
