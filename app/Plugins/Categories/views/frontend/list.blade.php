@@ -54,7 +54,7 @@
         <input type="text" name="search" value="{{ request()->get('search') }}" title="search">
         <input type="submit" value="{{ _t('translations.search') }}">
     </form>
-    @if($banners)
+    @if($banners??false)
         @foreach($banners as $banner)
             @if($banner->type!='message')
                 @continue
@@ -62,11 +62,11 @@
             @if($banner->frequency=='always' || ($banner->frequency=='once_per_session' && !session()->has('banner'.$banner->id)) || ($banner->frequency=='once_a_week' && !request()->cookie('banner'.$banner->id)))
                 @push('css')
                     <style type="text/css">
-                        .sv-message#message-{{$banner->id}}  {
+                        .sv-message#message-{{$banner->id}}    {
                             color: #{{$banner->color_text}};
                         }
 
-                        .sv-message#message-{{$banner->id}} > div {
+                        .sv-message#message-{{$banner->id}}   > div {
                             background-color: #{{ $banner->color_background }};
                         }
 
@@ -176,14 +176,21 @@
                                         </div>
                                     @endforeach
                                 @endif
+                                <button class="sv-filters-save sv-btn">{!! _t('translations.setFilter') !!}</button>
                             </div>
-                            <button class="sv-filters-save">{!! _t('translations.setFilter') !!}</button>
-                            <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
+                            @if($filters??false)
+                                <a href="{{ route('setFilter', ['reset']) }}"
+                                   class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
+                            @endif
                         </form>
                     @endif
                 </div>
                 <div class="sv-products">
-                    @yield('leftSide')
+                    @if(count($products??[]) || $product)
+                        @yield('leftSide')
+                    @else
+                        {!! _t('translations.nothinghasbeenfound') !!}
+                    @endif
                 </div>
             </div>
         </div>

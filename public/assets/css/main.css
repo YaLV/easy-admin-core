@@ -177,7 +177,7 @@ ul, li {
 		background: #1f9363;
 		color: #ffffff;
 		position: relative;
-		z-index: 4000;
+		z-index: 40;
 }
 
 .sv-dock:after {
@@ -589,10 +589,6 @@ ul, li {
 		position: relative;
 }
 
-.sv-default-dropdown > ul li a span {
-		align-items: flex-start;
-}
-
 .sv-default-dropdown > ul li a:hover {
 		color: #1f9363;
 }
@@ -718,7 +714,6 @@ ul, li {
 
 .sv-products-menu.has-large-dropdown > div > ul li {
 		position: static;
-		padding-right: 20px;
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown {
@@ -2170,11 +2165,11 @@ ul, li {
 		top: 0;
 		width: 390px;
 		height: 100%;
-		background: #ffffff;
+		background: white;
 		color: #323234;
 		position: fixed;
-		z-index: 2000;
-		transform: translateX(-40%);
+		z-index: 20000;
+		transform: translateX(-100%);
 		transition: all 350ms ease;
 		display: flex;
 		align-items: center;
@@ -2184,6 +2179,16 @@ ul, li {
 		opacity: 0;
 		visibility: hidden;
 		box-shadow: rgba(50, 50, 52, 0.2) 8px 0 65px;
+}
+
+.sv-menu-mobile .logo {
+		position: absolute;
+		top: 11px;
+		left: 15px;
+}
+
+.sv-menu-mobile .logo img {
+		width: 90px;
 }
 
 .sv-menu-mobile .content {
@@ -5424,11 +5429,6 @@ body.farmers-open #farmersmap-canvas {
 		padding-top: 25px;
 }
 
-.sv-thankyou-image {
-		height: 550px;
-		margin-bottom: -60px;
-}
-
 #sv-product-mobile-menu {
 		background: #ffffff;
 		font-size: 20px;
@@ -5738,6 +5738,7 @@ body.farmers-open #farmersmap-canvas {
 		text-align: center;
 		text-decoration: none !important;
 		transition: all 150ms ease;
+		outline: none !important;
 }
 
 .sv-btn:hover {
@@ -6314,6 +6315,10 @@ input[type="radio"]:checked + label:after {
 		color: #bdbdbd;
 }
 
+#legalform {
+		margin-top: 1px;
+}
+
 @media only screen and (min-width: 1470px) {
 		.container {
 				width: 1410px;
@@ -6328,20 +6333,7 @@ input[type="radio"]:checked + label:after {
 				opacity: 1;
 				visibility: visible;
 		}
-		.sv-dock .logo img {
-				width: 150px;
-		}
 		.sv-dock .menu {
-				font-size: 17px;
-		}
-		.sv-dock .menu ul {
-				margin-left: -70px;
-				transition: none;
-		}
-		.sv-dock .menu li a {
-				padding: 0 10px !important;
-		}
-		.sv-dock .sv-btn-menu {
 				display: none;
 		}
 		.sv-category-title-banner .title h4 {
@@ -6378,12 +6370,6 @@ input[type="radio"]:checked + label:after {
 		.sv-menu-mobile .content ul.menu-dock li a {
 				padding: 20px 0;
 		}
-		.sv-products-menu.has-large-dropdown > div > ul li {
-				padding-right: 0;
-		}
-		.sv-products-menu.has-large-dropdown > div > ul li:last-child {
-				padding-right: 0;
-		}
 }
 
 @media only screen and (max-width: 992px) {
@@ -6400,9 +6386,6 @@ input[type="radio"]:checked + label:after {
 		}
 		.sv-dock .row {
 				height: 54px;
-		}
-		.sv-dock .menu {
-				display: none;
 		}
 		.sv-dock .logo {
 				margin-left: 15px;
@@ -6439,7 +6422,6 @@ input[type="radio"]:checked + label:after {
 				display: none;
 		}
 		.sv-dock .sv-btn-menu {
-				display: flex;
 				right: auto;
 				left: 120px;
 				background: none !important;
@@ -7405,10 +7387,6 @@ input[type="radio"]:checked + label:after {
 		}
 		.sv-category-title-mobile {
 				display: block;
-		}
-		.sv-thankyou-image {
-				height: 250px;
-				margin-bottom: -30px;
 		}
 }
 

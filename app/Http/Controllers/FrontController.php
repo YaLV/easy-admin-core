@@ -35,6 +35,20 @@ class FrontController extends Controller
 
     private $slugPath;
 
+
+    public function clearCart() {
+        $cart = $this->getCart();
+        $cart->items()->delete();
+        $cart->update([
+           'delivery_id' => null,
+           'delivery_amount' => null
+        ]);
+        return redirect()->back();
+    }
+
+    public function cartHasItems() {
+        return $this->getCart()->items()->count()?"has-items":"";
+    }
     /**
      * Open page - detected by cache
      *
@@ -71,7 +85,7 @@ class FrontController extends Controller
     public function showCategory($categorySlug, $categoryId)
     {
         session()->put('lastCategory', request()->route()->parameters);
-
+        $filters = false;
         if ($categorySlug != 'search') {
             /** @var \App\Plugins\Categories\Model\Category $category */
             $category = Category::findOrFail($categoryId);
@@ -90,6 +104,7 @@ class FrontController extends Controller
                 $products = $products->whereHas('attributeValues', function (Builder $q) use ($filters) {
                     $q->whereIn('attribute_value_id', $filters['filters']);
                 });
+                $filters = true;
             }
 
             if (($filters['suppliers'] ?? false) && $filters['category'] == $category->id) {
@@ -160,7 +175,7 @@ class FrontController extends Controller
 
         $categoryPath = $this->slugPath;
 
-        return view("Products::frontend.listitems", compact(['category', 'products', 'suppliers', 'categoryPath', 'banners']));
+        return view("Products::frontend.listitems", compact(['category', 'products', 'suppliers', 'categoryPath', 'banners', 'filters']));
     }
 
     /**
