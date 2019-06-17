@@ -48,7 +48,10 @@ class CartController extends Controller
         $origCart = OrderHeader::find($cart->id);
         $origCart->delivery()->associate(Delivery::findOrFail($deliveryId))->save();
         $this->checkFreeDelivery($cart->id);
-        session()->forget('cartObject');
+        $cart = $cart->refresh();
+        if(request()->ajax()) {
+            return ['status' => true, 'message' => 'Delivery Updated', 'contents' => $this->getCartContents($cart, true)];
+        }
 
         return redirect(r('cart'));
     }
@@ -227,15 +230,15 @@ class CartController extends Controller
             return redirect()->back()->withErrors(["cartError" => "Cart Has undeliverable items"]);
         }
 
-
-        $step = 2;
-        if (Auth::user() && !Auth::user()->registered) {
-            Auth::logout();
-        }
-
         if (Auth::user() && !$edit) {
             return redirect(r('payment'));
         }
+
+        $step = 2;
+        if (Auth::user() && !Auth::user()->registered && !$edit) {
+            Auth::logout();
+        }
+
 
         return view('Orders::frontend.userinfo', ['cart' => $cart, 'step' => $step, 'stepInclude' => 'loginToSave', 'user' => Auth::user() ?? new User, 'pageTitle' => _t('translations.checkoutForm')]);
     }
@@ -386,6 +389,11 @@ class CartController extends Controller
             'items' => $cart->items->toArray()
         ]);
 
+        session()->forget('cart');
+        if (Auth::user() && !Auth::user()->registered) {
+            Auth::logout();
+        }
+
         return redirect(r('thankyou'));
     }
 
@@ -394,10 +402,6 @@ class CartController extends Controller
      */
     public function thankyou()
     {
-        session()->forget('cart');
-        if (Auth::user() && !Auth::user()->registered) {
-            Auth::logout();
-        }
 
         if (session()->get('paymetMethod') == 'paysera') $paymentMethod = 'paysera';
         else $paymentMethod = null;
