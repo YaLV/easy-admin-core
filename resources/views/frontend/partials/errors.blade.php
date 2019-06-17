@@ -1,4 +1,4 @@
-<div class="container">
+<div class="sv-error">
     @if($errors->any())
         <ul>
             {!! implode('', $errors->all('<li>:message</li>')) !!}
