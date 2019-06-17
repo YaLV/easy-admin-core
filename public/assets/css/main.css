@@ -1641,12 +1641,6 @@ ul, li {
 		width: 1170px !important;
 }
 
-@media only screen and (max-width: 1246px) {
-		.sv-product-card-slider .owl-carousel, .sv-linked-products-slider .owl-carousel, .sv-blog-list-slider .owl-carousel {
-				width: 930px !important;
-		}
-}
-
 @media only screen and (max-width: 1016px) {
 		.sv-product-card-slider .owl-carousel, .sv-linked-products-slider .owl-carousel, .sv-blog-list-slider .owl-carousel {
 				width: 690px !important;

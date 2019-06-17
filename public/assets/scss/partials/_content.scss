@@ -1569,9 +1569,9 @@ ul, li {
   z-index: 20;
   .owl-carousel {
     width: 1170px !important;
-    @media only screen and (max-width: 1246px)  {
-      width: 930px !important;
-    }
+    // @media only screen and (max-width: 1246px)  {
+    //   width: 930px !important;
+    // }
     @media only screen and (max-width: 1016px)  {
       width: 690px !important;
     }
