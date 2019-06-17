@@ -48,6 +48,7 @@ class CartController extends Controller
         $origCart = OrderHeader::find($cart->id);
         $origCart->delivery()->associate(Delivery::findOrFail($deliveryId))->save();
         $this->checkFreeDelivery($cart->id);
+        $cart = $cart->refresh();
         if(request()->ajax()) {
             return ['status' => true, 'message' => 'Delivery Updated', 'contents' => $this->getCartContents($cart, true)];
         }
