@@ -1711,6 +1711,10 @@ ul, li {
 		width: 100%;
 }
 
+.sv-linked-products-slider .sv-product-card {
+		width: 100% !important;
+}
+
 .sv-farmer-products {
 		position: relative;
 }

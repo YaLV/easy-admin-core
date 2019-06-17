@@ -1629,6 +1629,9 @@ ul, li {
 
 .sv-linked-products-slider {
   width: 100%;
+  .sv-product-card {
+    width: 100% !important;
+  }
 }
 
 .sv-farmer-products {
