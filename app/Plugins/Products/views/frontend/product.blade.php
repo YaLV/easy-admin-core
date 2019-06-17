@@ -22,7 +22,7 @@
                 @endif
                 <img src="{{ $product->image(config('app.imageSize.product_image.view')) }}" class="title-image">
                 <div class="text">
-                    {{ $product->getMeta('description') }}
+                    {!! $product->getMeta('description') !!}
                 </div>
                 @if($expire = $product->getMeta('expire_date'))
                     <div class="sv-exp-date">
@@ -111,7 +111,7 @@
                 <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                 <h4>{{ __("supplier.location.".$product->supplier_id) }}</h4>
             </a>
-            {{  $product->supplier()->getMeta('description') }}
+            {!! $product->supplier()->getMeta('description') !!}
         </div>
 
         <div class="sv-blank-spacer medium"></div>
