@@ -1335,6 +1335,11 @@ ul, li {
 .sv-product-card {
   width: 210px;
   position: relative;
+
+  @media only screen and (max-width: 1246px) {
+    width: 100%;
+  }
+
   .image {
     display: block;
     margin-bottom: 6px;

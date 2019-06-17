@@ -1389,6 +1389,12 @@ ul, li {
 		position: relative;
 }
 
+@media only screen and (max-width: 1246px) {
+		.sv-product-card {
+				width: 100%;
+		}
+}
+
 .sv-product-card .image {
 		display: block;
 		margin-bottom: 6px;
@@ -5519,13 +5525,7 @@ body.farmers-open #farmersmap-canvas {
 }
 
 .cart .alert.is-visible-once {
-		animation-play-state: running;
 		animation: bounce 3s normal forwards;
-}
-
-.cart .alert.stopped {
-		animation: none;
-		animation-play-state: initial;
 }
 
 @media only screen and (max-width: 767px) {
