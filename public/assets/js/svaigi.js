@@ -853,3 +853,10 @@ jQuery('#sv-product-mobile-menu').slinky({
   title: true
 
 });
+
+function showCartAlert() {
+  jQuery('.cart .alert').addClass('is-visible-once');
+  setTimeout(function(){
+    jQuery('.cart .alert').removeClass('is-visible-once');
+  }, 3000);
+}
