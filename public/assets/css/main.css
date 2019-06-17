@@ -2931,6 +2931,10 @@ ul, li {
 		margin: 0 15px 30px 15px;
 }
 
+.sv-product-single-wrapper .sv-products {
+		width: 100%;
+}
+
 .sv-product-single-wrapper > .container > .row {
 		display: flex;
 }

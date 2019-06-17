@@ -2729,6 +2729,9 @@ ul, li {
 }
 
 .sv-product-single-wrapper {
+  .sv-products {
+    width: 100%;
+  }
   & > .container {
     & > .row {
       display: flex;
