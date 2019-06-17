@@ -179,7 +179,7 @@ class CartController extends Controller
 
         $this->checkFreeDelivery($cart->id);
 
-        $cart = $this->getCart();
+        $cart = $cart->refresh();
 
         if ($request->ajax()) {
             return ['status' => true, 'message' => 'Item Updated', 'contents' => $this->getCartContents($cart, true)];
@@ -191,6 +191,7 @@ class CartController extends Controller
 
     private function checkFreeDelivery($cartId)
     {
+        /** @var OrderHeader $cart */
         $cart = OrderHeader::find($cartId);
         $totalAmount = getCartTotals($cart) ?? 0;
         if ($cart->delivery_id) {
@@ -481,6 +482,7 @@ class CartController extends Controller
     {
         $cart = $this->getCart();
 
+        /** @var DiscountCode $discount_code */
         $discount_code = DiscountCode::where('code', $cart->discount_code)->first();
         $discount_code->increment('uses', 1);
 

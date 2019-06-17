@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
  * Class BaseModel
  *
  * @package App
+ * @property callback increment
  */
 class BaseModel extends Model
 {
