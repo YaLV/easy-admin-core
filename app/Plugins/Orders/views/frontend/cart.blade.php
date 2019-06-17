@@ -107,6 +107,9 @@
                         <a href="{{ r('checkout') }}" class="sv-btn">{!! _t('translations.cartFormOrder') !!}</a>
                     </div>
                 </div>
+                <div class="clear">
+                    <a href="{{ route('clearCart') }}" class="sv-filters-cancel">{!! _t('translations.clearCart') !!}</a>
+                </div>
             </div>
         </div>
 

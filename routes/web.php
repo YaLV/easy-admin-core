@@ -132,12 +132,13 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::any('/{lang}/logout', "Auth\LoginController@logout")->name('frontlogout');
     Route::any('/logout', "Auth\LoginController@logout")->name('frontlogout.default');
 
+    Route::get('/clearCart', 'FrontController@clearCart')->name('clearCart');
 
-// Shop Stuff
-    Route::get("/{lang}/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}", 'FrontController@divert')->name('url');
-    Route::get("/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}", 'FrontController@divert')->name('url.default');
-
-    Route::post('filter/{category}', function ($category) {
+    Route::any('/filter/{category}', function ($category) {
+        if($category=='reset') {
+            session()->forget('filters');
+            return redirect(r('url', session()->get('lastCategory')));
+        }
         session()->put('filters', [
             'category'  => $category,
             'filters'   => request('filter'),
@@ -146,6 +147,12 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
 
         return redirect(r('url', session()->get('lastCategory')));
     })->name('setFilter');
+
+// Shop Stuff
+    Route::get("/{lang}/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}", 'FrontController@divert')->name('url');
+    Route::get("/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}", 'FrontController@divert')->name('url.default');
+
+
 
 } else {
     Route::get("/", function () {
