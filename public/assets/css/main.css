@@ -966,7 +966,7 @@ ul, li {
 }
 
 .sv-products-menu.affix {
-		z-index: 100;
+		z-index: 10000;
 		position: relative;
 }
 
@@ -1483,6 +1483,7 @@ ul, li {
 		justify-content: center;
 		background: #1f9363;
 		border: none;
+		outline: none !important;
 }
 
 .sv-product-card .add-to-cart .icon {
@@ -3255,6 +3256,53 @@ ul, li {
 
 .sv-message.error {
 		color: #ffffff;
+}
+
+.sv-error {
+		padding: 10px;
+		font-size: 16px;
+		line-height: 26px;
+		font-family: "DINPro Medium", sans-serif;
+		text-align: center;
+		margin-bottom: -10px;
+}
+
+.sv-error li {
+		padding: 15px 100px;
+		position: relative;
+		background: #ff7171;
+		color: #ffffff;
+}
+
+.sv-error li a {
+		color: #1f9363;
+		text-decoration: underline;
+}
+
+.sv-error li a:hover {
+		text-decoration: none;
+}
+
+.sv-error .sv-close {
+		width: 22px;
+		height: 21px;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 20px;
+		display: block;
+}
+
+.sv-error .sv-close svg {
+		transition: all 350ms ease;
+}
+
+.sv-error .sv-close svg path {
+		transition: all 350ms ease;
+}
+
+.sv-error .sv-close:hover svg path {
+		fill: #1f9363;
 }
 
 .sv-sidebar-filters {
@@ -5807,6 +5855,7 @@ body.farmers-open #farmersmap-canvas {
 		background: #1f9363;
 		text-align: center;
 		text-decoration: none !important;
+		outline: none !important;
 		transition: all 150ms ease;
 }
 

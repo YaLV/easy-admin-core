@@ -953,7 +953,7 @@ ul, li {
     }
   }
   &.affix {
-    z-index: 100;
+    z-index: 10000;
     position: relative;
     & > div {
       position: fixed;
@@ -1416,6 +1416,7 @@ ul, li {
     justify-content: center;
     background: $accent;
     border: none;
+    outline: none !important;
     .icon {
       width: 26px;
       height: 22px;
@@ -3036,6 +3037,50 @@ ul, li {
   }
   &.error {
     color: $white;
+  }
+}
+
+.sv-error {
+  padding: 10px;
+  font-size: 16px;
+  line-height: 26px;
+  font-family: $font-primary-medium;
+  text-align: center;
+  margin-bottom: -10px;
+  li {
+    padding: 15px 100px;
+    position: relative;
+    background: #ff7171;
+    color: $white;
+    a {
+      color: $accent;
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+  .sv-close {
+    width: 22px;
+    height: 21px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px;
+    display: block;
+    svg {
+      @include transition-fast;
+      path {
+        @include transition-fast;
+      }
+    }
+    &:hover {
+      svg {
+        path {
+          fill: $accent;
+        }
+      }
+    }
   }
 }
 
