@@ -589,10 +589,6 @@ ul, li {
 		position: relative;
 }
 
-.sv-default-dropdown > ul li a span {
-		align-items: flex-start;
-}
-
 .sv-default-dropdown > ul li a:hover {
 		color: #1f9363;
 }
@@ -792,6 +788,11 @@ ul, li {
 		transform: translateZ(0);
 		z-index: 1000;
 		transition: all 350ms ease;
+}
+
+.sv-products-menu .cart .alert {
+		font-weight: 300;
+		left: 13px;
 }
 
 .sv-products-menu .cart > a {
@@ -2173,8 +2174,8 @@ ul, li {
 		background: #ffffff;
 		color: #323234;
 		position: fixed;
-		z-index: 2000;
-		transform: translateX(-40%);
+		z-index: 20000;
+		transform: translateX(-100%);
 		transition: all 350ms ease;
 		display: flex;
 		align-items: center;
@@ -2184,6 +2185,16 @@ ul, li {
 		opacity: 0;
 		visibility: hidden;
 		box-shadow: rgba(50, 50, 52, 0.2) 8px 0 65px;
+}
+
+.sv-menu-mobile .logo {
+		position: absolute;
+		top: 11px;
+		left: 15px;
+}
+
+.sv-menu-mobile .logo img {
+		width: 90px;
 }
 
 .sv-menu-mobile .content {
@@ -5472,6 +5483,66 @@ body.farmers-open #farmersmap-canvas {
 		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20px' height='33px'%3E%3Cpath fill-rule='evenodd' fill='rgb(19, 19, 19)' d='M19.167,16.546 L17.046,18.667 L17.000,18.621 L2.954,32.667 L0.833,30.546 L14.879,16.500 L0.833,2.454 L2.954,0.333 L17.000,14.379 L17.046,14.333 L19.167,16.454 L19.121,16.500 L19.167,16.546 Z'/%3E%3C/svg%3E") !important;
 		opacity: 1;
 		transform: scale(0.6);
+}
+
+.cart .alert {
+		transition: all 350ms ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 50px;
+		height: 50px;
+		background: #5c457a;
+		color: #ffffff;
+		border-radius: 50%;
+		position: absolute;
+		bottom: -55px;
+		left: 7px;
+		z-index: 1000;
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 20px;
+		line-height: 30px;
+		font-weight: 500 !important;
+		padding-bottom: 5px;
+		padding: 0;
+		opacity: 0;
+		visibility: hidden;
+}
+
+.cart .alert.is-visible-once {
+		animation: bounce 3s normal forwards;
+}
+
+@media only screen and (max-width: 767px) {
+		.cart .alert {
+				font-size: 18px;
+				line-height: 28px;
+				width: 40px;
+				height: 40px;
+		}
+}
+
+@keyframes bounce {
+		0% {
+				opacity: 0;
+				visibility: hidden;
+				transform: translateY(20px);
+		}
+		10% {
+				transform: translateY(-5px);
+		}
+		20% {
+				opacity: 1;
+				visibility: visible;
+				transform: translateY(0);
+		}
+		90% {
+				opacity: 1;
+		}
+		100% {
+				opacity: 0;
+				visibility: hidden;
+		}
 }
 
 .selectric-wrapper {
