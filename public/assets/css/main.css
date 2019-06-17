@@ -6639,6 +6639,9 @@ input[type="radio"]:checked + label:after {
 		.sv-product-single-content .sv-product-single-header .sv-product-title {
 				margin-bottom: 10px;
 		}
+		.sv-product-single-content .sv-product-single-header .sv-product-title .title {
+				margin-top: 15px;
+		}
 		.sv-blog-list.page-list .list {
 				margin: 0;
 		}
@@ -7211,7 +7214,6 @@ input[type="radio"]:checked + label:after {
 		.sv-product-single-header .sv-product-title .title {
 				padding-top: 25px;
 				padding-bottom: 20px;
-				margin-top: 15px;
 		}
 		.sv-product-single-header .sv-product-title .title h2 {
 				font-size: 28px;
