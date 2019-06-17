@@ -3800,11 +3800,17 @@ ul, li {
 		display: block;
 }
 
+.sv-farmers-wrapper {
+		background: #f3f3f3;
+		margin-bottom: -60px;
+}
+
 .sv-farmers-list {
 		padding: 70px 0;
 		display: flex;
 		flex-wrap: wrap;
 		margin-bottom: -70px;
+		justify-content: center;
 }
 
 .sv-farmers-list .item {
@@ -7532,6 +7538,9 @@ input[type="radio"]:checked + label:after {
 		}
 		.sv-thankyou-image {
 				height: 250px;
+				margin-bottom: -30px;
+		}
+		.sv-farmers-wrapper {
 				margin-bottom: -30px;
 		}
 }

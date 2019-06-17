@@ -67,7 +67,7 @@
 
 <div id="farmersmap-canvas"></div>
 
-<div style="background: #f3f3f3;">
+<div class="sv-farmers-wrapper">
     <div class="sv-tab-content">
         <div class="tab-pane fade in active" id="farmers">
             <div class="container">
