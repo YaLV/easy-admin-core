@@ -2918,6 +2918,7 @@ ul, li {
 }
 
 .sv-category-wrapper .sv-products {
+		width: 100%;
 		align-items: flex-start;
 		align-content: flex-start;
 		display: flex;
