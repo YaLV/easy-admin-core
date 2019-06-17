@@ -24,6 +24,7 @@ function bindUpdate() {
         e.preventDefault();
         $.post($(this).attr('href'), $(this).closest('form').serialize(), function (response) {
             redrawCart(response);
+            showCartTotals(response);
             bindRemove();
             bindUpdate();
             if (!response.status) {

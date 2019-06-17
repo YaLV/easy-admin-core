@@ -27,15 +27,15 @@ class Profile extends FormRequest
     public function rules()
     {
         $rules = [
-            'name'             => 'required',
-            'last_name'        => 'required',
-            'phone'            => 'required',
+            'name'             => 'required|min:3|regex:/^[^0-9]+/i',
+            'last_name'        => 'required|min:3|regex:/^[^0-9]+/i',
+            'phone'            => 'required|numeric',
             'legal_name'       => 'required_if:is_legal,1',
             'legal_address'    => 'required_if:is_legal,1',
             'legal_reg_nr'     => 'required_if:is_legal,1',
             'legal_vat_reg_nr' => 'required_if:is_legal,1',
             'address'          => 'required',
-            'city'             => 'required',
+            'city'             => 'required|min:3|regex:/^[^0-9]+/i',
             'postal_code'      => 'required',
 
         ];

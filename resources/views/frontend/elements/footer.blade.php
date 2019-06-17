@@ -1,4 +1,4 @@
-<div class="sv-footer">
+<div class="sv-footer sticky-stopper">
     <div class="container">
         <div class="row">
             <ul class="menu">

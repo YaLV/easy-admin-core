@@ -62,11 +62,11 @@
             @if($banner->frequency=='always' || ($banner->frequency=='once_per_session' && !session()->has('banner'.$banner->id)) || ($banner->frequency=='once_a_week' && !request()->cookie('banner'.$banner->id)))
                 @push('css')
                     <style type="text/css">
-                        .sv-message#message-{{$banner->id}}    {
+                        .sv-message#message-{{$banner->id}}     {
                             color: #{{$banner->color_text}};
                         }
 
-                        .sv-message#message-{{$banner->id}}   > div {
+                        .sv-message#message-{{$banner->id}}    > div {
                             background-color: #{{ $banner->color_background }};
                         }
 
@@ -145,35 +145,37 @@
                                     @foreach($cache->getCategoryCache()->getFilters($category->id) as $attribute)
                                         @php
                                             $open = false;
-                                            $attributeValues = $cache->getAttributeCache($attribute)->getValues();
+                                            $attributeValues = $cache->getAttributeCache($attribute)->getAvailableValues();
                                         @endphp
 
-                                        @push('filter-'.$attribute)
-                                            @foreach($attributeValues as $attributeValue)
-                                                @php
-                                                    $checked = in_array($attributeValue,$currentAttributes)?"checked":"";
+                                        @if($attributeValues)
+                                            @push('filter-'.$attribute)
+                                                @foreach($attributeValues as $attributeValue)
+                                                    @php
+                                                        $checked = in_array($attributeValue,$currentAttributes)?"checked":"";
 
-                                                    $open = ($checked||($open??null))?true:null;
-                                                @endphp
-                                                <div class="input-wrapper checkbox">
-                                                    <input type="checkbox" id="check-{{$attributeValue}}"
-                                                           class="filterValue"
-                                                           name="filter[]"
-                                                           value="{{$attributeValue}}" {{ $checked }}/>
-                                                    <label for="check-{{$attributeValue}}">{{ __('attributevalues.name.'.$attributeValue) }}</label>
-                                                </div>
-                                            @endforeach
-                                        @endpush
+                                                        $open = ($checked||($open??null))?true:null;
+                                                    @endphp
+                                                    <div class="input-wrapper checkbox">
+                                                        <input type="checkbox" id="check-{{$attributeValue}}"
+                                                               class="filterValue"
+                                                               name="filter[]"
+                                                               value="{{$attributeValue}}" {{ $checked }}/>
+                                                        <label for="check-{{$attributeValue}}">{{ __('attributevalues.name.'.$attributeValue) }}</label>
+                                                    </div>
+                                                @endforeach
+                                            @endpush
 
-                                        <div class="item">
+                                            <div class="item">
                                 <span data-toggle="collapse" data-target="#filter-{{ $attribute }}"
                                       class="title {{ ($open?"":"collapsed") }}">{{ __('attributes.name.'.$attribute) }}</span>
-                                            <div id="filter-{{ $attribute }}" class="collapse {{ $open?"in":"" }}">
-                                                <div class="content">
-                                                    @stack('filter-'.$attribute)
+                                                <div id="filter-{{ $attribute }}" class="collapse {{ $open?"in":"" }}">
+                                                    <div class="content">
+                                                        @stack('filter-'.$attribute)
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endforeach
                                 @endif
                                 <button class="sv-filters-save sv-btn">{!! _t('translations.setFilter') !!}</button>

@@ -46,6 +46,7 @@
             @endif
         </div>
         <div class="cart {{ $frontController->cartHasItems() }}">
+            <div class="alert" id="alert-affix">+1</div>
             <a href="{{ r('cart') }}">
                 <span class="icon">
                     <s></s>

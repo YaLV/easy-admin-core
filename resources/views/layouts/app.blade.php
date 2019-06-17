@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset("assets/css/owl.carousel.min.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/font-awesome.min.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/animate.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/slinky.min.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/main.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/css/custom.css") }}">
     @stack('css')
@@ -52,6 +53,7 @@
 <script src="{{ asset("assets/js/owl.animate.js") }}"></script>
 <script src="{{ asset("assets/js/jquery.selectric.js") }}"></script>
 <script src="{{ asset("assets/js/imagesloaded.pkgd.min.js") }}"></script>
+<script src="{{ asset("assets/js/slinky.min.js") }}?ver={{ filemtime(public_path("assets/js/slinky.min.js")) }}"></script>
 <script src="{{ asset("assets/js/svaigi.js") }}?ver={{ filemtime(public_path("assets/js/svaigi.js")) }}"></script>
 <script src="{{ asset("assets/js/custom.js") }}?ver={{ filemtime(public_path("assets/js/custom.js")) }}"></script>
 <script src="{{ asset("assets/js/ajaxSetup.js") }}?ver={{ filemtime(public_path("assets/js/ajaxSetup.js")) }}"></script>
