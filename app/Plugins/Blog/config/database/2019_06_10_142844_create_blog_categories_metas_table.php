@@ -24,6 +24,8 @@ class CreateBlogCategoriesMetasTable extends Migration
 
             $table->unique(['owner_id', 'language', 'meta_name']);
         });
+
+        Artisan::call("db:seed", ['--class' => 'BlogAdminMenu']);
     }
 
     /**

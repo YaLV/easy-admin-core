@@ -188,7 +188,7 @@
                     @endif
                 </div>
                 <div class="sv-products">
-                    @if(count($products??[]) || $product)
+                    @if(count($products??[]) || ($product??false))
                         @yield('leftSide')
                     @else
                         {!! _t('translations.nothinghasbeenfound') !!}
