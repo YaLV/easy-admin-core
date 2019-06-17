@@ -3272,6 +3272,7 @@ ul, li {
 		position: relative;
 		background: #ff7171;
 		color: #ffffff;
+		margin-bottom: 10px;
 }
 
 .sv-error li a {
