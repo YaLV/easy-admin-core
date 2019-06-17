@@ -3486,6 +3486,9 @@ ul, li {
 
 #farmersmap-canvas {
   height: 700px;
+  & + .sv-blank-spacer {
+    display: none;
+  }
 }
 
 #contactsmap-canvas {
