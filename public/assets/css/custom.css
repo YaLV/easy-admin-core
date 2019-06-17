@@ -45,3 +45,8 @@ select {
     width: 100%;
   }
 }
+
+.loading-items, .loading-items * {
+  filter: blur(2px);
+  pointer-events:none;
+}
