@@ -741,6 +741,7 @@ ul, li {
         display: flex;
         background: $accent;
         ul {
+          width: 100%;
           display: flex;
           flex-wrap: wrap;
           li {
