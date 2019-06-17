@@ -855,8 +855,27 @@ jQuery('#sv-product-mobile-menu').slinky({
 });
 
 function showCartAlert() {
-  jQuery('.cart .alert').addClass('is-visible-once');
-  setTimeout(function(){
-    jQuery('.cart .alert').removeClass('is-visible-once');
-  }, 3000);
+
+  "use strict";
+
+  // retrieve the element
+  var element = document.getElementById("alert");
+  var elementAffix = document.getElementById("alert-affix");
+
+  // -> removing the class
+  element.classList.remove("is-visible-once");
+  elementAffix.classList.remove("is-visible-once");
+
+  // -> triggering reflow /* The actual magic */
+  // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
+  // This was, from the original tutorial, will no work in strict mode. Thanks Felis Phasma! The next uncommented line is the fix.
+  // element.offsetWidth = element.offsetWidth;
+
+  void element.offsetWidth;
+  void elementAffix.offsetWidth;
+
+  // -> and re-adding the class
+  element.classList.add("is-visible-once");
+  elementAffix.classList.add("is-visible-once");
+
 }
