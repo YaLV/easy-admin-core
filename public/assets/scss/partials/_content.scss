@@ -3545,11 +3545,17 @@ ul, li {
   }
 }
 
+.sv-farmers-wrapper {
+  background: #f3f3f3;
+  margin-bottom: -60px;
+}
+
 .sv-farmers-list {
   padding: 70px 0;
   display: flex;
   flex-wrap: wrap;
   margin-bottom: -70px;
+  justify-content: center;
   .item {
     width: 20%;
     display: flex;
