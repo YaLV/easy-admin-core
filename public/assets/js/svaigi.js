@@ -296,8 +296,8 @@ function carousels() {
         slideBy: 3
       },
       1246: {
-        items: 4,
-        slideBy: 4
+        items: 5,
+        slideBy: 5
       },
       1470: {
         items: 5,
