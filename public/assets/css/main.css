@@ -789,6 +789,11 @@ ul, li {
 		transition: all 350ms ease;
 }
 
+.sv-products-menu .cart .alert {
+		font-weight: 300;
+		left: 13px;
+}
+
 .sv-products-menu .cart > a {
 		padding: 0 25px;
 		position: relative;
@@ -5472,6 +5477,66 @@ body.farmers-open #farmersmap-canvas {
 		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20px' height='33px'%3E%3Cpath fill-rule='evenodd' fill='rgb(19, 19, 19)' d='M19.167,16.546 L17.046,18.667 L17.000,18.621 L2.954,32.667 L0.833,30.546 L14.879,16.500 L0.833,2.454 L2.954,0.333 L17.000,14.379 L17.046,14.333 L19.167,16.454 L19.121,16.500 L19.167,16.546 Z'/%3E%3C/svg%3E") !important;
 		opacity: 1;
 		transform: scale(0.6);
+}
+
+.cart .alert {
+		transition: all 350ms ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 50px;
+		height: 50px;
+		background: #5c457a;
+		color: #ffffff;
+		border-radius: 50%;
+		position: absolute;
+		bottom: -55px;
+		left: 7px;
+		z-index: 1000;
+		font-family: "DINPro Medium", sans-serif;
+		font-size: 20px;
+		line-height: 30px;
+		font-weight: 500 !important;
+		padding-bottom: 5px;
+		padding: 0;
+		opacity: 0;
+		visibility: hidden;
+}
+
+.cart .alert.is-visible-once {
+		animation: bounce 3s normal forwards;
+}
+
+@media only screen and (max-width: 767px) {
+		.cart .alert {
+				font-size: 18px;
+				line-height: 28px;
+				width: 40px;
+				height: 40px;
+		}
+}
+
+@keyframes bounce {
+		0% {
+				opacity: 0;
+				visibility: hidden;
+				transform: translateY(20px);
+		}
+		10% {
+				transform: translateY(-5px);
+		}
+		20% {
+				opacity: 1;
+				visibility: visible;
+				transform: translateY(0);
+		}
+		90% {
+				opacity: 1;
+		}
+		100% {
+				opacity: 0;
+				visibility: hidden;
+		}
 }
 
 .selectric-wrapper {
