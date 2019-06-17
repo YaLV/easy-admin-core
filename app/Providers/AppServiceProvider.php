@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Controllers\CacheController;
 use App\Http\Controllers\FrontController;
 use App\Model\Admin\Menu;
+use App\Plugins\Banners\Model\Banner;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with("currentMenuId", (new CacheController)->getMenuCache('shop')->getCurrentId());
             $view->with("currentCategoryId", (new CacheController)->getMenuCache('shop')->getCurrentCatId());
         });
+        View::composer("frontend.pages.page", function($view) {
+           $view->with("banners", Banner::whereDoesntHave('categories')->where('type', 'popup')->get());
+        });
+
 
 
         // Register Plugin View/Migration Directory

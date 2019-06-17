@@ -45,7 +45,7 @@
             </div>
             @endif
         </div>
-        <div class="cart has-items">
+        <div class="cart {{ $frontController->cartHasItems() }}">
             <a href="{{ r('cart') }}">
                 <span class="icon">
                     <s></s>
@@ -55,14 +55,6 @@
                 </span>
                 <span class="minicart-totals">{{ $frontController->getCartTotals()->toPay }} €</span>
             </a>
-            <div class="sv-dropdown sv-cart-dropdown">
-                <div class="item-list minicart-contents">
-                    @foreach($frontController->getCartItems() as $item)
-                        @include("Orders::frontend.partials.miniitem")
-                    @endforeach
-                </div>
-                <a href="{{ r('cart') }}" class="go-to-cart"><span>{!! _t('translations.openCart') !!}</span></a>
-            </div>
         </div>
     </div>
 </div>

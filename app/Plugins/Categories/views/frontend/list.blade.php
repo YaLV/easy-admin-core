@@ -1,10 +1,14 @@
 @extends('layouts.app')
 
+@php
+    /** @var \App\Plugins\Categories\Model\Category $category */
+@endphp
+
 @section('content')
 
     @if($category??false)
         <div class="sv-products-menu-mobile">
-            <select tabindex="-1">
+            <select tabindex="-1" title="mobile menu">
                 @include("frontend.partials.menu.mobile", ['menuSlug' => 'shop', 'menuId' => "auto"])
             </select>
         </div>
@@ -46,24 +50,43 @@
             </div>
         </div>
     </div>
-    <form class="sv-sidebar-search is-mobile">
-        <input type="text">
+    <form class="sv-sidebar-search is-mobile" method="get" action="{{ r('url', ['search']) }}">
+        <input type="text" name="search" value="{{ request()->get('search') }}" title="search">
         <input type="submit" value="{{ _t('translations.search') }}">
     </form>
-    @if(!($hideHeader??false))
-        <div class="sv-message">
-            <div style="background: #f8ddc4;">
-                Izvēlies CETURTDIENU, pirms liec produktus groziņā, ja vēlies pasūtījumu saņemt šajā ceturtdienā, nodod
-                to&nbsp;līdz
-                plkst. 10:00!<br>
-                Ieliec groziņā sezonas ogas&nbsp;vai šīs sezonas medus burciņu! <a href="#">Uzzini vairāk</a>
-                <a href="#" class="sv-close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21">
-                        <path d="M21.253,19.339l-1.414,1.414L11,11.914,2.161,20.753,0.747,19.339,9.586,10.5,0.747,1.661,2.161,0.247,11,9.086l8.839-8.839,1.414,1.414L12.414,10.5Z"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
+    @if($banners??false)
+        @foreach($banners as $banner)
+            @if($banner->type!='message')
+                @continue
+            @endif
+            @if($banner->frequency=='always' || ($banner->frequency=='once_per_session' && !session()->has('banner'.$banner->id)) || ($banner->frequency=='once_a_week' && !request()->cookie('banner'.$banner->id)))
+                @push('css')
+                    <style type="text/css">
+                        .sv-message#message-{{$banner->id}}    {
+                            color: #{{$banner->color_text}};
+                        }
+
+                        .sv-message#message-{{$banner->id}}   > div {
+                            background-color: #{{ $banner->color_background }};
+                        }
+
+                        .sv-message#message-{{$banner->id}} a {
+                            color: #{{$banner->color_url }};
+                        }
+                    </style>
+                @endpush
+                <div class="sv-message" id="message-{{ $banner->id }}">
+                    <div>
+                        {{ $banner->meta['message'][language()] }}
+                        <a href="#" class="sv-close reportClose" data-url="{{ route('closeBanner', [$banner->id]) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21">
+                                <path d="M21.253,19.339l-1.414,1.414L11,11.914,2.161,20.753,0.747,19.339,9.586,10.5,0.747,1.661,2.161,0.247,11,9.086l8.839-8.839,1.414,1.414L12.414,10.5Z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            @endif
+        @endforeach
     @endif
     <div class="@yield('wrapper')">
         <div class="container">
@@ -82,9 +105,10 @@
                         </ul>
                     @endif
                     <form class="sv-sidebar-search" method="get" action="{{ r('url', ['search']) }}">
-                        <input type="text" name="search" value="{{request()->get('search')}}" />
+                        <input type="text" name="search" value="{{request()->get('search')}}" title="search" />
                         <input type="submit" value="{{ _t('translations.search') }}" />
                     </form>
+
                     @if($category??false)
                         <form method="post" action="{{ route('setFilter', [$category->id]) }}">
                             {{ csrf_field() }}
@@ -152,14 +176,21 @@
                                         </div>
                                     @endforeach
                                 @endif
+                                <button class="sv-filters-save sv-btn">{!! _t('translations.setFilter') !!}</button>
                             </div>
-                            <button class="sv-filters-save">{!! _t('translations.setFilter') !!}</button>
-                            <a href="#" class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
+                            @if($filters??false)
+                                <a href="{{ route('setFilter', ['reset']) }}"
+                                   class="sv-filters-cancel">{!! _t('translations.clearFilter') !!}</a>
+                            @endif
                         </form>
                     @endif
                 </div>
                 <div class="sv-products">
-                    @yield('leftSide')
+                    @if(count($products??[]) || $product)
+                        @yield('leftSide')
+                    @else
+                        {!! _t('translations.nothinghasbeenfound') !!}
+                    @endif
                 </div>
             </div>
         </div>

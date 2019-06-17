@@ -1,6 +1,6 @@
 @php
     $id = $id??str_random(5);
-    $language = $language??"";
+    $content->language = $language = $language??"";
 @endphp
 
 <div class="row">
@@ -11,7 +11,7 @@
         <div class="form-group" style="margin-bottom:20px;">
             <select class="selectpicker {{ $class??"" }}{{ ($errors->has($name)?:$errors->has("$name.$language")?:false)?" is-invalid":"" }}"
                     {{ $data??"" }} id="{{ $id }}"
-                    {{ $multiple??"" }} name="{{$name}}{{($multiple??false)?"[]":""}}" {{ $data??"" }} tabindex="-98">
+                    {{ $multiple??"" }} name="{{$name}}{{($multiple??false)?"[]":($language?"[$language]":"") }}" {{ $data??"" }} tabindex="-98">
                 <option></option>
                 @foreach($options as $option)
                     @if($option->id==($content->id??"") && class_basename($content) == class_basename($option))

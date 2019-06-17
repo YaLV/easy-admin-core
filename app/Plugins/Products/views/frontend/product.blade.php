@@ -22,7 +22,7 @@
                 @endif
                 <img src="{{ $product->image(config('app.imageSize.product_image.view')) }}" class="title-image">
                 <div class="text">
-                    {{ $product->getMeta('description') }}
+                    {!! $product->getMeta('description') !!}
                 </div>
                 @if($expire = $product->getMeta('expire_date'))
                     <div class="sv-exp-date">
@@ -111,7 +111,7 @@
                 <h3>{{ __("supplier.name.".$product->supplier_id) }}</h3>
                 <h4>{{ __("supplier.location.".$product->supplier_id) }}</h4>
             </a>
-            {{  $product->supplier()->getMeta('description') }}
+            {!! $product->supplier()->getMeta('description') !!}
         </div>
 
         <div class="sv-blank-spacer medium"></div>
@@ -131,11 +131,10 @@
                 @endforeach
             </div>
         </div>
-
-        @if($blogPosts = \App\Plugins\Products\Model\Product::find($product->id)->blogPosts)
+        @if(count($blogPosts = \App\Plugins\Products\Model\Product::find($product->id)->blogPosts)>0)
             <div class="sv-blank-spacer medium"></div>
             <div class="sv-title">
-                <h3>{{ _t('translations.linked blogposts') }}</h3>
+                <h3>{!! _t('translations.linked blogposts') !!}</h3>
             </div>
             <div class="sv-blank-spacer medium"></div>
             <div class="sv-blog-list-slider">
