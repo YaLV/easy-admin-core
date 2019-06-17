@@ -3739,6 +3739,10 @@ ul, li {
 		height: 700px;
 }
 
+#farmersmap-canvas + .sv-blank-spacer {
+		display: none;
+}
+
 #contactsmap-canvas {
 		height: 550px;
 }
