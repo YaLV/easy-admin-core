@@ -740,6 +740,7 @@ ul, li {
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown ul {
+		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
 }
