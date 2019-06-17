@@ -292,8 +292,8 @@ function carousels() {
         slideBy: 3
       },
       1016: {
-        items: 3,
-        slideBy: 3
+        items: 4,
+        slideBy: 4
       },
       1246: {
         items: 5,
@@ -330,12 +330,12 @@ function carousels() {
         slideBy: 1,
       },
       750: {
-        items: 1,
-        slideBy: 1
-      },
-      1016: {
         items: 2,
         slideBy: 2
+      },
+      1016: {
+        items: 3,
+        slideBy: 3
       },
       1246: {
         items: 3,
@@ -367,7 +367,7 @@ function forms() {
     }
   });
 
-    jQuery('select').on('selectric-change', function(event, element, selectric) {
+  jQuery('select').on('selectric-change', function(event, element, selectric) {
     jQuery(element).val(jQuery(element).selectric().val());
   });
 
@@ -392,10 +392,9 @@ function forms() {
     });
   });
 
-  jQuery('.sv-cart-tabs .tab:not(.active)').on('click', function() {
+  jQuery('.sv-cart-tabs .tab').on('click', function() {
     jQuery('.sv-cart-tabs .tab').removeClass('active');
     jQuery(this).addClass('active');
-    document.location=$(this).data('run');
   });
 
   jQuery('#spinner, .spinner').spinner({

@@ -4,6 +4,7 @@
             @include("frontend.partials.menu.main", ['menuSlug' => 'shop'])
         </ul>
         <div class="cart {{ $frontController->cartHasItems() }}">
+            <div class="alert" id="alert">+1</div>
             <a href="{{ r('cart') }}">
 						<span class="icon">
 							<s></s>

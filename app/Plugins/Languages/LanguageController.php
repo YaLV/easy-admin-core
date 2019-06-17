@@ -45,8 +45,8 @@ class LanguageController extends AdminController
             }
         }
 
-
         if($language->save()) {
+            \Illuminate\Support\Facades\Cache::forget('languagelist');
             return redirect(route('languages'))->with('message', ['msg' => 'Language saved successfully']);
         }
         session()->flash("message", ['msg' => "Error Saving Language", 'isError'=> true]);
@@ -56,7 +56,7 @@ class LanguageController extends AdminController
     public function destroyLanguage($id) {
         $language = Languages::findOrFail($id);
         $language->forceDelete();
-
+        \Illuminate\Support\Facades\Cache::forget('languagelist');
         return ['status' => true, 'message' => "Language <strong>{$language->name}</strong> deleted"];
     }
 

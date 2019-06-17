@@ -1,11 +1,11 @@
 @php
+    /** @var \App\Cache\MenuCache $menu */
     $menu = $cache->getMenuCache($menuSlug??"main");
-    $cmenu = $menu->getItemId(request()->route('slug1'));
 @endphp
-<option data-wrap="true" data-href="{{ $menu->getUrl($cmenu) }}">{{ $menu->getName($cmenu) }}</option>
 
 @foreach($menu->getItems(($menuId??"first")) as $menuItem)
-    <option data-wrap="true" data-href="{{$menu->getUrl($menuItem)}}" {{$menuItem==$menu->getCurrentId()?"selected":""}}>
-        {{ $menu->getName($menuItem) }}
-    </option>
+    <li>
+        <a {{ $menu->hasChildren($menuItem)?"href=# class=next":"href=".$menu->getUrl($menuItem) }}>{{ $menu->getName($menuItem) }}</a>
+        @include('frontend.partials.menu.items.mobile', ['menuData' => $menuItem])
+    </li>
 @endforeach

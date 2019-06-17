@@ -25,5 +25,27 @@ $(document).ready(function () {
         }
         return false;
     })
-
+    addToCart();
 });
+
+
+function addToCart() {
+    $('.sv-product-card form, .sv-product-title form').unbind().submit(function (e) {
+        e.preventDefault();
+        $.post($(this).attr('action'), $(this).serialize(), function(response) {
+            if(response.status) {
+                showCartAlert();
+                showCartTotals(response);
+                return false;
+            }
+            alert(response.message);
+            return false;
+        });
+        return false;
+    });
+}
+
+function showCartTotals(response) {
+    $('.minicart-totals').text(response.contents.cartTotals.toPay+" €");
+    $('.cart').addClass('has-items');
+}

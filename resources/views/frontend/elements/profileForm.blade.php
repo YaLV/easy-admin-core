@@ -7,7 +7,7 @@
         <div class="section">
             <div class="input-wrapper req">
                 <label>{!! _t('translations.profileFormEmail') !!}</label>
-                <input type="email" name="email" value="{{ old('email')??$user->email??"" }}" />
+                <input type="text" name="email" value="{{ old('email')??$user->email??"" }}" />
             </div>
             <div class="input-wrapper req">
                 <label>{!! _t('translations.profileFormPhone') !!}</label>
