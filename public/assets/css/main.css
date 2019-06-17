@@ -1578,16 +1578,6 @@ ul, li {
 		color: #1f9363;
 }
 
-.sv-product-card:hover .sv-tag {
-		transform: translateY(-12px);
-}
-
-.sv-product-card:hover .image {
-		transform: translateY(-8px);
-		-webkit-filter: saturate(1.1);
-		box-shadow: rgba(50, 50, 52, 0.2) 0 10px 25px;
-}
-
 .sv-product-card:hover .selectric .label {
 		color: #1f9363;
 }
