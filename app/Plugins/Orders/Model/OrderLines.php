@@ -98,7 +98,7 @@ class OrderLines extends Model
 
         if ($type == 'percent') {
             if (($items ?? false) && count($items) > 0) {
-                return $query->orWhere(function (Builder $q) use (
+                return $query->where(function (Builder $q) use (
                     $amount,
                     $items
                 ) {
@@ -106,7 +106,7 @@ class OrderLines extends Model
                         '>=',
                         $amount)->whereIn('product_id',
                         $items);
-                });
+                })->orWhereNotIn('product_id', $items);
 
             }
 

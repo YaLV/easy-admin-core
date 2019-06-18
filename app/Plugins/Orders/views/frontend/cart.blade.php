@@ -50,12 +50,13 @@
                 @stack('items')
                 <div class="sv-blank-spacer small"></div>
                 <div class="coupon">
-                    <form method="post" action="{{ r('addDiscountCode') }}">
-                    <div class="enter">
+                    <form method="post" action="{{ r('addDiscountCode') }}" id="discountCodeForm">
+                        <div class="enter">
                             {{ @csrf_field() }}
-                            <input type="text" name="code" class="nr enderDiscountCode" placeholder="{!! __('translations.cartDiscountCode') !!}" />
-                    </div>
-                    <input type="submit" class="sv-btn" value="OK" />
+                            <input type="text" name="code" class="nr enderDiscountCode"
+                                   placeholder="{!! __('translations.cartDiscountCode') !!}" value="{{ $cart->discount_code }}" />
+                        </div>
+                        <input type="submit" class="sv-btn" value="OK" />
                     </form>
                 </div>
             </div>
@@ -71,27 +72,24 @@
                                 {{ $cartTotals->productSum }} €
                             </div>
                         </div>
-                        @if($cart->delivery_id)
-                            <div class="item">
-                                <div>
-                                    {!! _t('translations.cartDelivery') !!}
-                                </div>
-                                <div class="delivery">
-                                    {{$cart->delivery_amount}} €
-                                </div>
+                        <div class="item" {{ $cart->delivery_id?"":"style=display:none;" }}>
+                            <div>
+                                {!! _t('translations.cartDelivery') !!}
                             </div>
-                        @endif
-                        @if($cart->discount_target??false)
-                            <div class="item">
-                                <div>
-                                    {!! _t('translations.cartDiscount') !!} (<span style="text-transform: uppercase; font-weight:bold; ">{{$cart->discount_code}}</span>)
-                                    <a href="{{ r('removeDiscountCode') }}" class="remove"></a>
-                                </div>
-                                <div class="discount">
-                                    {{ $cartTotals->discount }} €
-                                </div>
+                            <div class="delivery">
+                                {{$cart->delivery_amount}} €
                             </div>
-                        @endif
+                        </div>
+                        <div class="item" {{ $cart->discount_code?"":"style=display:none;" }}>
+                            <div>
+                                {!! _t('translations.cartDiscount') !!} (<span
+                                        style="text-transform: uppercase; font-weight:bold; " class="dcode">{{$cart->discount_code}}</span>)
+                                <a href="{{ r('removeDiscountCode') }}" class="remove" id="removeDiscountCode"></a>
+                            </div>
+                            <div class="discount">
+                                {{ $cartTotals->discount }} €
+                            </div>
+                        </div>
                     </div>
                     <div class="checkout">
                         <div class="list">
@@ -108,7 +106,8 @@
                     </div>
                 </div>
                 <div class="clear">
-                    <a href="{{ route('clearCart') }}" class="sv-filters-cancel">{!! _t('translations.clearCart') !!}</a>
+                    <a href="{{ route('clearCart') }}"
+                       class="sv-filters-cancel">{!! _t('translations.clearCart') !!}</a>
                 </div>
             </div>
         </div>

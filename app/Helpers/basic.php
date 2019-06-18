@@ -202,8 +202,9 @@ function getCartTotals(\App\Plugins\Orders\Model\OrderHeader $cart, array $items
                 ->selectRaw($queryForCode)
                 ->first();
             $woDiscount = $cart->currentDayItems()
-                ->whereNotIn('product_id', $discount_items)
+//                ->whereNotIn('product_id', $discount_items)
                 ->discountOver($cart->discount_amount, $cart->discount_type, $discount_items)
+//                ->get();
                 ->selectRaw($queryNoCode)
                 ->first();
             break;
@@ -230,7 +231,7 @@ function getCartTotals(\App\Plugins\Orders\Model\OrderHeader $cart, array $items
             $sums = $cart->currentDayItems($items)->selectRaw($queryNoCode)->first();
             break;
     }
-
+//    dd($woDiscount);
 
     /** @var int $productSum */
     $productSum = number_format(round($sums->sum ?? 0, 2), 2);
