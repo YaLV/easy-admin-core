@@ -28,7 +28,8 @@ class AppServiceProvider extends ServiceProvider
             $view->with("currentCategoryId", (new CacheController)->getMenuCache('shop')->getCurrentCatId());
         });
         View::composer("frontend.pages.page", function($view) {
-           $view->with("banners", Banner::whereDoesntHave('categories')->where('type', 'popup')->get());
+            $banners = Banner::whereDoesntHave('categories')->where('type', 'popup')->get();
+           $view->with("popups", $banners);
         });
 
 

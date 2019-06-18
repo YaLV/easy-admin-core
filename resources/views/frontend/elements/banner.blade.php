@@ -1,4 +1,4 @@
-@foreach($banners??[] as $banner)
+@foreach($popups??[] as $banner)
     @if($banner->type!='popup')
         @continue
     @endif
@@ -18,5 +18,13 @@
                 </div>
             </div>
         </div>
+        @push('scripts')
+            <script>
+                $(document).ready(function () {
+                    $('body').addClass('sv-lightbox-open');
+                })
+            </script>
+        @endpush
+        @break
     @endif
 @endforeach
