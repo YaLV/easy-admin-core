@@ -3081,6 +3081,9 @@ ul, li {
     background: #ff7171;
     color: $white;
     margin-top: 10px;
+    @media only screen and (max-width: 767px) {
+      padding: 15px 15px;
+    }
     a {
       color: $accent;
       text-decoration: underline;
