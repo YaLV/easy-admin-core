@@ -170,7 +170,7 @@ function dropdowns() {
       var drop = jQuery(this).find('.sv-dropdown');
       setTimeout(function() {
         drop.addClass('is-visible');
-      }, 10);
+      }, 350);
     });
 
     jQuery('.sv-products-menu .sv-default-dropdown-toggle').on('mouseleave', function() {
