@@ -183,7 +183,7 @@ function dropdowns() {
 
         // console.log('DELAYED HOVER');
 
-      }, 350)
+      }, 200)
 
     }).mouseleave(function(){
 
