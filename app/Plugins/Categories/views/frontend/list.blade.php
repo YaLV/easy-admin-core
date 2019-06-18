@@ -10,8 +10,8 @@
         @if(!($hideHeader??false))
             <div class="sv-category-title-banner">
                 <div class="title">
-                    <h3>{{ __("category.name.$currentCategoryId") }}</h3>
-                    <h4>{{ __("category.description.$currentCategoryId") }}</h4>
+                    <h3>{{ __("category.name.".$currentCategoryId?:$product->mainCategory?:null) }}</h3>
+                    <h4>{{ __("category.description.".$currentCategoryId?:$product->mainCategory?:null) }}</h4>
                 </div>
                 <div class="bg-parallax has-loaded">
                     <div class="image"
@@ -20,7 +20,7 @@
             </div>
         @endif
         <div class="sv-category-title-mobile">
-            <h1>{{ __("category.name.$currentCategoryId") }}</h1>
+            <h1>{{ __("category.name.".($currentCategoryId?:$product->mainCategory?:null)) }}</h1>
             <a href="#sv-mobile-filters" data-toggle="collapse" class="sv-icon-filter collapsed">
                 <s></s>
                 <s></s>
