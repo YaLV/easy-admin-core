@@ -2983,6 +2983,11 @@ ul, li {
         padding: 8px 0;
         display: block;
       }
+      .active {
+        a {
+          color: $accent;
+        }
+      }
     }
   }
   .sv-back-link {
