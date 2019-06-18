@@ -81,7 +81,7 @@ trait CartFunctions
 
     private function getCartContents($cart, $cartType = false)
     {
-        return array_merge(['cartTotals' => getCartTotals($cart)], $this->renderCartItems($cart, $cartType));
+        return array_merge(['cartTotals' => getCartTotals($cart), 'code' => $cart->discount_code], $this->renderCartItems($cart, $cartType));
     }
 
     private function renderCartItems($cart, $bothCarts)

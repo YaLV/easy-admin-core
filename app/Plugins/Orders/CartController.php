@@ -483,6 +483,10 @@ class CartController extends Controller
             'discount_items'  => json_decode($discount_code->getOriginal('items')),
         ]);
 
+        if(request()->ajax()) {
+            $cart = $cart->refresh();
+            return ['status' => true, 'message' => 'Code Added', 'contents' => $this->getCartContents($cart, true)];
+        }
         return redirect()->back()->with(['message' => 'Discount Code Added']);
     }
 
@@ -500,7 +504,10 @@ class CartController extends Controller
             'discount_target' => null,
             'discount_type'   => null,
         ]);
-
+        if(request()->ajax()) {
+            $cart = $cart->refresh();
+            return ['status' => true, 'message' => 'Code removed', 'contents' => $this->getCartContents($cart, true)];
+        }
         return redirect()->back()->with(['message' => 'Discount Code Removed']);
     }
 }
