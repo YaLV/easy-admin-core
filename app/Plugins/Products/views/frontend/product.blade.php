@@ -2,6 +2,7 @@
 
 @php
     $hideHeader = true;
+    $currentCategoryId = $product->mainCategory;
     /** @var \App\Cache\ProductCache $product **/
 @endphp
 
