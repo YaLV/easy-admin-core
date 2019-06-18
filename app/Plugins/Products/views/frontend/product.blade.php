@@ -59,20 +59,12 @@
                     @else
                         <input type="hidden" value="{{$product->prices()->id}}" name="variation_id" />
 
-<<<<<<< Updated upstream
                         <div class="amount">
                           @if($product->isSale())
                               <s>{{ $product->prices()->oldPrice }}€</s>
                           @endif
                           {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
                         </div>
-
-=======
-                        @if($product->isSale())
-                            <s>{{ $product->prices()->oldPrice }}€ </s>
-                        @endif
-                        {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
->>>>>>> Stashed changes
                     @endif
                     <div class="input-wrapper quantity">
                         <span class="button minus disabled"></span>
