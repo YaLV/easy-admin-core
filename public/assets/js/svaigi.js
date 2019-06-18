@@ -163,24 +163,59 @@ function dropdowns() {
       }, 350);
     });
 
-    jQuery('.sv-products-menu .sv-default-dropdown-toggle').on('mouseenter', function() {
-      clearTimeout(window.timeout);
-      jQuery(this).find('.sv-dropdown').removeClass('is-dom').addClass('is-dom');
-      jQuery(this).addClass('is-active');
-      var drop = jQuery(this).find('.sv-dropdown');
-      setTimeout(function() {
-        drop.addClass('is-visible');
-      }, 350);
-    });
+    // delayed hover
 
-    jQuery('.sv-products-menu .sv-default-dropdown-toggle').on('mouseleave', function() {
+    var timer;
+
+    jQuery('.sv-products-menu .sv-default-dropdown-toggle').mouseenter(function() {
+
+      var element = jQuery(this);
+
+      timer = setTimeout(function(){
+
+        clearTimeout(window.timeout);
+        element.find('.sv-dropdown').removeClass('is-dom').addClass('is-dom');
+        element.addClass('is-active');
+        var drop = element.find('.sv-dropdown');
+        setTimeout(function() {
+          drop.addClass('is-visible');
+        }, 10);
+
+        console.log('DELAYED HOVER');
+
+      }, 350)
+
+    }).mouseleave(function(){
+
+      clearTimeout(timer);
+
       jQuery(this).find('.sv-dropdown').removeClass('is-visible');
       var drop = jQuery(this).find('.sv-dropdown');
       jQuery(this).removeClass('is-active');
       window.timeout = setTimeout(function() {
         drop.removeClass('is-dom');
       }, 350);
+
     });
+
+    // jQuery('.sv-products-menu .sv-default-dropdown-toggle').on('mouseenter', function() {
+    //   clearTimeout(window.timeout);
+    //   jQuery(this).find('.sv-dropdown').removeClass('is-dom').addClass('is-dom');
+    //   jQuery(this).addClass('is-active');
+    //   var drop = jQuery(this).find('.sv-dropdown');
+    //   setTimeout(function() {
+    //     drop.addClass('is-visible');
+    //   }, 10);
+    // });
+    //
+    // jQuery('.sv-products-menu .sv-default-dropdown-toggle').on('mouseleave', function() {
+    //   jQuery(this).find('.sv-dropdown').removeClass('is-visible');
+    //   var drop = jQuery(this).find('.sv-dropdown');
+    //   jQuery(this).removeClass('is-active');
+    //   window.timeout = setTimeout(function() {
+    //     drop.removeClass('is-dom');
+    //   }, 350);
+    // });
 
   }
 
