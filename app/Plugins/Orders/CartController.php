@@ -195,6 +195,12 @@ class CartController extends Controller
         /** @var OrderHeader $cart */
         $cart = OrderHeader::find($cartId);
         $totalAmount = getCartTotals($cart) ?? 0;
+
+        if($cart->items()->count()==0) {
+            $cart->update(['delivery_amount' => 0, 'delivery_id' => null]);
+            return true;
+        }
+
         if ($cart->delivery_id) {
             $delivery = $cart->delivery;
             if ($totalAmount->productSum >= ($delivery->freeAbove ?? 0)) {
@@ -429,7 +435,7 @@ class CartController extends Controller
             if ($item) {
                 $item->delete();
                 $this->checkFreeDelivery($cart->id);
-                $cart = $this->getCart();
+                $cart = $cart->refresh();
 
                 return ['status' => true, 'message' => 'Item Removed', 'contents' => $this->getCartContents($cart, true)];
             }
