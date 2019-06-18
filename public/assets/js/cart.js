@@ -10,6 +10,7 @@ function bindRemove() {
         $.post($(this).attr('href'), '', function (response) {
             if (response.status === true) {
                 redrawCart(response);
+                showCartTotals(response);
                 bindRemove();
                 bindUpdate();
             }
