@@ -3194,6 +3194,8 @@ ul, li {
 		outline: none !important;
 		min-height: 60px;
 		box-shadow: none !important;
+		text-align: center;
+		margin-bottom: 10px;
 		transition: all 500ms ease;
 		-webkit-appearance: none;
 }
