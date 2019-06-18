@@ -2980,6 +2980,8 @@ ul, li {
     outline: none !important;
     min-height: 60px;
     box-shadow: none !important;
+    text-align: center;
+    margin-bottom: 10px;
     @include transition-medium;
     -webkit-appearance: none;
     &:focus {
