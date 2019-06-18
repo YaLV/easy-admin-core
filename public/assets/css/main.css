@@ -3180,6 +3180,28 @@ ul, li {
 		width: 100%;
 }
 
+.sv-product-title .amount {
+		color: #323234;
+		width: 100%;
+		font-family: "DINPro Medium", sans-serif;
+		letter-spacing: 0;
+		font-size: 22px;
+		line-height: 60px;
+		padding: 0 15px;
+		border: #e2e2e2 1px solid;
+		border-radius: 0;
+		background: #ffffff;
+		outline: none !important;
+		min-height: 60px;
+		box-shadow: none !important;
+		transition: all 500ms ease;
+		-webkit-appearance: none;
+}
+
+.sv-product-title .amount:focus {
+		border: #c9c9c9 1px solid;
+}
+
 .sv-sidebar-category {
 		flex-shrink: 0;
 		width: 210px;
