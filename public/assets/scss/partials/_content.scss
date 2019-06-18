@@ -2983,7 +2983,7 @@ ul, li {
         padding: 8px 0;
         display: block;
       }
-      .active {
+      &.active {
         a {
           color: $accent;
         }

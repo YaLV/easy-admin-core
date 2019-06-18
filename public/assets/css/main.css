@@ -3199,7 +3199,7 @@ ul, li {
 		display: block;
 }
 
-.sv-sidebar-category .menu li .active a {
+.sv-sidebar-category .menu li.active a {
 		color: #1f9363;
 }
 
