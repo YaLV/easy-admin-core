@@ -42,7 +42,7 @@
             @endif
             <h4><a href="{{ r('supplierOpen', [getSupplierSlugs(true),__("supplier.slug.{$item->supplier_id}")]) }}">{{ __("supplier.name.{$item->supplier_id}") }}</a></h4>
         </div>
-        <button class="add-to-cart">
+        <button class="add-to-cart {{ in_array((new \App\Http\Controllers\CacheController)->getSelectedMarketDay()->id,$item->marketDays)?"":"is-disabled" }}">
                 <span class="icon">
                     <s></s>
                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="14" viewBox="0 0 26 14">

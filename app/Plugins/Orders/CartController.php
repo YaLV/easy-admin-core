@@ -19,6 +19,7 @@ use Antcern\Paysera\PayseraManager;
 use App\Paysera;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class CartController
@@ -49,7 +50,7 @@ class CartController extends Controller
         $origCart->delivery()->associate(Delivery::findOrFail($deliveryId))->save();
         $this->checkFreeDelivery($cart->id);
         $cart = $cart->refresh();
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             return ['status' => true, 'message' => 'Delivery Updated', 'contents' => $this->getCartContents($cart, true)];
         }
 
@@ -156,8 +157,8 @@ class CartController extends Controller
                 'variation_size' => $variation->size,
                 'discount'       => $product->discount(),
                 'variation_id'   => $request->get('variation_id'),
-                'total_amount'   => $variation->amountinpackage*($request->get('amount') ?? 1),
-                'real_amount'    => $variation->amountinpackage*($request->get('amount') ?? 1),
+                'total_amount'   => $variation->amountinpackage * ($request->get('amount') ?? 1),
+                'real_amount'    => $variation->amountinpackage * ($request->get('amount') ?? 1),
                 'amount_unit'    => $variation->amountUnit,
                 'amount'         => $request->get('amount') ?? 1,
                 'price_raw'      => $variation->price_raw,
@@ -165,7 +166,7 @@ class CartController extends Controller
                 'cost'           => $variation->cost,
                 'markup'         => $variation->markup,
                 'markup_amount'  => $variation->markup_amount,
-                'discount_name'  => $product->getDiscountName()
+                'discount_name'  => $product->getDiscountName(),
             ];
 
             if ($item) {
@@ -215,20 +216,27 @@ class CartController extends Controller
      * @param null $edit
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     *
+     * @throws ValidationException
      */
     public function checkout($edit = null)
     {
 
         $cart = $this->getCart();
 
+
         if (!$cart->delivery_id) {
-            return redirect()->back()->withErorrs(['delivery' => 'Please select Delivery option']);
+            throw ValidationException::withMessages([
+                ['delivery' => 'Please select Delivery option'],
+            ]);
         }
 
         $cartItemCount = $cart->items()->count();
 
         if ($cart->currentDayItems()->count() !== $cartItemCount || $cartItemCount == 0) {
-            return redirect()->back()->withErrors(["cartError" => "Cart Has undeliverable items"]);
+            throw ValidationException::withMessages([
+                ["cartError" => "Cart Has undeliverable items"],
+            ]);
         }
 
         if (Auth::user() && !$edit) {
@@ -385,9 +393,9 @@ class CartController extends Controller
         }
 
         OriginalOrder::create([
-            'id' => $cart->id,
+            'id'      => $cart->id,
             'headers' => $cart->getOriginal(),
-            'items' => $cart->items->toArray()
+            'items'   => $cart->items->toArray(),
         ]);
 
         session()->forget('cart');

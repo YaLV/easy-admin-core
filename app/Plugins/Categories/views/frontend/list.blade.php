@@ -7,11 +7,6 @@
 @section('content')
 
     @if($category??false)
-        <div class="sv-products-menu-mobile">
-            <select tabindex="-1" title="mobile menu">
-                @include("frontend.partials.menu.mobile", ['menuSlug' => 'shop', 'menuId' => "auto"])
-            </select>
-        </div>
         @if(!($hideHeader??false))
             <div class="sv-category-title-banner">
                 <div class="title">
