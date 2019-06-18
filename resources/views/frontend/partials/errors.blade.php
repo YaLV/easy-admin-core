@@ -1,7 +1,7 @@
-<div class="sv-error">
-    @if($errors->any())
+@if($errors->any())
+    <div class="sv-error">
         <ul>
             {!! implode('', $errors->all('<li>:message</li>')) !!}
         </ul>
-    @endif
-</div>
+    </div>
+@endif
