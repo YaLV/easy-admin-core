@@ -3199,6 +3199,10 @@ ul, li {
 		display: block;
 }
 
+.sv-sidebar-category .menu li .active a {
+		color: #1f9363;
+}
+
 .sv-sidebar-category .sv-back-link {
 		display: block;
 		margin-bottom: 25px;
