@@ -181,7 +181,7 @@ function dropdowns() {
           drop.addClass('is-visible');
         }, 10);
 
-        console.log('DELAYED HOVER');
+        // console.log('DELAYED HOVER');
 
       }, 350)
 
