@@ -973,7 +973,7 @@ ul, li {
 }
 
 .sv-products-menu-mobile {
-  display: none;
+  display: none !important;
   .selectric {
     border: none;
     font-family: $font-secondary;
