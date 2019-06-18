@@ -59,10 +59,13 @@
                     @else
                         <input type="hidden" value="{{$product->prices()->id}}" name="variation_id" />
 
-                        @if($product->isSale())
-                            <s>{{ $product->prices()->oldPrice }}€</s>
-                        @endif
-                        {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
+                        <div class="amount">
+                          @if($product->isSale())
+                              <s>{{ $product->prices()->oldPrice }}€</s>
+                          @endif
+                          {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
+                        </div>
+
                     @endif
                     <div class="input-wrapper quantity">
                         <span class="button minus disabled"></span>
