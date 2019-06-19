@@ -1201,13 +1201,23 @@ ul, li {
 }
 
 .sv-page-title-banner .bg-parallax {
-		background: #000000;
 		opacity: 0;
 		transition: all 150ms ease;
 }
 
 .sv-page-title-banner .bg-parallax .image {
-		opacity: 0.6;
+		opacity: 1;
+		position: relative;
+}
+
+.sv-page-title-banner .bg-parallax .image:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(50, 50, 52, 0.4);
 }
 
 .sv-page-title-banner .bg-parallax.has-loaded {
@@ -1302,7 +1312,7 @@ ul, li {
 		width: 50%;
 		color: #ffffff;
 		position: relative;
-		background: #000000;
+		background: #ececec;
 		opacity: 0;
 		transition: all 150ms ease;
 }
@@ -2016,7 +2026,7 @@ ul, li {
 }
 
 .sv-steps .bg-parallax {
-		background: #000000;
+		background: #ececec;
 		opacity: 0;
 		transition: all 150ms ease;
 }
