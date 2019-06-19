@@ -1277,13 +1277,24 @@ ul, li {
 }
 
 .sv-category-title-banner .bg-parallax {
-		background: #000000;
+		background: #ececec;
 		opacity: 0;
 		transition: all 150ms ease;
 }
 
 .sv-category-title-banner .bg-parallax .image {
-		opacity: 0.6;
+		position: relative;
+		opacity: 1;
+}
+
+.sv-category-title-banner .bg-parallax .image:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(50, 50, 52, 0.4);
 }
 
 .sv-category-title-banner .bg-parallax.has-loaded {
