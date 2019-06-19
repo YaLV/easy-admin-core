@@ -26,6 +26,5 @@
             @endforeach
         </div>
     </div>
-    <div class="sv-blank-spacer medium"></div>
     {{ $orders->onEachSide(3)->render('frontend.elements.orderPagination') }}
 @endsection
