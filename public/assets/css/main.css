@@ -3371,6 +3371,14 @@ ul, li {
 		color: #ffffff;
 }
 
+.sv-message.is-empty-cart {
+		margin-bottom: 0;
+}
+
+.sv-message.is-empty-cart + .sv-blank-spacer {
+		display: none;
+}
+
 .sv-error {
 		padding: 0;
 		font-size: 16px;
