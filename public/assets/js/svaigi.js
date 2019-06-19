@@ -656,7 +656,7 @@ function farmersmap() {
     for (var i = 0; i < locations.length; i++) {
       var farmer = locations[i];
 
-      var myLatLng = new google.maps.LatLng(farmer[1], farmer[2]);
+      var myLatLng = new google.maps.LatLng(farmer[1][0], farmer[1][1]);
       var marker = new RichMarker({
         position: myLatLng,
         map: map,
