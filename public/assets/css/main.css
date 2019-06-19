@@ -7064,6 +7064,7 @@ input[type="radio"]:checked + label:after {
 				margin-bottom: 15px;
 		}
 		.sv-blog-sidebar {
+				margin-top: 20px;
 				padding-left: 0;
 				width: 100%;
 		}
