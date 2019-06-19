@@ -1232,7 +1232,7 @@ ul, li {
     padding: 0 20%;
   }
   .bg-parallax {
-    background: #ececec;
+    // background: #ececec;
     opacity: 0;
     @include transition-veryfast;
     .image {

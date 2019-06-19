@@ -1277,7 +1277,6 @@ ul, li {
 }
 
 .sv-category-title-banner .bg-parallax {
-		background: #ececec;
 		opacity: 0;
 		transition: all 150ms ease;
 }
