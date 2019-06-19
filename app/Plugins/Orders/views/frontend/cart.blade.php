@@ -113,9 +113,15 @@
         </div>
 
         <div class="sv-blank-spacer small"></div>
+
     @else
-        Your Cart is Empty!!
+    <div class="sv-message" id="message-1">
+      <div>
+        Your cart is empty!
+      </div>
+    </div>
     @endif
+    
 @endsection
 
 @push('scripts')
