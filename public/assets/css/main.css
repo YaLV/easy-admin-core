@@ -4761,8 +4761,16 @@ body.farmers-open #farmersmap-canvas {
 }
 
 .sv-cart .list .item .quantity {
-		width: 20%;
+		width: 15%;
 		text-align: center;
+}
+
+.sv-cart .list .item .quantity .selectric {
+		justify-content: center;
+}
+
+.sv-cart .list .item .quantity .selectric-items {
+		outline: none !important;
 }
 
 .sv-cart .list .item .total {
