@@ -1403,21 +1403,21 @@ ul, li {
 		background: rgba(50, 50, 52, 0.4);
 }
 
-.sv-image-banner .item:hover .image {
+.sv-image-banner .item.has-loaded .image {
 		opacity: 1;
 }
 
-.sv-image-banner .item:hover .image:before {
+.sv-image-banner .item.has-loaded:hover .image {
+		opacity: 1;
+}
+
+.sv-image-banner .item.has-loaded:hover .image:before {
 		background: rgba(50, 50, 52, 0.6);
 }
 
-.sv-image-banner .item:hover .title h3 {
+.sv-image-banner .item.has-loaded:hover .title h3 {
 		transform: translateY(-5px);
 		text-shadow: rgba(50, 50, 52, 0.7) 0 15px 30px;
-}
-
-.sv-image-banner .item.has-loaded .image {
-		opacity: 1;
 }
 
 .sv-title {
