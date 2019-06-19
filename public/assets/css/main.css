@@ -714,11 +714,7 @@ ul, li {
 
 .sv-products-menu.has-large-dropdown > div > ul li {
 		position: static;
-		padding-right: 40px;
-}
-
-.sv-products-menu.has-large-dropdown > div > ul li:nth-child(even) {
-		padding-right: 0;
+		padding-right: 20px;
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown {
@@ -780,6 +776,14 @@ ul, li {
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .left ul li a span {
 		align-items: flex-start;
+}
+
+.sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .left ul li {
+		padding-right: 20px;
+}
+
+.sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .left ul li:nth-child(even) {
+		padding-right: 0;
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .right {
