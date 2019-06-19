@@ -714,7 +714,11 @@ ul, li {
 
 .sv-products-menu.has-large-dropdown > div > ul li {
 		position: static;
-		padding-right: 30px;
+		padding-right: 40px;
+}
+
+.sv-products-menu.has-large-dropdown > div > ul li:nth-child(even) {
+		padding-right: 0;
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown {

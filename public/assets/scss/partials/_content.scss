@@ -722,7 +722,10 @@ ul, li {
       position: static;
       li {
         position: static;
-        padding-right: 30px;
+        padding-right: 40px;
+        &:nth-child(even) {
+          padding-right: 0;
+        }
       }
     }
     .sv-default-dropdown-toggle {
