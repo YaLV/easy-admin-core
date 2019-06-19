@@ -2042,10 +2042,6 @@ ul, li {
 		color: #1f9363;
 }
 
-.sv-footer .social a {
-		margin-right: 30px;
-}
-
 .sv-footer .social {
 		margin-left: auto;
 		display: flex;
@@ -2062,6 +2058,11 @@ ul, li {
 		font-size: 18px;
 		font-weight: normal;
 		position: relative;
+		margin-left: 30px;
+}
+
+.sv-footer .social a:first-child {
+		margin-left: 0;
 }
 
 .sv-footer .social a i {
