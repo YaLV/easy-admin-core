@@ -1905,6 +1905,7 @@ ul, li {
 .sv-blog-list .post, .sv-blog-list-slider .post {
 		font-size: 18px;
 		line-height: 30px;
+		flex-grow: 1;
 }
 
 .sv-blog-list .post p, .sv-blog-list-slider .post p {

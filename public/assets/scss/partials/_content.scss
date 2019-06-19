@@ -1821,6 +1821,7 @@ ul, li {
   .post {
     font-size: 18px;
     line-height: 30px;
+    flex-grow: 1;
     p {
       margin-bottom: 45px;
       &:last-child {
