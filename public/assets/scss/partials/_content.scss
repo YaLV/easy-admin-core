@@ -1198,6 +1198,7 @@ ul, li {
 }
 
 .sv-category-title-banner {
+  background: #ececec;
   height: 250px;
   width: 100%;
   position: relative;
@@ -1232,7 +1233,6 @@ ul, li {
     padding: 0 20%;
   }
   .bg-parallax {
-    background: #ececec;
     opacity: 0;
     @include transition-veryfast;
     .image {
