@@ -1346,7 +1346,7 @@ ul, li {
 		color: #ffffff;
 		position: relative;
 		background: #ececec;
-		opacity: 0;
+		opacity: 1;
 		transition: all 150ms ease;
 }
 
@@ -1380,7 +1380,7 @@ ul, li {
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-size: cover;
-		opacity: 1;
+		opacity: 0;
 		transition: all 350ms ease;
 }
 
@@ -1416,7 +1416,7 @@ ul, li {
 		text-shadow: rgba(50, 50, 52, 0.7) 0 15px 30px;
 }
 
-.sv-image-banner .item.has-loaded {
+.sv-image-banner .item.has-loaded .image {
 		opacity: 1;
 }
 
