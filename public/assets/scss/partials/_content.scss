@@ -3151,6 +3151,7 @@ ul, li {
   &.is-empty-cart {
     margin-bottom: 0;
     & > div {
+      padding: 15px !important;
       text-align: center !important;
     }
     & + .sv-blank-spacer {
