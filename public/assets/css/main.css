@@ -714,7 +714,7 @@ ul, li {
 
 .sv-products-menu.has-large-dropdown > div > ul li {
 		position: static;
-		padding-right: 20px;
+		padding-right: 40px;
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown {
@@ -765,13 +765,17 @@ ul, li {
 		width: 50%;
 		display: flex;
 		align-items: center;
-		padding: 0 120px 0 60px;
+		padding: 0 60px 0 60px;
 }
 
 @media only screen and (max-width: 1200px) {
 		.sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .left {
 				padding: 0 60px 0 60px;
 		}
+}
+
+.sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .left ul li a span {
+		align-items: flex-start;
 }
 
 .sv-products-menu.has-large-dropdown .sv-default-dropdown-toggle .sv-default-dropdown .right {
