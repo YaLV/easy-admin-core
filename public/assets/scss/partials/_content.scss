@@ -4145,6 +4145,9 @@ body.farmers-open {
       }
     }
   }
+  & + .sv-blank-spacer {
+    display: none;
+  }
 }
 
 .sv-pagination {

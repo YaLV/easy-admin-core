@@ -4438,6 +4438,10 @@ body.farmers-open #farmersmap-canvas {
 		transform: rotate(270deg);
 }
 
+.sv-order-history + .sv-blank-spacer {
+		display: none;
+}
+
 .sv-pagination {
 		font-size: 28px;
 		font-family: "NeutraDisp Titling", sans-serif;
