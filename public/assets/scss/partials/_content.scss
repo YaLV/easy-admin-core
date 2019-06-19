@@ -1132,6 +1132,16 @@ ul, li {
   height: 320px;
   width: 100%;
   position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #ececec;
+    z-index: -2;
+  }
   .title {
     position: absolute;
     width: 100%;
