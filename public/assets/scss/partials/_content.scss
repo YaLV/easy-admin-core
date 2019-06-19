@@ -1307,6 +1307,7 @@ ul, li {
     .image {
       position: relative;
       &:before {
+        @include transition-fast;
         content: "";
         position: absolute;
         top: 0;
@@ -1318,7 +1319,10 @@ ul, li {
     }
     &:hover {
       .image {
-        opacity: 0.8;
+        opacity: 1;
+        &:before {
+          background: rgba($black, 0.6);
+        }
       }
       .title {
         h3 {

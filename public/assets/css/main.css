@@ -1365,6 +1365,7 @@ ul, li {
 }
 
 .sv-image-banner .item .image:before {
+		transition: all 350ms ease;
 		content: "";
 		position: absolute;
 		top: 0;
@@ -1375,7 +1376,11 @@ ul, li {
 }
 
 .sv-image-banner .item:hover .image {
-		opacity: 0.8;
+		opacity: 1;
+}
+
+.sv-image-banner .item:hover .image:before {
+		background: rgba(50, 50, 52, 0.6);
 }
 
 .sv-image-banner .item:hover .title h3 {
