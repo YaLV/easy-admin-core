@@ -1166,6 +1166,17 @@ ul, li {
 		position: relative;
 }
 
+.sv-page-title-banner:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background: #ececec;
+		z-index: -2;
+}
+
 .sv-page-title-banner .title {
 		position: absolute;
 		width: 100%;
