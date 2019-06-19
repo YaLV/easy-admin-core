@@ -3798,6 +3798,12 @@ ul, li {
 		display: none;
 }
 
+#farmersmap-canvas .googleMapsMarker {
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+}
+
 #contactsmap-canvas {
 		height: 550px;
 }
