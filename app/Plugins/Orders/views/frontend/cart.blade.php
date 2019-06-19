@@ -115,13 +115,13 @@
         <div class="sv-blank-spacer small"></div>
 
     @else
-    <div class="sv-message" id="message-1">
-      <div>
+    <div class="sv-message is-empty-cart">
+      <div style="background-color: #f8ddc4;">
         Your cart is empty!
       </div>
     </div>
     @endif
-    
+
 @endsection
 
 @push('scripts')
