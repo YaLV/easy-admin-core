@@ -13,7 +13,7 @@
                     <h3>{{ __("category.name.".$currentCategoryId?:$product->mainCategory?:null) }}</h3>
                     <h4>{{ __("category.description.".$currentCategoryId?:$product->mainCategory?:null) }}</h4>
                 </div>
-                <div class="bg-parallax has-loaded">
+                <div class="bg-parallax">
                     <div class="image"
                          style="background-image: url({{ $cache->getCategoryCache()->image(config('app.imageSize.category_image.default'), $currentCategoryId) }});"></div>
                 </div>
