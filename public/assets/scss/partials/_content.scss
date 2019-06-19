@@ -1809,6 +1809,7 @@ ul, li {
     .list {
       width: 100%;
       display: flex;
+      align-items: flex-start;
       flex-wrap: wrap;
       margin: 0 -15px;
       margin-bottom: -30px;

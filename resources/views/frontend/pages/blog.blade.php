@@ -4,6 +4,7 @@
 
     @include('frontend.partials.blogTitleMain')
 
+    <div class="sv-blank-spacer small"></div>
     <div class="sv-blog-list page-list">
         <div class="container">
             <div class="row">
@@ -30,5 +31,5 @@
             </div>
         </div>
     </div>
-    <div class="sv-blank-spacer medium"></div>
+
 @endsection
