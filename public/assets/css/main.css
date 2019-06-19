@@ -3762,6 +3762,12 @@ ul, li {
 		text-align: center;
 }
 
+.sv-text-block img:first-child {
+		width: 130px;
+		height: 130px;
+		border-radius: 50%;
+}
+
 .sv-text-block a {
 		color: #1f9363;
 		position: relative;
