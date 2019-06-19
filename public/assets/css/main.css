@@ -1238,10 +1238,20 @@ ul, li {
 }
 
 .sv-category-title-banner {
-		background: #ececec;
 		height: 250px;
 		width: 100%;
 		position: relative;
+}
+
+.sv-category-title-banner:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background: #ececec;
+		z-index: -2;
 }
 
 .sv-category-title-banner .title {
@@ -1295,7 +1305,6 @@ ul, li {
 		width: 100%;
 		height: 100%;
 		background: rgba(50, 50, 52, 0.4);
-		opacity: 0;
 }
 
 .sv-category-title-banner .bg-parallax.has-loaded {

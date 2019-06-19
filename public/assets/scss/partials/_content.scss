@@ -1198,10 +1198,19 @@ ul, li {
 }
 
 .sv-category-title-banner {
-  background: #ececec;
   height: 250px;
   width: 100%;
   position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #ececec;
+    z-index: -2;
+  }
   .title {
     position: absolute;
     width: 100%;
@@ -1246,7 +1255,6 @@ ul, li {
         width: 100%;
         height: 100%;
         background: rgba($black, 0.4);
-        opacity: 0;
       }
     }
     &.has-loaded {
