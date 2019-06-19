@@ -1345,23 +1345,24 @@ ul, li {
         background: rgba($black, 0.4);
       }
     }
-    &:hover {
-      .image {
-        opacity: 1;
-        &:before {
-          background: rgba($black, 0.6);
-        }
-      }
-      .title {
-        h3 {
-          transform: translateY(-5px);
-          text-shadow: rgba($black, 0.7) 0 15px 30px;
-        }
-      }
-    }
+
     &.has-loaded {
       .image {
         opacity: 1;
+      }
+      &:hover {
+        .image {
+          opacity: 1;
+          &:before {
+            background: rgba($black, 0.6);
+          }
+        }
+        .title {
+          h3 {
+            transform: translateY(-5px);
+            text-shadow: rgba($black, 0.7) 0 15px 30px;
+          }
+        }
       }
     }
   }
