@@ -3373,6 +3373,7 @@ ul, li {
 
 .sv-message.is-empty-cart {
 		margin-bottom: 0;
+		text-align: center !important;
 }
 
 .sv-message.is-empty-cart + .sv-blank-spacer {

@@ -3150,6 +3150,7 @@ ul, li {
   }
   &.is-empty-cart {
     margin-bottom: 0;
+    text-align: center !important;
     & + .sv-blank-spacer {
       display: none;
     }
