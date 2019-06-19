@@ -3373,6 +3373,9 @@ ul, li {
 
 .sv-message.is-empty-cart {
 		margin-bottom: 0;
+}
+
+.sv-message.is-empty-cart > div {
 		text-align: center !important;
 }
 
