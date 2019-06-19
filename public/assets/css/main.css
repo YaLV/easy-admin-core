@@ -1360,10 +1360,6 @@ ul, li {
 		padding-bottom: 54%;
 }
 
-.sv-image-banner .item .image {
-		position: relative;
-}
-
 .sv-image-banner .item .image:before {
 		transition: all 350ms ease;
 		content: "";
