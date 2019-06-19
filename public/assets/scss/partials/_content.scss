@@ -2257,7 +2257,7 @@ ul, li {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 10000;
   transform: translateZ(0);
   .title {
     color: $white;
