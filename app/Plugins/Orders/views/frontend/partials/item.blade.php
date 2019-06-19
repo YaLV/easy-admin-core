@@ -47,11 +47,16 @@
                 @stack("variations-$random_id")
             </div>
             <div class="quantity">
-                <input class="spinner" name="amount" value="{{ $item->amount }}" />
+                <!-- <input class="spinner" name="amount" value="{{ $item->amount }}" /> -->
+                <select class="selectpicker " name="amount">
+                   @foreach(range(1,($item->amount+10)) as $amnt)
+                       <option value="{{$amnt}}" {{ $item->amount==$amnt?"selected":"" }}>{{$amnt}}</option>
+                   @endforeach
+               </select>
             </div>
-            <div>
+            <!-- <div>
                 <a href="{{ r('cartAdd') }}" class="updateCartProduct">Update</a>
-            </div>
+            </div> -->
             <div class="total">
                 {{ number_format($item->amount*$item->price,2) }} €
             </div>
