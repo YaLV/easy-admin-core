@@ -662,8 +662,8 @@ function farmersmap() {
         map: map,
         animation: google.maps.Animation.DROP,
         title: farmer[0],
-        zIndex: farmer[3],
-        content: "<img title='"+farmer[0]+"' src='"+farmer[4]+"' class='googleMapsMarker'/>",
+        zIndex: farmer[2],
+        content: "<img title='"+farmer[0]+"' src='"+farmer[3]+"' class='googleMapsMarker'/>",
         flat: true
       });
 
