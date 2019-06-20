@@ -60,9 +60,9 @@ class BaseModel extends Model
         $metaData = [];
         $metaDataCollection = $this->metaData;
         foreach($metaDataCollection??[] as $meta) {
-            dd($meta);
+//            dd($meta);
             $metaData[$meta->meta_name][$meta->language] = $meta->meta_value;
-            dd($metaData);
+//            dd($metaData);
         }
         $this->metaContent = $metaData;
         return $metaData;

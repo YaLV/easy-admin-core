@@ -1,7 +1,7 @@
 @php
     $id = $id??str_random(5);
     $language = null;
-    if(is_object($content) && property_exists($content, 'language')) {
+    if(is_object($content) && property_exists($content, 'language') && ($language??false)) {
         $content->language = $language = $language??"";
     }
 @endphp
