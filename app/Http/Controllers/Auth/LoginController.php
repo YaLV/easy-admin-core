@@ -36,7 +36,6 @@ class LoginController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -46,7 +45,7 @@ class LoginController extends Controller
     public function redirectTo()
     {
         if (Auth::user()->isAdmin) {
-            return route('dashboard');
+            return route('orders');
         }
 
         return r('page');
@@ -68,6 +67,7 @@ class LoginController extends Controller
 
             return redirect(r('register'))->with(['fbuser' => $newUser, 'existingUser' => ($user ?? false)]);
         }
+        Auth::logout();
         Auth::login($user);
         return redirect(r('page'));
     }
@@ -98,6 +98,8 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        Auth::logout();
+
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle

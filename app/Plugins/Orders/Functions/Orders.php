@@ -58,7 +58,6 @@ trait Orders
                     ->orWhere('email', 'like', "%$search%");
             })->orWhere('invoice', 'like', "%$search%");
         }
-
         if($fullResults) {
             return $orders->get();
         }

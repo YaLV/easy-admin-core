@@ -27,6 +27,8 @@ class ForgotPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        if(\Auth::user() && \Auth::user()->registered) {
+            $this->middleware('guest');
+        }
     }
 }

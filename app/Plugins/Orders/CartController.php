@@ -354,7 +354,7 @@ class CartController extends Controller
         $cart = $this->getCart();
         if (!Auth::user()) {
             Auth::login($user);
-            $cart->update(['user_id' => $user->id]);
+            $cart->update(['user_id' => $user->id, 'comments' => $request->get('comments')]);
         }
 
 
@@ -389,6 +389,7 @@ class CartController extends Controller
             'city'         => $user->city,
             'address'      => $user->address,
             'postcode'     => $user->postal_code,
+            'invoice'       => $cart->id."-u".$user->id
         ]);
 
         foreach ($cart->items()->get() as $cartItem) {
