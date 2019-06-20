@@ -25,7 +25,7 @@
         if(!($totalWoVat[$item->vat_id]??false)) { $totalWoVat[$item->vat_id] = 0; }
         $totalVat[$item->vat_id]+=$vat;
         $totalWoVat[$item->vat_id]+=$sum-$vat;
-        $vatItems[$item->vat_id][] = $item->id;
+        $vatItems[$item->vat_id][] = $item->product_id;
     @endphp
     <div class="row viewRow prodrow">
         <div class="col-md-1">
@@ -83,7 +83,7 @@
 @foreach($totalVat as $vat_id => $vat_amount)
     @php
         $vatAmount = \App\Plugins\Vat\Model\Vat::find($vat_id)->amount;
-        $totals = getCartTotals($order, $vatItems[$vat_id]);
+        $totals = getCartTotals($order, $vatItems[$vat_id], $original);
 
         $totalWoVat[$vat_id] = $twv = ($totals->productSum)-$totals->vatSum;
         $totalVat[$vat_id] = $tv = $totals->vatSum;
