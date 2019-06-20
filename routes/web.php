@@ -106,6 +106,8 @@ if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
     Route::post("/{lang}/payment", "\App\Plugins\Orders\CartController@saveOrder")->name('payment.post');
     Route::post("/payment", "\App\Plugins\Orders\CartController@saveOrder")->name('payment.post.default');
 
+    Route::get('/invoice/{invoice}', "\App\Plugins\Orders\CartController@invoice")->name('getInvoice');
+
 // Paysera
     Route::get("/{lang}/payseramake", "\App\Plugins\Orders\CartController@payseraMake")->name('paysera.make');
     Route::get("/payseramake", "\App\Plugins\Orders\CartController@payseraMake")->name('paysera.make.default');

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Schema;
 
 trait CartFunctions
 {
+
+
     private function getCart($changedUser = null)
     {
 

@@ -7,6 +7,7 @@ use App\Http\Requests\Profile;
 use App\Plugins\Deliveries\Model\Delivery;
 use App\Plugins\DiscountCodes\Model\DiscountCode;
 use App\Plugins\Orders\Functions\CartFunctions;
+use App\Plugins\Orders\Functions\Invoice;
 use App\Plugins\Orders\Model\OrderHeader;
 use App\Plugins\Orders\Model\OriginalOrder;
 use App\Plugins\Products\Model\Product;
@@ -30,6 +31,7 @@ class CartController extends Controller
 {
 
     use CartFunctions;
+    use Invoice;
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -523,4 +525,5 @@ class CartController extends Controller
         }
         return redirect()->back()->with(['message' => 'Discount Code Removed']);
     }
+
 }
