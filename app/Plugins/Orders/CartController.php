@@ -372,6 +372,12 @@ class CartController extends Controller
         /** @var OrderHeader $cart */
         $cart = $this->getCart();
 
+        $pt = request()->get('payment_type')??session()->get('paymetMethod');
+
+        if(!$pt) {
+            abort(404, "Unknown Payment Method");
+        }
+
         if ($cart->items()->count() == 0) {
             return redirect()->route('cart');
         }
@@ -385,7 +391,7 @@ class CartController extends Controller
         $cart->update([
             'state'        => 'ordered',
             'ordered_at'   => Carbon::now(),
-            'payment_type' => request()->get('payment_type'),
+            'payment_type' => $pt,
             'city'         => $user->city,
             'address'      => $user->address,
             'postcode'     => $user->postal_code,
