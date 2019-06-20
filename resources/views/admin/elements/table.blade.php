@@ -50,7 +50,7 @@
                                         <a href="{{ $action->url }}" data-params="getCheckedRows"
                                            class="btn btn-xs massAction {{ $action->class??"" }} isAjax post"
                                            data-callback="{{ $action->callback??"" }}" title="{{ $action->label??"" }}"
-                                        ><i class="{{ $action->icon }}"></i></a>
+                                        >{{--<i class="{{ $action->icon }}"></i>--}}{{$action->label}}</a>
                                     @endforeach
                                 </div>
                             @endif
