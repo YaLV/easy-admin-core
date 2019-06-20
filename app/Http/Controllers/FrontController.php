@@ -353,4 +353,11 @@ class FrontController extends Controller
                 break;
         }
     }
+
+    public function getSupplierListInCategory($items) {
+        if($items) {
+            return array_unique(Product::whereIn('id', array_keys($items))->pluck('supplier_id')->toArray());
+        }
+        return [];
+    }
 }

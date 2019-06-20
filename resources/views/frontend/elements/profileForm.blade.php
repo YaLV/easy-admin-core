@@ -111,7 +111,7 @@
             @if($showComments??false)
                 <div class="input-wrapper">
                     <label>{!! _t('translations.checkoutComments') !!}</label>
-                    <input type="text" name="comments" value="{{ old('comments') }}" />
+                    <input type="text" name="comments" value="{{ old('comments')??$cart->comments??"" }}" />
                 </div>
             @endif
             <div class="sv-blank-spacer very-small"></div>

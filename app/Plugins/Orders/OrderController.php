@@ -78,14 +78,14 @@ class OrderController extends AdminController
         $id = $id ? [$id] : request('massAction');
 
         if (!count($id)) {
-            return ['stsatus' => false, 'message' => 'No Order specified'];
+            return ['status' => false, 'message' => 'No Order specified'];
         }
         $forceDelete = OrderHeader::onlyTrashed()->whereIn('id', $id)->forceDelete();
         $delete = OrderHeader::whereIn('id', $id)->delete();
 
         if ($forceDelete) {
             OrderLines::whereIn('order_header_id', $id)->delete();
-            OriginalOrder::find($id)->delete();
+            OriginalOrder::where('id', $id)->delete();
             $result = $forceDelete;
         } else {
             $result = $delete;

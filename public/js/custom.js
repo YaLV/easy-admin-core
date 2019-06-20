@@ -133,6 +133,7 @@ jQuery(document).ready(function () {
         force_br_newlines: true,
         force_p_newlines: false,
         forced_root_block: '',
+        entity_encoding : "raw",
         toolbar: [
             "code | undo redo | formats | bold italic | fontselect | fontsizeselect | hr alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor | anchor",
         ],
