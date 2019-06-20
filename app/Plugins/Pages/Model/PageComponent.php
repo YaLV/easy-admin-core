@@ -57,6 +57,9 @@ class PageComponent extends BaseModel
         if(!($this->meta['data']??false)) {
             return "";
         }
+
+        dd($this->metaData);
+
         $path = "";
         $filename = "";
         if($name) {
