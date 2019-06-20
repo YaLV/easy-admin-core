@@ -5759,6 +5759,11 @@ body.farmers-open #farmersmap-canvas {
 		}
 }
 
+.selectric-items {
+		top: 100% !important;
+		left: 0 !important;
+}
+
 .selectric-wrapper {
 		position: relative;
 		cursor: pointer;
@@ -6582,6 +6587,10 @@ input[type="radio"]:checked + label:after {
 		padding-top: 30px;
 		font-size: 22px;
 		font-family: "DINPro Medium", sans-serif;
+}
+
+.btn-fb:hover {
+		text-decoration: none !important;
 }
 
 ::-webkit-input-placeholder {
