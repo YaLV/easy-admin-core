@@ -60,10 +60,10 @@
                         <input type="hidden" value="{{$product->prices()->id}}" name="variation_id" />
 
                         <div class="amount">
-                          @if($product->isSale())
-                              <s>{{ $product->prices()->oldPrice }}€</s>
-                          @endif
-                          {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
+                            @if($product->isSale())
+                                <s>{{ $product->prices()->oldPrice }}€</s>
+                            @endif
+                            {{ implode(" / ",[$product->prices()->price."€", $product->prices()->display_name]) }}
                         </div>
                     @endif
                     <div class="input-wrapper quantity">
@@ -116,23 +116,26 @@
             {!! $product->supplier()->getMeta('description') !!}
         </div>
 
-        <div class="sv-blank-spacer medium"></div>
-        <div class="sv-title">
-            <h3>{!! _t('translations.otherProducts') !!}</h3>
-        </div>
-
-        <div class="sv-blank-spacer medium"></div>
-
-        <div class="sv-linked-products-slider">
-            <div class="owl-carousel">
-                @foreach($product->getOtherProducts($product->id) as $otherProduct)
-                    @php
-                        $item = $cache->getProduct($otherProduct);
-                    @endphp
-                    @include("Products::frontend.listitem")
-                @endforeach
+        @if(count($product->getOtherProducts($product->id)))
+            <div class="sv-blank-spacer medium"></div>
+            <div class="sv-title">
+                <h3>{!! _t('translations.otherProducts') !!}</h3>
             </div>
-        </div>
+
+            <div class="sv-blank-spacer medium"></div>
+
+            <div class="sv-linked-products-slider">
+                <div class="owl-carousel">
+                    @foreach($product->getOtherProducts($product->id) as $otherProduct)
+                        @php
+                            $item = $cache->getProduct($otherProduct);
+                        @endphp
+                        @include("Products::frontend.listitem")
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         @if(count($blogPosts = \App\Plugins\Products\Model\Product::find($product->id)->blogPosts)>0)
             <div class="sv-blank-spacer medium"></div>
             <div class="sv-title">
@@ -143,11 +146,13 @@
                 <div class="owl-carousel">
                     @foreach($blogPosts as $post)
                         <div class="item">
-                            <a href="{{ r('blog', [__('postcategory.slug.'.$post->main_category), __('posts.slug.'.$post->id)]) }}" class="link"></a>
+                            <a href="{{ r('blog', [__('postcategory.slug.'.$post->main_category), __('posts.slug.'.$post->id)]) }}"
+                               class="link"></a>
                             <div class="title">
                                 <h2>{{ __('posts.name.'.$post->id) }}</h2>
                             </div>
-                            <div class="image" style="background-image: url({{ $post->getImageByKey('blog_picture') }});"></div>
+                            <div class="image"
+                                 style="background-image: url({{ $post->getImageByKey('blog_picture') }});"></div>
                             <div class="sizing"></div>
                         </div>
                     @endforeach
