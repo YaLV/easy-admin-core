@@ -62,9 +62,11 @@ class PageComponent extends BaseModel
         if($name) {
             $path = config("app.uploadFile.$name");
             $size = "original";
-            $filename = File::where('owner', $name)->whereIn('id', $this->getData('image'))->first()->filePath ?? "";
+            $ids = $this->getData('image');
+            $ids = is_array($ids)?$ids:[$ids];
+            $filename = File::where('owner', $name)->whereIn('id', $ids)->first()->filePath ?? "";
         } else {
-            if ($this->meta['data'][language()]['image']??false) {
+            if ($this->meta['data'][language()]['image']) {
                 $path = config("app.uploadFile.pageimage", "temp");
                 switch ($method) {
                     case "shuffle":
