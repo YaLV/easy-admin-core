@@ -561,6 +561,12 @@ input[type="radio"] {
   }
 }
 
+.btn-fb {
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
 ::-webkit-input-placeholder {
   color: #bdbdbd;
 }
