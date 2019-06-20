@@ -19,6 +19,8 @@ class BaseModel extends Model
      */
     private $metaContent;
 
+    public $language;
+
     /**
      * Setting Meta (unused ??)
      *

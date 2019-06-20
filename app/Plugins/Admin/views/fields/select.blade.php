@@ -1,6 +1,9 @@
 @php
     $id = $id??str_random(5);
-    $content->language = $language = $language??"";
+    $language = null;
+    if(is_object($content) && property_exists($content, 'language')) {
+        $content->language = $language = $language??"";
+    }
 @endphp
 
 <div class="row">
