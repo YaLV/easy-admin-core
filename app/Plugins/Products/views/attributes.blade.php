@@ -46,9 +46,9 @@
                 jQuery.post('{{route('products.attributes.format')}}', form.serialize(), function (result) {
                     if (result.status) {
                         if (result.remove) {
-                            jQuery("[data-vid=" + result.attributeId + "]").remove();
+                            jQuery(".attributes [data-vid=" + result.attributeId + "]").remove();
                         }
-                        eai = $('[data-vid=' + result.attributeId + ']');
+                        eai = $('.attributes [data-vid=' + result.attributeId + ']');
                         if (eai.length > 0) {
                             eai.replaceWith(result.data);
                         } else {

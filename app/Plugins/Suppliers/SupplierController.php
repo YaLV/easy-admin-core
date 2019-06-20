@@ -4,18 +4,28 @@ namespace App\Plugins\Suppliers;
 
 
 use App\Functions\General;
+use App\Http\Controllers\CacheController;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Suppliers\Functions\Suppliers;
 use App\Plugins\Suppliers\Model\Supplier;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class SupplierController
+ *
+ * @package App\Plugins\Suppliers
+ */
 class SupplierController extends AdminController
 {
     use General;
     use Suppliers;
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
 
@@ -29,25 +39,35 @@ class SupplierController extends AdminController
             ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add()
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Supplier()]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return array
+     */
     public function destroy($id)
     {
-
+        /** @var Supplier $cc */
         $cc = Supplier::findOrFail($id);
 
-        if($cc->products()->count()) {
+        if ($cc->products()->count()) {
             return ['status' => false, 'message' => 'This Supplier has products, can not remove Supplier'];
         }
-        try{
+        try {
             DB::beginTransaction();
             $cc->metaData()->delete();
             $cc->forceDelete();
             DB::commit();
-        } catch(\PDOException $e) {
+            $cc->forgetMeta(['slug', 'name', 'location']);
+            (new CacheController)->createProductCache($cc->id, true);
+        } catch (\PDOException $e) {
             DB::rollBack();
             abort(500);
         }
@@ -55,11 +75,22 @@ class SupplierController extends AdminController
         return ['status' => true, "message" => "Supplier Deleted"];
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Supplier::findOrFail($id)]);
     }
 
+    /**
+     * @param Request $request
+     * @param bool    $id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function store(Request $request, $id = false)
     {
         if ($id) {
@@ -69,13 +100,11 @@ class SupplierController extends AdminController
         $val = [
             'custom_id' => 'required|unique:suppliers,custom_id' . ($unique ?? ""),
             'email'     => 'required|email',
-            'location'  => 'required',
         ];
 
         $msg = [
             'custom_id.required' => 'ID can not be empty',
             'email.required'     => 'Email can not be empty',
-            'location.required'  => 'Location can not be empty',
             'email.email'        => 'Email Should be in Email Format',
         ];
 
@@ -84,7 +113,7 @@ class SupplierController extends AdminController
             $msg["name.{$lang->code}.required"] = "Supplier Name in {$lang->name} Should Be Filled";
             $val["slug.{$lang->code}"] = [
                 'required',
-                Rule::unique('supplier_metas', 'meta_value')->where(function ($query) use ($lang, $id) {
+                Rule::unique('supplier_metas', 'meta_value')->where(function (Builder $query) use ($lang, $id) {
                     $query = $query->where(['meta_name' => 'slug', 'language' => $lang->code]);
                     if ($id) {
                         $query = $query->where('owner_id', '!=', $id);
@@ -106,14 +135,15 @@ class SupplierController extends AdminController
             'description',
             'google_keywords',
             'google_description',
+            'location',
         ];
 
         try {
             DB::beginTransaction();
+            /** @var Supplier $supplier */
             $supplier = Supplier::updateOrCreate(['id' => $id], [
                 'custom_id' => request('custom_id'),
                 'email'     => request('email'),
-                'location'  => request('location'),
                 'coords'    => request('coords'),
                 'farmer'    => $this->switch(request('farmer')),
                 'craftsman' => $this->switch(request('craftsman')),
@@ -122,14 +152,25 @@ class SupplierController extends AdminController
             $this->handleMetas($supplier, $metas, 'name');
             $this->handleImages($supplier);
             DB::commit();
-
+            $supplier->forgetMeta(['slug', 'name', 'location']);
+            (new CacheController)->createSupplierCache($supplier->id, true);
             return redirect(route('suppliers.list'));
         } catch (\PDOException $e) {
             DB::rollBack();
 
-            session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);
+            session()->flash("message", ['msg' => $e->getMessage(), 'isError' => true]);
+
             return redirect()->back();
         }
+    }
+
+    /**
+     * @param $id
+     *
+     * @return array|null|string
+     */
+    public function getEditName($id) {
+        return __('supplier.name.'.$id);
     }
 
 }

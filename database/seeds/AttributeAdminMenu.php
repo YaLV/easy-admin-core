@@ -13,7 +13,7 @@ class AttributeAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::where('slug','!=','config')->orderBy('sequence', 'desc')->first();
 
-        $mainMenu = \App\Model\Admin\Menu::firstOrCreate(
+        $mainMenu = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'shop',
                 'routeName' => 'shop',
@@ -30,7 +30,7 @@ class AttributeAdminMenu extends Seeder
 
         $main = "attributes";
 
-        $mainCat = \App\Model\Admin\Menu::firstOrCreate(
+        $mainCat = \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => $main,
                 'routeName' => $main,
@@ -45,7 +45,7 @@ class AttributeAdminMenu extends Seeder
                 'method'      => 'GET',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "list",
                 'routeName' => "$main.list",
@@ -59,7 +59,7 @@ class AttributeAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "add",
                 'routeName' => "$main.add",
@@ -73,7 +73,7 @@ class AttributeAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "edit/{id}",
                 'routeName' => "$main.edit",
@@ -87,7 +87,7 @@ class AttributeAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'GET',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "store/{id?}",
                 'routeName' => "$main.store",
@@ -101,7 +101,7 @@ class AttributeAdminMenu extends Seeder
                 'parent_id'   => $mainCat->id,
                 'method'      => 'POST',
             ]);
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "destroy/{id}",
                 'routeName' => "$main.destroy",
@@ -116,7 +116,7 @@ class AttributeAdminMenu extends Seeder
                 'method'      => 'POST',
             ]);
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "value/store/{id?}",
                 'routeName' => "$main.value.store",
@@ -132,7 +132,7 @@ class AttributeAdminMenu extends Seeder
             ]
         );
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => "value/load/{id?}",
                 'routeName' => "$main.value.load",

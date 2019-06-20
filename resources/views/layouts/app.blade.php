@@ -1,80 +1,76 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<html class="sv-lightbox-open_" lang="{{ $pageLanguage }}">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <title>Svaigi.lv</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="{{ asset("assets/img/favicon.ico") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/bootstrap.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/jquery-ui.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/owl.carousel.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/font-awesome.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/animate.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/slinky.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/main.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/css/custom.css") }}">
+    @stack('css')
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+<body class="sv-lightbox-open_ sv-has-marketday-dropdown{{ (Auth::user()??(New App\User))->registered?" is-auth":"" }}">
+{{--@include("frontend.elements.cookies")--}}
+@include("frontend.elements.banner")
+@include("frontend.elements.loginpopup")
+@include("frontend.elements.mobilemenu")
+@include("frontend.elements.marketday")
+<div class="sv-dock">
+    <div class="container">
+        @include("frontend.elements.desktopmenu")
     </div>
+</div>
+@include("frontend.elements.categorymenu")
+
+@include("frontend.partials.pageTitle")
+@include("frontend.partials.errors")
+
+@yield('content')
+<div class="sv-blank-spacer medium"></div>
+@include("frontend.elements.footer")
+
+@include("frontend.elements.copyright")
+
+@stack('preScript')
+<script>
+    window.token = "{{ csrf_token() }}";
+</script>
+<script src="{{ asset("assets/js/jquery-3.1.1.min.js") }}"></script>
+<script src="{{ asset("assets/js/bootstrap.min.js") }}"></script>
+<script src="{{ asset("assets/js/jquery-ui.min.js") }}"></script>
+<script src="{{ asset("assets/js/jquery.ui.touch-punch.min.js") }}"></script>
+<script src="{{ asset("assets/js/owl.carousel.min.js") }}"></script>
+<script src="{{ asset("assets/js/owl.animate.js") }}"></script>
+<script src="{{ asset("assets/js/jquery.selectric.js") }}"></script>
+<script src="{{ asset("assets/js/imagesloaded.pkgd.min.js") }}"></script>
+<script src="{{ asset("assets/js/slinky.min.js") }}?ver={{ filemtime(public_path("assets/js/slinky.min.js")) }}"></script>
+<script src="{{ asset("assets/js/svaigi.js") }}?ver={{ filemtime(public_path("assets/js/svaigi.js")) }}"></script>
+<script src="{{ asset("assets/js/custom.js") }}?ver={{ filemtime(public_path("assets/js/custom.js")) }}"></script>
+<script src="{{ asset("assets/js/ajaxSetup.js") }}?ver={{ filemtime(public_path("assets/js/ajaxSetup.js")) }}"></script>
+@if(Auth::user() && Auth::user()->isAdmin)
+    <script src="{{ asset('js/trans.js') }}"></script>
+@endif
+@if(session()->has('openLogin'))
+<script>
+    $(document).ready(function() {
+        if(!$('body').hasClass('sv-lightbox-open')) {
+            $('.user > .toggle-sv-signin').click();
+        }
+    })
+</script>
+@endif
+
+@stack('scripts')
 </body>
+
 </html>

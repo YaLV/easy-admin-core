@@ -11,9 +11,31 @@ use App\Plugins\Products\Model\ProductVariation;
 use App\Plugins\Suppliers\Model\Supplier;
 use App\Plugins\Units\Model\Unit;
 use App\Plugins\Vat\Model\Vat;
+use App\Schedules;
 
+/**
+ * Trait Products
+ *
+ * @package App\Plugins\Products
+ */
 trait Products
 {
+
+    public function storageList()
+    {
+        return [
+            ['field' => 'sku', 'label' => 'Product Code'],
+            ['field' => 'name', 'label' => 'Product Name', 'translate' => 'product.name', 'key' => 'id'],
+            ['field' => 'info_window', 'label' => 'Info'],
+            ['field' => 'available', 'label' => 'Current Amount'],
+            ['field' => 'amount', 'label' => 'Add Amount'],
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
     public function form()
     {
 
@@ -60,12 +82,12 @@ trait Products
             ],
             [
                 'Label' => 'Prices',
-                'data' => [
-                    'cost'             => ['type' => 'text', 'class' => '', 'label' => 'Cost'],
-                    'mark_up'          => ['type' => 'text', 'class' => '', 'label' => 'Mark Up'],
-                    'vat_id'           => ['type' => 'select', 'class' => '', 'label' => 'Vat', 'options' => Vat::all()],
-                    'unit_id'          => ['type' => 'select', 'class' => 'set_unit_id', 'label' => 'Measurement Unit', 'options' => Unit::all()],
-                ]
+                'data'  => [
+                    'cost'    => ['type' => 'text', 'class' => '', 'label' => 'Cost'],
+                    'mark_up' => ['type' => 'text', 'class' => '', 'label' => 'Mark Up'],
+                    'vat_id'  => ['type' => 'select', 'class' => '', 'label' => 'Vat', 'options' => Vat::all()],
+                    'unit_id' => ['type' => 'select', 'class' => 'set_unit_id', 'label' => 'Measurement Unit', 'options' => Unit::all()],
+                ],
             ],
             [
                 'Label' => 'Attributes',
@@ -82,6 +104,9 @@ trait Products
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getList()
     {
         return [
@@ -93,22 +118,45 @@ trait Products
         ];
     }
 
+    /**
+     * @param Product $collection
+     *
+     * @return bool|null
+     */
     public function setVariations(Product $collection)
     {
-        $variations = request('variation');
+        $variations = request('variation') ?? false;
 
-        foreach (ProductVariation::findMany($variations) as $variation) {
+        if (!$variations) return null;
+
+        $DBvariations = ProductVariation::findMany($variations);
+
+        $removeVariations = array_diff($collection->variations()->pluck('id')->toArray(), $variations);
+
+        foreach ($removeVariations as $rVariation) {
+            ProductVariation::find($rVariation)->delete();
+        }
+
+        foreach ($DBvariations as $variation) {
             $variation->product_id = $collection->id;
             $variation->save();
         }
+
+        return true;
     }
 
+    /**
+     * @param Product $collection
+     */
     public function addCategories(Product $collection)
     {
         $categories = array_unique(array_merge([request('main_category')], (request('extra_categories') ?? [])));
         $collection->extra_categories()->sync($categories);
     }
 
+    /**
+     * @param Product $collection
+     */
     public function addMarketDays(Product $collection)
     {
         $marketdays = request('market_days');
@@ -116,6 +164,11 @@ trait Products
     }
 
 
+    /**
+     * @param array $variation
+     *
+     * @return array
+     */
     public function withoutID(array $variation)
     {
         unset($variation['id']);
@@ -123,21 +176,29 @@ trait Products
         return $this->makeDisplayName($variation);
     }
 
+    /**
+     * @param array $variation
+     *
+     * @return array
+     */
     public function makeDisplayName(array $variation)
     {
         if (!($variation['display_name'] ?? false)) {
             $unit = Unit::findOrFail(request('unit_id')) ?? "";
 
-            if($unit->subUnit()->count()) {
+            if ($unit->subUnit()->count() && request('amount') < 1) {
                 $unit = $unit->subUnit;
-                $displayName = (request('amount')*$unit->parent_amount).$unit->unit;
+                $displayName = (request('amount') * $unit->parent_amount) . $unit->unit;
             }
-            $variation['display_name'] = $displayName??request('amount').$unit->unit;
+            $variation['display_name'] = $displayName ?? request('amount') . $unit->unit;
         }
 
         return $variation;
     }
 
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
         $options = [];
@@ -159,6 +220,9 @@ trait Products
         return ['status' => true, 'noMessage' => true, 'options' => $options, "attribute" => $attribute->id];
     }
 
+    /**
+     * @return array
+     */
     public function formatAttributes()
     {
         $attribute = Attribute::findOrFail(request('attributeSel'));
@@ -180,5 +244,23 @@ trait Products
             'message'     => 'Changes to Attribute have been made',
         ];
 
+    }
+
+    public function uploadImport()
+    {
+
+    }
+
+    public function scheduleImport()
+    {
+        return Schedules::create([
+            'plugin'     => 'Products',
+            'class'      => 'ProductImport',
+            'data'       => $importData,
+            'progress'   => 0,
+            'is_running' => false,
+            'stopped_at' => 0,
+            'result'     => 'Awaiting for Schedule',
+        ]);
     }
 }

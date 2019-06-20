@@ -1,0 +1,15 @@
+// main: ../main.scss
+
+@media only screen and (min-width : 1470px) {
+
+  .container {
+    width: 1410px;
+  }
+
+  .sv-linked-products-slider, .sv-blog-list-slider {
+    .owl-carousel {
+      width: 1170px !important;
+    }
+  }
+
+}

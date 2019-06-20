@@ -59,18 +59,21 @@ trait MarketDays
         return $default;
     }
 
-    public function getClosestMarketDayList()
+    public function getClosestMarketDayList($chosenMarketDay = false)
     {
-        $marketDays = [];
+        $marketDays = session()->get('marketDays') ?? [];
 
-        foreach (MarketDay::all() as $marketDay) {
-            list($time, $marketDaySelected) = $marketDay->availableTo;
-            $marketDay->date = $marketDaySelected;
-            $marketDays[$time] = $marketDay;
+        if (count($marketDays)==0) {
+            foreach (MarketDay::all() as $marketDay) {
+                list($time, $marketDaySelected) = $marketDay->availableTo;
+                $marketDay->date = $marketDaySelected;
+                $marketDays[$time] = $marketDay;
+            }
+            ksort($marketDays);
+            session()->put('marketDays', $marketDays);
         }
 
-        ksort($marketDays);
-
+        if($chosenMarketDay) return $marketDays[$chosenMarketDay]??null;
         return $marketDays;
     }
 

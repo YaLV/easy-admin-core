@@ -13,7 +13,7 @@ class ConfigAdminMenu extends Seeder
     {
         $currentMenu = \App\Model\Admin\Menu::orderBy('sequence', 'desc')->first();
 
-        \App\Model\Admin\Menu::firstOrCreate(
+        \App\Model\Admin\Menu::updateOrCreate(
             [
                 'slug'      => 'config',
                 'routeName' => 'config',
@@ -27,6 +27,19 @@ class ConfigAdminMenu extends Seeder
                 'parent_id'   => null,
                 'method'      => 'GET',
             ]);
-
+        \App\Model\Admin\Menu::updateOrCreate(
+            [
+                'slug'      => 'download/{direcotry}/{filename}',
+                'routeName' => 'download',
+            ],
+            [
+                'icon'        => 'fas fa-download',
+                'displayName' => 'Download',
+                'action'      => '\App\Plugins\Admin\AdminController@downloadFile',
+                'inMenu'      => '0',
+                'sequence'    => 0,
+                'parent_id'   => null,
+                'method'      => 'GET',
+            ]);
     }
 }

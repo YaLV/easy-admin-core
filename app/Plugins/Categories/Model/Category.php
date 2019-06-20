@@ -5,6 +5,7 @@ namespace App\Plugins\Categories\Model;
 use App\BaseModel;
 use App\Plugins\Admin\Model\File;
 use App\Plugins\Attributes\Model\Attribute;
+use App\Plugins\Banners\Model\Banner;
 use App\Plugins\Products\Model\Product;
 
 
@@ -52,5 +53,17 @@ class Category extends BaseModel
 
     public function products_main() {
         return $this->hasMany(Product::class, 'main_category');
+    }
+
+    public function children() {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function discount() {
+        return 0;
+    }
+
+    public function banners() {
+        return $this->belongsToMany(Banner::class);
     }
 }

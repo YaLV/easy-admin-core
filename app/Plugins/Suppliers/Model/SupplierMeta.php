@@ -8,4 +8,7 @@ class SupplierMeta extends Model
 {
     public $fillable = ['meta_name', 'meta_value', 'language', 'owner_id'];
 
+    public function supplier() {
+        return $this->belongsTo(Supplier::class, 'owner_id');
+    }
 }

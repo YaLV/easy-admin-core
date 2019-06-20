@@ -3,6 +3,7 @@
 namespace App\Plugins\Categories;
 
 use App\Functions\General;
+use App\Http\Controllers\CacheController;
 use App\Languages;
 use App\Plugins\Admin\AdminController;
 use App\Plugins\Admin\Model\File;
@@ -12,11 +13,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class CategoryController
+ *
+ * @package App\Plugins\Categories
+ */
 class CategoryController extends AdminController
 {
     use \App\Plugins\Categories\Functions\Category;
     use General;
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view('admin.elements.table',
@@ -29,11 +38,20 @@ class CategoryController extends AdminController
             ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add()
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => new Category()]);
     }
 
+    /**
+     * @param Request $request
+     * @param bool    $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, $id = false)
     {
         $val = $msg = [];
@@ -67,7 +85,7 @@ class CategoryController extends AdminController
 
         try {
             DB::beginTransaction();
-
+            /** @var Category $category */
             $category = Category::updateOrCreate(['id' => $id], [
                 'parent_id' => request('parent_id'),
             ]);
@@ -75,6 +93,8 @@ class CategoryController extends AdminController
             $this->handleImages($category);
             $this->handleAttributes($category);
             DB::commit();
+            $category->forgetMeta();
+            (new CacheController)->createCategoryCache(true);
         } catch(\PDOException $e) {
             DB::rollBack();
             session()->flash("message", ['msg' => $e->getMessage(), 'isError'=> true]);
@@ -83,9 +103,15 @@ class CategoryController extends AdminController
         return redirect(route('categories.list'))->with(['message' => ['msg' => "Category Saved"]]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return array
+     */
     public function destroy($id)
     {
 
+        /** @var Category $cc */
         $cc = Category::findOrFail($id);
 
         if($cc->products_main()->count()) {
@@ -107,11 +133,21 @@ class CategoryController extends AdminController
         return ['status' => true, "message" => "Category Deleted"];
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         return view('admin.elements.tabForm', ['formElements' => $this->form(), 'content' => Category::findOrFail($id)]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function getEditName($id)
     {
         return Category::findOrFail($id)->name;

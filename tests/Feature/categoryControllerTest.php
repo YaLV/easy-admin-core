@@ -10,6 +10,12 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Storage;
 use App\Plugins\Categories\Model\Category;
 use Illuminate\Http\UploadedFile;
+use App\Plugins\Categories\Model\CategoryMeta;
+use App\Plugins\Attributes\Model\AttributeValue;
+use App\Plugins\Attributes\Model\Attribute;
+use App\Plugins\Products\Model\Product;
+
+
 
 class categoryControllerTest extends TestCase
 {
@@ -26,9 +32,6 @@ class categoryControllerTest extends TestCase
        $response->assertStatus(200);
        $response->assertSee("Category Slug");
 
-
-
-       // $response->assertViewHas('tableHeaders', 'header', 'list', 'idField', 'destroyName');
      }
 
      public function testAdd(){
@@ -36,14 +39,7 @@ class categoryControllerTest extends TestCase
 
      }
 
-     // public function testStore(){
-     //   $this->actingAs(\App\User::find(1));
-     //
-     // }
-
      public function testCreateEditCategory(){
-
-
 
        $this->actingAs(\App\User::find(1));
        $faker = \Faker\Factory::create('en_US');
@@ -70,6 +66,9 @@ class categoryControllerTest extends TestCase
 
        $cid = \App\Plugins\Categories\Model\CategoryMeta::where(['meta_name' => 'slug', 'meta_value' => $slug, 'language' => language()])->first();
 
+       $response = $this->call('GET', route('categories.edit', $cid->owner_id));
+       $response->assertStatus(200);
+
        $save['id'] = $cid->owner_id;
        $response = $this->from(route('categories.edit', [$cid->owner_id]))->post(route('categories.store', [$cid->owner_id]), $save);
        $response->assertStatus(302);
@@ -92,9 +91,20 @@ class categoryControllerTest extends TestCase
        $response = $this->json('POST', route('categories.destroy', $cid->owner_id));
        $response->assertStatus(200);
 
-       $response = $this->call('get', route('categories.edit', $cid->owner_id));
-       $response->assertStatus(404);
+       // $response = $this->call('GET', route('categories.edit', $cid->owner_id));
+       // $response->assertStatus(200);
 
+       /*TEST parent() function*/
+
+       $categoryMeta = CategoryMeta::create(['owner_id' => $cid->owner_id, 'meta_name' => 'test', 'meta_value' => 'value_test', 'language' => 'lv']);
+       $category = Category::create(['parent_id' => $categoryMeta->id]);
+
+       // dd($categoryMeta, $category);
+       $parent = $category->parent();
+
+       // dd($parent);
+
+       $response->assertEquals($parent->parent_id, $categoryMeta->id);
 
      }
 
@@ -105,6 +115,8 @@ class categoryControllerTest extends TestCase
        $response->assertStatus(200);
        $response->assertSee('Display');
      }
+
+
 
 
 

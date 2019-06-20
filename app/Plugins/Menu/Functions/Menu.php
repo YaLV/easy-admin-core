@@ -2,6 +2,7 @@
 
 namespace App\Plugins\Menu\Functions;
 
+use App\Plugins\Menu\Model\FrontendMenu;
 use App\Plugins\Menu\Model\FrontendMenuItem;
 use \Illuminate\Support\Facades\Route;
 
@@ -45,10 +46,11 @@ trait Menu
 
     public function iterateMenuItems($menuData, $collection, $parent = null)
     {
+
         $sequence = 0;
         foreach ($menuData as $menuDataItem) {
             $item = FrontendMenuItem::updateOrCreate(['id' => $menuDataItem->id], ['frontend_menu_item_id' => $parent, 'sequence' => $sequence]);
-            if ($menuDataItem->children ?? false) {
+            if (($menuDataItem->children ?? false)) {
                 $itemId = $item->id;
                 $this->iterateMenuItems($menuDataItem->children, $collection, $itemId);
             }
@@ -65,5 +67,10 @@ trait Menu
             }
         }
         $item->delete();
+    }
+
+    public function getEditName($id) {
+        $fmenu = FrontendMenu::find($id);
+        return $fmenu?$fmenu->name:"";
     }
 }

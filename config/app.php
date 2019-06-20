@@ -4,6 +4,52 @@ return [
 
     'uploadFile' => [
         'category_image' => 'categories',
+        'product_image'  => 'products',
+        'supplier_image' => 'suppliers',
+        'pageimage'      => 'pages',
+        'pageimage1'     => 'pages',
+        'pageimage2'     => 'pages',
+        'pageimage3'     => 'pages',
+        'featured_image' => 'featuredsuppliers',
+        'blog_picture'   => 'blogs',
+        'banner_image'   => 'banners',
+    ],
+
+    'imageSize' => [
+        'category_image' => [
+            'default' => '1473x247',
+        ],
+        'product_image'  => [
+            'list' => '210x210',
+            'view' => '700x',
+        ],
+        'supplier_image' => [
+            'main' => '260x260',
+        ],
+        'blog_picture'   => [
+            'main' => '369x369',
+        ],
+    ],
+
+    'defaultProductImage'  => '/assets/img/tmp/photo-5.jpg',
+    'defaultCategoryImage' => '/assets/img/tmp/photo-15.jpg',
+    'defaultSupplierImage' => '/assets/img/tmp/photo-9.jpg',
+
+    'paymentNames' => [
+        'money'   => 'With Cash',
+        'invoice' => 'With Invoice',
+        'card'    => 'With Payment Card',
+    ],
+
+
+    'schedulenames' => [
+        'productImport'      => 'Product Import',
+        'productImageImport' => 'Product Image Import',
+        'orderExport'        => 'Order Export',
+        'orderImport'        => 'Order Change Import',
+        'createPDF'          => 'Order PDF Generation',
+        'sendOrderEmails'    => 'Order Sending to Suppliers',
+        'orderSummary'       => 'Order Summary',
     ],
     /*
     |--------------------------------------------------------------------------
@@ -164,6 +210,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Antcern\Paysera\PayseraServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -177,7 +225,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -226,7 +274,8 @@ return [
         'URL'          => Illuminate\Support\Facades\URL::class,
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
-
+        'PDF'          => Barryvdh\DomPDF\Facade::class,
+        'Socialite'    => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

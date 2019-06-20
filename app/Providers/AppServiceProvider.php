@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\CacheController;
+use App\Http\Controllers\FrontController;
 use App\Model\Admin\Menu;
+use App\Plugins\Banners\Model\Banner;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -16,6 +19,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Send current language
+        View::share("pageLanguage", language());
+        View::share("frontController", new FrontController);
+        View::share("cache", new CacheController);
+        View::composer("Categories::frontend.list", function($view) {
+            $view->with("currentMenuId", (new CacheController)->getMenuCache('shop')->getCurrentId());
+            $view->with("currentCategoryId", (new CacheController)->getMenuCache('shop')->getCurrentCatId());
+        });
+        View::composer("frontend.pages.page", function($view) {
+            $banners = Banner::whereDoesntHave('categories')->where('type', 'popup')->get();
+           $view->with("popups", $banners);
+        });
+
+
 
         // Register Plugin View/Migration Directory
         $dir = config('app.plugins', app_path('Plugins'));
@@ -35,41 +52,48 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->loadMigrationsFrom($migrationFolder);
 
-        // Add Menu, when Menubar exists
+        // Add Admin Menu, when Menubar exists
         View::composer('admin.partials.sidebar', function ($view) {
             $view->with('menuItems', (new Menu)->getMenuItems());
         });
 
+        // Add breadcrumbs in admin
         View::composer('layouts.admin', function ($view) {
             $page = Menu::where('routeName', Route::currentRouteName())->first();
             $breadcrumbs = $title = [];
             do {
-                $editorId = request()->route('id');
-                if($editorId && preg_match("/[{}]/",$page->slug)) {
+
+                if ($page && preg_match("/{([^}]*)}/", $page->slug, $matches)) {
+                    $editorId = request()->route($matches[1]);
                     $controller = explode("@", $page->action);
                     $editName = (new $controller[0])->getEditName($editorId);
-                    $pageEl = (object)['displayName' => $page->displayName.": <strong>".$editName."</strong>"];
+                    $pageEl = (object)['displayName' => $page->displayName . ": <strong>" . $editName . "</strong>"];
                     $breadcrumbs[] = $pageEl;
                 } else {
                     $breadcrumbs[] = $page;
                 }
 
-                $page = Menu::find($page->parent_id??false);
-            } while($page);
+                $page = Menu::find($page->parent_id ?? false);
+            } while ($page);
 
             $breadcrumbs = array_reverse($breadcrumbs);
 
-            foreach($breadcrumbs as $crumb) {
-                $title[] = strip_tags($crumb->displayName??ucfirst(Route::currentRouteName()));
+            foreach ($breadcrumbs as $crumb) {
+                $title[] = strip_tags($crumb->displayName ?? ucfirst(Route::currentRouteName()));
             }
             $view->with('title', implode("::", $title));
 
             $view->with('breadcrumbs', $breadcrumbs);
         });
 
-        View::composer('admin.*',function($view) {
+        // Admin pages - send current Route Name
+        View::composer('admin.*', function ($view) {
             $routeName = explode(".", Route::currentRouteName());
-            $view->with('currentRoute', $routeName[0]);
+            if(count($routeName)>1) {
+                array_pop($routeName);
+            }
+            $view->with('currentRoute', implode(".", $routeName));
+            $view->with('routeAction', $routeName[1]??"");
         });
     }
 
