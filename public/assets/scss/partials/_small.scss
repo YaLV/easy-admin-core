@@ -325,6 +325,9 @@
         .quantity {
           width: 50%;
           text-align: left;
+          .selectric-wrapper {
+            width: 105px;
+          }
           .ui-spinner .ui-spinner-input {
             width: 103px;
             height: 28px;
