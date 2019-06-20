@@ -23,6 +23,10 @@ class PageComponent extends BaseModel
      */
     public $metaClass = __NAMESPACE__ . '\PageComponentMeta';
 
+    public $casts = [
+        'meta_value' => 'array'
+    ];
+
     public static function boot()
     {
         static::addGlobalScope('order', function(Builder $builder) {
