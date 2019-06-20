@@ -26,4 +26,8 @@ class Controller extends BaseController
     public function cache() {
         return new CacheController;
     }
+
+    public function adminLogin() {
+        return redirect()->route('login');
+    }
 }

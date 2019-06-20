@@ -95,11 +95,13 @@ class BannerController extends AdminController
     public function store(Request $request, $id = false)
     {
 
-        $request->validate([
+        $specVal = request()->get('type')=='message'?['message' => 'required']:['image_id' => 'required'];
+
+        $request->validate(array_merge([
             'frequency' => 'required',
             'dates'     => 'required',
             'title'     => 'required',
-        ]);
+        ], $specVal));
 
         try {
             DB::beginTransaction();
@@ -110,6 +112,7 @@ class BannerController extends AdminController
                 'target',
                 'image',
             ];
+
             list($dateFrom, $dateTo) = array_pad(explode(" ~ ", (request('dates') ?? "")), 2, '');
 
             $df = new Carbon($dateFrom);
@@ -156,11 +159,20 @@ class BannerController extends AdminController
 
     public function fixUrl($url)
     {
+        if(is_array($url)) {
+            $return = [];
+            foreach($url as $lang => $urlForLang) {
+                $return[$lang] = $this->addHttp($urlForLang);
+            }
+            return $return;
+        }
+        return $this->addHttp($url);
+    }
+
+    public function addHttp($url) {
         if (strpos($url, 'http') !== false) {
             return $url;
         }
-
         return "http://$url";
     }
-
 }

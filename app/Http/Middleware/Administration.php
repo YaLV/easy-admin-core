@@ -27,7 +27,7 @@ class Administration
         $user = Auth::user() ?? new User();
 
         if (!$user->isAdmin()) {
-            abort(404);
+            return redirect()->route('login');
         }
 
         return $next($request);

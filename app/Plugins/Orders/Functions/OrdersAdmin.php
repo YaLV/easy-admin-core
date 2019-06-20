@@ -109,7 +109,8 @@ trait OrdersAdmin
 
     public function getOrderedAtFormattedAttribute(){
         /** @var  OrderHeader $this  */
-        return Carbon::createFromTimeString($this->ordered_at)->format('d.m.Y H:i:s');
+        $oa = is_array($this->ordered_at)?$this->ordered_at['date']:$this->ordered_at;
+        return Carbon::createFromTimeString($oa)->format('d.m.Y H:i:s');
     }
 
     public function getSelectedDeliveryAttribute()

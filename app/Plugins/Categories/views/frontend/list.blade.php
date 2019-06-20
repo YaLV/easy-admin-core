@@ -2,6 +2,7 @@
 
 @php
     /** @var \App\Plugins\Categories\Model\Category $category */
+    $suppliersInCateogry = $frontController->getSupplierListInCategory($products??null);
 @endphp
 
 @section('content')
@@ -35,6 +36,9 @@
                 <div id="filter-1-m" class="collapse">
                     <div class="content">
                         @foreach($suppliers as $supplier)
+                            @if(!in_array($supplier, $suppliersInCateogry))
+                                @continue
+                            @endif
                             <div class="input-wrapper checkbox">
                                 <input type="checkbox" id="check-{{$supplier}}-m">
                                 <label for="check-{{$supplier}}-m">{{ __('supplier.name.'.$supplier) }}</label>
@@ -57,11 +61,11 @@
             @if($banner->frequency=='always' || ($banner->frequency=='once_per_session' && !session()->has('banner'.$banner->id)) || ($banner->frequency=='once_a_week' && !request()->cookie('banner'.$banner->id)))
                 @push('css')
                     <style type="text/css">
-                        .sv-message#message-{{$banner->id}}     {
+                        .sv-message#message-{{$banner->id}}      {
                             color: #{{$banner->color_text}};
                         }
 
-                        .sv-message#message-{{$banner->id}}    > div {
+                        .sv-message#message-{{$banner->id}}     > div {
                             background-color: #{{ $banner->color_background }};
                         }
 
@@ -72,7 +76,7 @@
                 @endpush
                 <div class="sv-message" id="message-{{ $banner->id }}">
                     <div>
-                        {{ $banner->meta['message'][language()] }}
+                        {{ $banner->meta['message'][language()]??"" }}
                         <a href="#" class="sv-close reportClose" data-url="{{ route('closeBanner', [$banner->id]) }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21">
                                 <path d="M21.253,19.339l-1.414,1.414L11,11.914,2.161,20.753,0.747,19.339,9.586,10.5,0.747,1.661,2.161,0.247,11,9.086l8.839-8.839,1.414,1.414L12.414,10.5Z"></path>
@@ -123,6 +127,9 @@
                                     <div id="filter-supp" class="collapse {{$in}}">
                                         <div class="content">
                                             @foreach($suppliers as $supplier)
+                                                @if(!in_array($supplier, $suppliersInCateogry))
+                                                    @continue
+                                                @endif
                                                 <div class="input-wrapper checkbox">
                                                     <input type="checkbox" id="check-{{$supplier}}-supp"
                                                            name="suppliers[]"

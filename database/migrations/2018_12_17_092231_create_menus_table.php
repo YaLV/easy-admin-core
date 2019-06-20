@@ -36,7 +36,7 @@ class CreateMenusTable extends Migration
                 'icon'        => 'fa fa-fw fa-user-circle',
                 'displayName' => 'Dashboard',
                 'action'      => 'AdminController@index',
-                'inMenu'      => 1,
+                'inMenu'      => 0,
                 'sequence'    => 0,
                 'parent_id'   => null,
                 'method'      => 'GET',
