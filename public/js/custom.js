@@ -360,5 +360,5 @@ window.onbeforeunload = function (event) {
     $('body').addClass("loading");
     setTimeout(function () {
         $('body').removeClass("loading");
-    }, 5000);
+    }, 3000);
 };
