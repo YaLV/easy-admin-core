@@ -62,7 +62,7 @@ class PageComponent extends BaseModel
             return "";
         }
 
-        dd($this->metaData);
+        dd($this->meta);
 
         $path = "";
         $filename = "";
