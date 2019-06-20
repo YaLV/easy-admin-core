@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-4">
         <div class="page-breadcrumb">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -24,7 +24,7 @@
             </nav>
         </div>
     </div>
-    <div class="col-md-2 text-right">
+    <div class="col-md-8 text-right">
         {!! $operations??"" !!}
         {!! $logButton??"" !!}
     </div>
