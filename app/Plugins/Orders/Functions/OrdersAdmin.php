@@ -155,7 +155,7 @@ trait OrdersAdmin
 
     public function getInvoiceUrlAttribute() {
         /** @var OrderHeader $this */
-        return "<a href='#'>{$this->invoice}</a>";
+        return "<a href='".route("getInvoice", [$this->invoice])."'>{$this->invoice}</a>";
     }
 
     public function getCommentsAttribute($value) {
