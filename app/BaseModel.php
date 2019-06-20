@@ -19,8 +19,6 @@ class BaseModel extends Model
      */
     private $metaContent;
 
-    public $language;
-
     /**
      * Setting Meta (unused ??)
      *
@@ -60,9 +58,7 @@ class BaseModel extends Model
         $metaData = [];
         $metaDataCollection = $this->metaData;
         foreach($metaDataCollection??[] as $meta) {
-//            dd($meta);
             $metaData[$meta->meta_name][$meta->language] = $meta->meta_value;
-//            dd($metaData);
         }
         $this->metaContent = $metaData;
         return $metaData;
