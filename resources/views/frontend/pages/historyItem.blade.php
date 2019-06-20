@@ -21,7 +21,7 @@
                             </div>
                         </div>
                         <div class="download">
-                            <a href="{{ route('getInvoice', {{$order->invoice}}) }}">{!! _t('translations.downloadInvoice') !!}<span class="icon"></span></a>
+                            <a href="{{ route('getInvoice', [$order->invoice]) }}">{!! _t('translations.downloadInvoice') !!}<span class="icon"></span></a>
                         </div>
                     </div>
                 </div>
